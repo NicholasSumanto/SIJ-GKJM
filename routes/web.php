@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BasicController;
 use App\Http\Controllers\AdminPageController;
+use App\Http\Controllers\CustomLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,9 +57,8 @@ Route::get('/admin/transaksi/baptis-dewasa', AdminPageController::class . '@admi
 Route::get('/admin/transaksi/baptis-sidi', AdminPageController::class . '@adminTransaksiBaptisSidi')->name('admin.transaksi.baptis-sidi');
 // Admin Routes End
 
-// Route::get('/blank', function () {
-//     return view('blank');
-// })->name('blank');
+// API
+// Route::post('/login', CustomLoginController::class.'@login')->name('api.post.login');
 
 Route::middleware('auth')->group(function() {
     Route::resource('basic', BasicController::class);

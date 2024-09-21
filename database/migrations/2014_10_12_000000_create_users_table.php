@@ -13,13 +13,17 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
+        Schema::create('role_pengguna', function (Blueprint $table) {
+            $table->id('id_role');
+            $table->enum('nama_role', ['Super Admin','Admin Wilayah 1','Admin Wilayah 2','Admin Wilayah 3','Admin Wilayah 4','Admin Wilayah 5','Admin Wilayah 6']);
+            $table->timestamps();
+        });
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('last_name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('username',100)->primary();
+            $table->string('nama_user');
             $table->string('password');
+            $table->unsignedBigInteger('id_role');
+            $table->foreign('id_role')->references('id_role')->on('role_pengguna')->onUpdate('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -32,6 +36,7 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('RolePengguna');
+        Schema::dropIfExists('user_login');
     }
 }

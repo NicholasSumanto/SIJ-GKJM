@@ -37,7 +37,7 @@
 
         <!-- Nav Item -->
         <li class="nav-item {{ Nav::isRoute('admin.data.*') }}">
-            <a class="nav-link" href="{{ route('admin.pengaturan.wilayah') }}">
+            <a class="nav-link" href="{{ route('admin.data.anggota-jemaat') }}">
                 <i class="fa-solid fa-book"></i>
                 <span>{{ __('Data') }}</span>
             </a>
