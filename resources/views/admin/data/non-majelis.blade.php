@@ -1,6 +1,6 @@
 @extends('layouts.admin-main-data')
 
-@section('title', 'Anggota Jemaat')
+@section('title', 'Anggota Non Majelis')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -16,13 +16,7 @@
 
 @section('content')
     <div class="card-body">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item" aria-current="page"><a href="#">Daftar Jemaat</a></li>
-                <li class="breadcrumb-item active">Detail Jemaat (xxxx)</li>
-            </ol>
-        </nav>
-        <a href="" class="btn btn-success tambah-wilayah">Tambah Jemaat</a>
+        <a href="" class="btn btn-success tambah-wilayah">Tambah Non Majelis</a>
         <div id="toolbar" class="select">
             <select class="form-control">
                 <option value="">Export (Hanya yang Ditampilkan)</option>
@@ -32,7 +26,7 @@
         </div>
         <table id="table" data-show-export="true" data-pagination="true" data-click-to-select="true"
             data-toolbar="#toolbar" data-search="true" data-show-toggle="true" data-show-columns="true"
-            data-filter-control="true" data-ajax="ApiGetAnggotaJemaat">
+            data-filter-control="true" data-ajax="ApiGetAnggotaNonMajelis">
         </table>
     </div>
 @endsection
@@ -59,22 +53,33 @@
                     title: 'No',
                     align: 'center'
                 }, {
-                    field: 'id',
-                    title: 'ID Jemaat',
-                    align: 'center'
-                }, {
-                    field: 'name',
+                    field: 'nama',
                     title: 'Nama',
                     align: 'center'
                 }, {
-                    field: 'wilayah',
-                    title: 'Wilayah',
+                    field: 'jabatan',
+                    title: 'Jabatan',
+                    align: 'center'
+                }, {
+                    field: 'tahun',
+                    title: 'Tahun',
                     filterControl: 'select',
                     align: 'center'
                 }, {
-                    field: 'kelamin',
-                    title: 'Kelamin',
-                    filterControl: 'select',
+                    field: 'tanggal_mulai',
+                    title: 'Tanggal Mulai',
+                    align: 'center'
+                }, {
+                    field: 'tanggal_selesai',
+                    title: 'Tanggal Selesai',
+                    align: 'center'
+                }, {
+                    field: 'no_sk',
+                    title: 'No. SK',
+                    align: 'center'
+                }, {
+                    field: 'file_sk',
+                    title: 'File SK',
                     align: 'center'
                 }, {
                     field: 'status',
@@ -82,27 +87,10 @@
                     filterControl: 'select',
                     align: 'center'
                 }, {
-                    field: 'darah',
-                    title: 'Darah',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'pendidikan',
-                    title: 'Pendidikan',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'view',
-                    title: 'View',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-success btn-view" data-id="${row.id}">View</button>`;
-                    },
-                    align: 'center'
-                }, {
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
+                        return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
                     },
                     align: 'center'
                 }, {
@@ -125,30 +113,37 @@
                     exportDataType: exportDataType,
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
-                        field: 'state',
-                        checkbox: true,
-                        visible: exportDataType === 'selected'
-                    }, {
                         field: 'id',
                         title: 'No',
-                        align: 'center'
-                    }, {
-                        field: 'id',
-                        title: 'ID Jemaat',
                         align: 'center'
                     }, {
                         field: 'name',
                         title: 'Nama',
                         align: 'center'
                     }, {
-                        field: 'wilayah',
-                        title: 'Wilayah',
+                        field: 'jabatan',
+                        title: 'Jabatan',
+                        align: 'center'
+                    }, {
+                        field: 'tahun',
+                        title: 'Tahun',
                         filterControl: 'select',
                         align: 'center'
                     }, {
-                        field: 'kelamin',
-                        title: 'Kelamin',
-                        filterControl: 'select',
+                        field: 'tanggal_mulai',
+                        title: 'Tanggal Mulai',
+                        align: 'center'
+                    }, {
+                        field: 'tanggal_selesai',
+                        title: 'Tanggal Selesai',
+                        align: 'center'
+                    }, {
+                        field: 'no_sk',
+                        title: 'No. SK',
+                        align: 'center'
+                    }, {
+                        field: 'file_sk',
+                        title: 'File SK',
                         align: 'center'
                     }, {
                         field: 'status',
@@ -156,27 +151,10 @@
                         filterControl: 'select',
                         align: 'center'
                     }, {
-                        field: 'darah',
-                        title: 'Darah',
-                        filterControl: 'select',
-                        align: 'center'
-                    }, {
-                        field: 'pendidikan',
-                        title: 'Pendidikan',
-                        filterControl: 'select',
-                        align: 'center'
-                    }, {
-                        field: 'view',
-                        title: 'View',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-success btn-view" data-id="${row.id}">View</button>`;
-                        },
-                        align: 'center'
-                    }, {
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}" style="color: #ffff;">Edit</button>`;
+                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
                         },
                         align: 'center'
                     }, {
@@ -361,7 +339,7 @@
             });
         });
 
-        function ApiGetAnggotaJemaat(params) {
+        function ApiGetAnggotaNonMajelis(params) {
             $.ajax({
                 type: "GET",
                 url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",

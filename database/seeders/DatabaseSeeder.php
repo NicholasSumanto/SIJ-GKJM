@@ -3,8 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Database\Seeders\RolePenggunaSeeder;
-
+use Database\Seeders\UserSeeders\{RoleSeeder, UsersSeeder};
+use Database\Seeders\ParentSeeders\{StatusSeeder, GerejaSeeder, BidangIlmuSeeder, PendidikanSeeder, PekerjaanSeeder, PendetaSeeder, PendetaDidikSeeder, WilayahSeeder, ProvinsiSeeder, JabatanMajelisSeeder, JabatanNonMajelisSeeder};
+use Database\Seeders\GeoSeeders\{KabupatenSeeder,KecamatanSeeder,KelurahanSeeder};
+use Database\Seeders\BaptisSeeders\{BaptisAnakSeeder,BaptisDewasaSeeder,BaptisSidiSeeder};
+use Database\Seeders\JemaatSeeders\{PernikahanSeeder,jemaatSeeder,JemaatTitipanSeeder,KeluargaSeeder};
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,7 +17,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(role_seeder::class);
-        $this->call(users_seeder::class);
+        $this->call([
+            RoleSeeder::class,
+            UsersSeeder::class,
+            StatusSeeder::class,
+            GerejaSeeder::class,
+            BidangIlmuSeeder::class,
+            PendidikanSeeder::class,
+            PekerjaanSeeder::class,
+            PendetaSeeder::class,
+            PendetaDidikSeeder::class,
+            WilayahSeeder::class,
+            ProvinsiSeeder::class,
+            JabatanMajelisSeeder::class,
+            JabatanNonMajelisSeeder::class,
+            KabupatenSeeder::class,
+            KecamatanSeeder::class,
+            KelurahanSeeder::class,
+            BaptisAnakSeeder::class,
+            BaptisDewasaSeeder::class,
+            BaptisSidiSeeder::class,
+            PernikahanSeeder::class,
+            JemaatSeeder::class,
+            JemaatTitipanSeeder::class,
+            KeluargaSeeder::class,
+        ]);
     }
 }

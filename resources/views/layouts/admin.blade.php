@@ -268,7 +268,11 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Alejandro RH 2020</span>
+                        @if (date('Y') == 2024)
+                            <span>Copyright &copy; 2024 UKDW Nicholas Sumanto</span>
+                        @else
+                            <span>Copyright &copy; 2024 - {{ date('Y') }} UKDW Nicholas Sumanto</span>
+                        @endif
                     </div>
                 </div>
             </footer>

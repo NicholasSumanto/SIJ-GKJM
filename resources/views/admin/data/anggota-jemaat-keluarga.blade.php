@@ -1,28 +1,21 @@
 @extends('layouts.admin-main-data')
 
-@section('title', 'Anggota Jemaat')
+@section('title', 'Anggota Jemaat Keluarga')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap-table-filter-control.css') }}">
     <style>
-        th {
-            vertical-align: top !important;
+        .btn-keluarga {
+            color: white;
         }
     </style>
 @endpush
 
 @section('content')
     <div class="card-body">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item" aria-current="page"><a href="#">Daftar Jemaat</a></li>
-                <li class="breadcrumb-item active">Detail Jemaat (xxxx)</li>
-            </ol>
-        </nav>
-        <a href="" class="btn btn-success tambah-wilayah">Tambah Jemaat</a>
+        <a href="" class="btn btn-success tambah-keluarga">Tambah Keluarga</a>
         <div id="toolbar" class="select">
             <select class="form-control">
                 <option value="">Export (Hanya yang Ditampilkan)</option>
@@ -32,7 +25,7 @@
         </div>
         <table id="table" data-show-export="true" data-pagination="true" data-click-to-select="true"
             data-toolbar="#toolbar" data-search="true" data-show-toggle="true" data-show-columns="true"
-            data-filter-control="true" data-ajax="ApiGetAnggotaJemaat">
+            data-ajax="ApiGetKeluarga">
         </table>
     </div>
 @endsection
@@ -47,8 +40,6 @@
     <script src="{{ asset('js/table-export/FileSaver/FileSaver.min.js') }}"></script>
     <script src="{{ asset('js/table-export/js-xlsx/xlsx.core.min.js') }}"></script>
     <script src="{{ asset('js/table-export/html2canvas/html2canvas.min.js') }}"></script>
-    <script src="{{ asset('js/table-export/filter-control/bootstrap-table-filter-control.js') }}"></script>
-    <script src="{{ asset('js/table-export/filter-control/utils.js') }}"></script>
     <script>
         var $table = $('#table');
         $(document).ready(function() {
@@ -56,53 +47,30 @@
             $table.bootstrapTable({
                 columns: [{
                     field: 'id',
-                    title: 'No',
-                    align: 'center'
+                    title: 'No'
                 }, {
                     field: 'id',
-                    title: 'ID Jemaat',
-                    align: 'center'
+                    title: 'ID Jemaat'
                 }, {
                     field: 'name',
-                    title: 'Nama',
-                    align: 'center'
+                    title: 'Nama'
                 }, {
-                    field: 'wilayah',
-                    title: 'Wilayah',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'kelamin',
-                    title: 'Kelamin',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'status',
-                    title: 'Status',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'darah',
-                    title: 'Darah',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'pendidikan',
-                    title: 'Pendidikan',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'view',
-                    title: 'View',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-success btn-view" data-id="${row.id}">View</button>`;
-                    },
-                    align: 'center'
+                    field: 'name',
+                    title: 'Wilayah'
                 }, {
                     field: 'edit',
-                    title: 'Edit',
+                    title: 'Keluarga',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
+                        return `
+                        <button class="btn btn-warning btn-keluarga" type="button" data-bs-toggle="collapse" data-bs-target="#${row.id}" aria-expanded="false" aria-controls="${row.id}" data-id="${row.id}" data-name="${row.name}">
+                            Lihat Keluarga
+                        </button>
+
+                        <div class="collapse" id="${row.id}">
+                            <div class="card card-body mt-2">
+                                Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                            </div>
+                        </div>`;
                     },
                     align: 'center'
                 }, {
@@ -130,53 +98,30 @@
                         visible: exportDataType === 'selected'
                     }, {
                         field: 'id',
-                        title: 'No',
-                        align: 'center'
+                        title: 'No'
                     }, {
                         field: 'id',
-                        title: 'ID Jemaat',
-                        align: 'center'
+                        title: 'ID Jemaat'
                     }, {
                         field: 'name',
-                        title: 'Nama',
-                        align: 'center'
+                        title: 'Nama'
                     }, {
-                        field: 'wilayah',
-                        title: 'Wilayah',
-                        filterControl: 'select',
-                        align: 'center'
-                    }, {
-                        field: 'kelamin',
-                        title: 'Kelamin',
-                        filterControl: 'select',
-                        align: 'center'
-                    }, {
-                        field: 'status',
-                        title: 'Status',
-                        filterControl: 'select',
-                        align: 'center'
-                    }, {
-                        field: 'darah',
-                        title: 'Darah',
-                        filterControl: 'select',
-                        align: 'center'
-                    }, {
-                        field: 'pendidikan',
-                        title: 'Pendidikan',
-                        filterControl: 'select',
-                        align: 'center'
-                    }, {
-                        field: 'view',
-                        title: 'View',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-success btn-view" data-id="${row.id}">View</button>`;
-                        },
-                        align: 'center'
+                        field: 'name',
+                        title: 'Wilayah'
                     }, {
                         field: 'edit',
-                        title: 'Edit',
+                        title: 'Keluarga',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}" style="color: #ffff;">Edit</button>`;
+                        return `
+                            <button class="btn btn-warning btn-keluarga" type="button" data-bs-toggle="collapse" data-bs-target="#${row.id}" aria-expanded="false" aria-controls="${row.id}" data-id="${row.id}" data-name="${row.name}">
+                                Lihat Keluarga
+                            </button>
+
+                            <div class="collapse" id="${row.id}">
+                                <div class="card card-body mt-2">
+                                    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                                </div>
+                            </div>`;
                         },
                         align: 'center'
                     }, {
@@ -191,10 +136,10 @@
             }).trigger('change');
 
             // Event listener untuk tombol tambah wilayah
-            $('.tambah-wilayah').on('click', function() {
+            $('.tambah-anggota-keluarga').on('click', function() {
                 event.preventDefault();
                 Swal.fire({
-                    title: 'Tambah Wilayah Baru',
+                    title: 'Tambah Keluarga Baru',
                     html: `
                         <form id="addWilayahForm">
                             <div class="form-group">
@@ -268,7 +213,7 @@
                 var name = $(this).data('name');
 
                 Swal.fire({
-                    title: 'Edit Wilayah',
+                    title: 'Edit Keluarga',
                     html: `
                         <form id="editForm">
                             <div class="form-group">
@@ -361,7 +306,7 @@
             });
         });
 
-        function ApiGetAnggotaJemaat(params) {
+        function ApiGetKeluarga(params) {
             $.ajax({
                 type: "GET",
                 url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",

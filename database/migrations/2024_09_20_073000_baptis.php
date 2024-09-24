@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('nomor');
             $table->string('nama');
             $table->string('tempat_lahir');
-            $table->string('tangal_lahir');
+            $table->string('tanggal_lahir');
             $table->string('ayah');
             $table->string('ibu');
             $table->date('tanggal_baptis');

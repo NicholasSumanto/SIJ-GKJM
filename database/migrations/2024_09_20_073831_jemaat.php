@@ -54,7 +54,7 @@ return new class extends Migration
             $table->string('email', 100);
             $table->string('nik', 16);
             $table->string('no_kk', 20);
-            $table->string('photo', 20);
+            $table->string('photo', 255);
             $table->unsignedBigInteger('id_nikah');
             $table->unsignedBigInteger('id_sidi');
             $table->unsignedBigInteger('id_ba');
@@ -91,7 +91,7 @@ return new class extends Migration
             $table->string('nama_jemaat', 200);
             $table->string('tempat_lahir', 100);
             $table->date('tanggal_lahir');
-            $table->string('agama', 10);
+            $table->enum('agama',['Kristen','Katholik','Islam','Buddha','Hindu','Khonghucu','Lainnya']);
             $table->string('kelamin', 10);
             $table->text('alamat_jemaat');
             $table->text('alamat_domisili');
@@ -107,7 +107,7 @@ return new class extends Migration
             $table->string('no_kk', 20);
             $table->string('nama_ortu', 100);
             $table->string('telepon_ortu', 50);
-            $table->string('photo', 20);
+            $table->string('photo', 250);
             $table->date('tanggal_baptis');
             $table->string('golongan_darah', 3);
             $table->unsignedBigInteger('id_pendidikan');
@@ -133,12 +133,13 @@ return new class extends Migration
 
         Schema::create('keluarga', function (Blueprint $table) {
             $table->id('id_keluarga');
-            $table->unsignedBiginteger('id_jemaat');
+            $table->unsignedBigInteger('id_jemaat');
             $table->unsignedBigInteger('id_gereja');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade');
             $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade');
             $table->timestamps();
         });
+
         Schema::create('keluarga_detil', function (Blueprint $table) {
             $table->id('id_keluarga_detil');
             $table->unsignedBiginteger('id_jemaat');
