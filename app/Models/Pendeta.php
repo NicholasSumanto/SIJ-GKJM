@@ -10,6 +10,7 @@ class Pendeta extends Model
     use HasFactory;
 
     protected $table = 'pendeta';
+    protected $primaryKey = 'id_pendeta';
 
     protected $fillable = [
         'nama_pendeta',

@@ -10,6 +10,7 @@ class Keluarga extends Model
     use HasFactory;
 
     protected $table = 'keluarga';
+    protected $primaryKey = 'id_keluarga';
 
     protected $fillable = [
         'id_jemaat',

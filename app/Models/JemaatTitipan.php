@@ -10,6 +10,7 @@ class JemaatTitipan extends Model
     use HasFactory;
 
     protected $table = 'jemaat_titipan';
+    protected $primaryKey = 'id_titipan';
 
     protected $fillable = [
         'id_wilayah',

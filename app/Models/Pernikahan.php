@@ -10,6 +10,7 @@ class Pernikahan extends Model
     use HasFactory;
 
     protected $table = 'pernikahan';
+    protected $primaryKey = 'id_pernikahan';
 
     protected $fillable = [
         'nomor',

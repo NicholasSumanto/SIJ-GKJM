@@ -10,6 +10,7 @@ class BidangIlmu extends Model
     use HasFactory;
 
     protected $table = 'bidangilmu';
+    protected $primaryKey = 'id_ilmu';
 
     protected $fillable = [
         'bidangilmu',

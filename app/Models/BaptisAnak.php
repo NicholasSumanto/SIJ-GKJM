@@ -25,4 +25,16 @@ class BaptisAnak extends Model
         'ketua_majelis',
         'sekretaris_majelis',
     ];
+
+    public function wilayah()
+    {
+        return $this->belongsTo(Wilayah::class, 'id_wilayah');
+    }
+    public function pendeta()
+    {
+        return $this->belongsTo(Pendeta::class, 'id_pendeta');
+    }
+
 }
+
+

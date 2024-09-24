@@ -10,6 +10,7 @@ class Gereja extends Model
     use HasFactory;
 
     protected $table = 'gereja';
+    protected $primaryKey = 'id_gereja';
 
     protected $fillable = [
         'nama_gereja',

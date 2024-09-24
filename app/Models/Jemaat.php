@@ -10,6 +10,7 @@ class Jemaat extends Model
     use HasFactory;
 
     protected $table = 'jemaat';
+    protected $primaryKey = 'id_jemaat';
 
     protected $fillable = [
         'id_wilayah',
@@ -47,6 +48,51 @@ class Jemaat extends Model
         'alat_transportasi',
     ];
 
- 
+    public function wilayah()
+    {
+        return $this->belongsTo(Wilayah::class, 'id_wilayah');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'id_status');
+    }
+
+    public function kelurahan()
+    {
+        return $this->belongsTo(Kelurahan::class, 'id_kelurahan');
+    }
+
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class, 'id_kecamatan');
+    }
+
+    public function kabupaten()
+    {
+        return $this->belongsTo(Kabupaten::class, 'id_kabupaten');
+    }
+
+    public function provinsi()
+    {
+        return $this->belongsTo(Provinsi::class, 'id_provinsi');
+    }
+
+    public function pendidikan()
+    {
+        return $this->belongsTo(Pendidikan::class, 'id_pendidikan');
+    }
+
+    public function ilmu()
+    {
+        return $this->belongsTo(BidangIlmu::class, 'id_ilmu');
+    }
+
+    public function pekerjaan()
+    {
+        return $this->belongsTo(Pekerjaan::class, 'id_pekerjaan');
+    }
+
+
 }
 

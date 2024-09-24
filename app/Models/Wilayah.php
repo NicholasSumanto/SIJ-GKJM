@@ -10,6 +10,7 @@ class Wilayah extends Model
     use HasFactory;
 
     protected $table = 'wilayah';
+    protected $primaryKey = 'id_wilayah';
 
     protected $fillable = [
         'nama_wilayah',

@@ -10,6 +10,7 @@ class JabatanMajelis extends Model
     use HasFactory;
 
     protected $table = 'jabatan_majelis';
+    protected $primaryKey = 'id_jabatan';
 
     protected $fillable = [
         'jabatan_majelis',

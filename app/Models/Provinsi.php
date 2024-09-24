@@ -9,6 +9,7 @@ class Provinsi extends Model
     use HasFactory;
 
     protected $table = 'provinsi';
+    protected $primaryKey = 'id_provinsi';
 
     protected $fillable = [
         'nama_provinsi',
