@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('baptis_anak', function (Blueprint $table) {
-            $table->id('id_ba');
-            $table->unsignedBigInteger('id_wilayah');
-            $table->unsignedBigInteger('id_pendeta');
+            $table->id('id_ba')->primary();
+            $table->bigInteger('id_wilayah')->unsigned()->nullable();
+            $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string('nomor');
             $table->string('nama');
             $table->string('tempat_lahir');
@@ -24,14 +24,14 @@ return new class extends Migration
             $table->date('tanggal_baptis');
             $table->string('ketua_majelis');
             $table->string('sekretaris_majelis');
-            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade');
-            $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade');
+            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
         Schema::create('baptis_dewasa', function (Blueprint $table) {
-            $table->id('id_bd');
-            $table->unsignedBigInteger('id_wilayah');
-            $table->unsignedBigInteger('id_pendeta');
+            $table->id('id_bd')->primary();
+            $table->bigInteger('id_wilayah')->unsigned()->nullable();
+            $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string('nomor');
             $table->string('nama');
             $table->string('tempat_lahir');
@@ -42,13 +42,13 @@ return new class extends Migration
             $table->string('ketua_majelis');
             $table->string('sekretaris_majelis');
             $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade');
-            $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade');
+            $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
         Schema::create('baptis_sidi', function (Blueprint $table) {
-            $table->id('id_sidi');
-            $table->unsignedBigInteger('id_wilayah');
-            $table->unsignedBigInteger('id_pendeta');
+            $table->id('id_sidi')->primary();
+            $table->bigInteger('id_wilayah')->unsigned()->nullable();
+            $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string('nomor');
             $table->string('nama');
             $table->string('tempat_lahir');
@@ -58,8 +58,8 @@ return new class extends Migration
             $table->date('tanggal_baptis');
             $table->string('ketua_majelis');
             $table->string('sekretaris_majelis');
-            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade');
-            $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade');
+            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
     }

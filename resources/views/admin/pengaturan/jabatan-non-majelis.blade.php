@@ -41,28 +41,31 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id',
-                    title: 'No'
+                    field: 'id_jabatan_non',
+                    title: 'ID Jabatan Non Majelis'
                 }, {
-                    field: 'name',
+                    field: 'jabatan_nonmajelis',
                     title: 'Nama Jabatan'
+                }, {
+                    field: 'periode',
+                    title: 'Periode'
                 }, {
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
+                        return `<button class="btn btn-warning btn-edit" data-id="${row.id_jabatan_non}">Edit</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
+                        return `<button class="btn btn-danger btn-delete" data-id="${row.id_jabatan_non}">Delete</button>`;
                     },
                     align: 'center'
                 }],
                 exportOptions: {
-                    columns: [0, 1]
+                    ignoreColumn: [3, 4]
                 }
             });
 
@@ -77,26 +80,32 @@
                         checkbox: true,
                         visible: exportDataType === 'selected'
                     }, {
-                        field: 'id',
-                        title: 'No'
+                        field: 'id_jabatan_non',
+                        title: 'ID Jabatan Non Majelis'
                     }, {
-                        field: 'name',
+                        field: 'jabatan_nonmajelis',
                         title: 'Nama Jabatan'
+                    }, {
+                        field: 'periode',
+                        title: 'Periode'
                     }, {
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}" style="color: #ffff;">Edit</button>`;
+                            return `<button class="btn btn-warning btn-edit" data-id="${row.id_jabatan_non}">Edit</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_jabatan_non}">Delete</button>`;
                         },
                         align: 'center'
-                    }]
+                    }],
+                    exportOptions: {
+                        ignoreColumn: [3, 4]
+                    }
                 });
             }).trigger('change');
 
@@ -106,14 +115,18 @@
                 Swal.fire({
                     title: 'Tambah Jabatan Non Majelis Baru',
                     html: `
-                        <form id="addJabatan Non MajelisForm">
+                        <form id="addJabatanNonMajelisForm">
+                           <div class="form-group">
+                                <label for="id_jabatan_non">ID Jabatan Non Majelis *</label>
+                                <input type="text" id="id_jabatan_non" class="form-control" placeholder="Masukkan ID Jabatan Non Majelis" required>
+                            </div>
                             <div class="form-group">
-                                <label for="noJabatan">ID Jabatan Non Majelis</label>
-                                <input type="text" id="noJabatan" class="form-control" placeholder="Masukkan Nomor Jabatan">
+                                <label for="jabatan_nonmajelis">Nama Jabatan Non Majelis *</label>
+                                <input type="text" id="jabatan_nonmajelis" class="form-control" placeholder="Masukkan Nama Jabatan Non Majelis" required>
                             </div>
                             <div class="form-group mb-0">
-                                <label for="namaJabatan">Nama Jabatan Non Majelis</label>
-                                <input type="text" id="namaJabatan" class="form-control" placeholder="Masukkan Nama Jabatan Non Majelis">
+                                <label for="periode">Periode *</label>
+                                <input type="number" id="periode" class="form-control" placeholder="Masukkan Tahun Periode" min="1900" max="2100" required>
                             </div>
                         </form>
                     `,
@@ -121,48 +134,77 @@
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
                     preConfirm: () => {
-                        const noJabatan = $('#noJabatan').val();
-                        const namaJabatan = $('#namaJabatan').val();
+                        const id_jabatan_non = $('#id_jabatan_non').val();
+                        const jabatan_nonmajelis = $('#jabatan_nonmajelis').val();
+                        const periode = $('#periode').val();
 
                         // Validasi input
-                        if (!noJabatan || !namaJabatan) {
+                        if (!id_jabatan_non || !jabatan_nonmajelis || !periode) {
                             Swal.showValidationMessage(
-                                'ID Jabatan Non Majelis dan Nama Jabatan Non Majelis harus diisi!');
+                                'Terdapat bagian yang tidak valid atau belum diisi!');
                             return false;
                         }
 
-                        return {
-                            noJabatan: noJabatan,
-                            namaJabatan: namaJabatan
-                        };
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('api.get.jabatan-non-majelis') }}",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id: id_jabatan_non
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.total > 0) {
+                                        reject(
+                                            'ID jabatan non majelis sudah ada, silahkan gunakan ID non jabatan majelis lain!'
+                                        );
+                                    } else {
+                                        resolve({
+                                            id_jabatan_non: id_jabatan_non,
+                                            jabatan_nonmajelis: jabatan_nonmajelis,
+                                            periode: periode
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    reject(
+                                        'Terjadi kesalahan saat memvalidasi ID jabatan non majelis.'
+                                    );
+                                }
+                            });
+                        }).catch(error => {
+                            Swal.showValidationMessage(error);
+                        });
                     }
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Ambil data dari result.value
+                    if (result.isConfirmed && result.value) {
                         const {
-                            noJabatan,
-                            namaJabatan
+                            id_jabatan_non,
+                            jabatan_nonmajelis,
+                            periode
                         } = result.value;
 
-                        // AJAX request untuk menambah Jabatan Non Majelis
                         $.ajax({
-                            url: '/add-jabatan-non-majelis',
+                            url: "{{ route('api.post.jabatan-non-majelis') }}",
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                noJabatan: noJabatan,
-                                namaJabatan: namaJabatan
+                                id_jabatan_non: id_jabatan_non,
+                                jabatan_nonmajelis: jabatan_nonmajelis,
+                                periode: periode
                             },
                             success: function(response) {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data Jabatan Non Majelis berhasil ditambahkan!'
+                                    title: 'Data jabatan non majelis berhasil ditambahkan!'
                                 });
+                                $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
                                 alert.fire({
                                     icon: 'error',
-                                    title: 'Terjadi keslahan saat menambahkan data Jabatan Non Majelis!'
+                                    title: 'Data jabatan non majelis gagal ditambahkan!'
                                 });
                             }
                         });
@@ -172,61 +214,179 @@
 
             // Event listener untuk tombol edit
             $(document).on('click', '.btn-edit', function() {
-                event.preventDefault();
                 var id = $(this).data('id');
-                var name = $(this).data('name');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('api.get.jabatan-non-majelis') }}",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        var id_jabatan_non = response.rows[0].id_jabatan_non;
+                        var jabatan_nonmajelis = response.rows[0].jabatan_nonmajelis;
+                        var periode = response.rows[0].periode;
+
+                        Swal.fire({
+                            title: 'Edit Jabatan Non Majelis Baru',
+                            html: `
+                                <form id="editJabatanNonMajelisForm">
+                                <div class="form-group">
+                                        <label for="id_jabatan_non">ID Jabatan Non Majelis *</label>
+                                        <input type="text" id="id_jabatan_non" class="form-control" placeholder="Masukkan ID Jabatan Non Majelis" value="${id_jabatan_non}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="jabatan_nonmajelis">Nama Jabatan Non Majelis *</label>
+                                        <input type="text" id="jabatan_nonmajelis" class="form-control" placeholder="Masukkan Nama Jabatan Non Majelis" value="${jabatan_nonmajelis}" required>
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <label for="periode">Periode *</label>
+                                        <input type="number" id="periode" class="form-control" placeholder="Masukkan Tahun Periode" min="1900" max="2100" value="${periode}" required>
+                                    </div>
+                                </form>
+                            `,
+                            showCancelButton: true,
+                            confirmButtonText: 'Save',
+                            cancelButtonText: 'Cancel',
+                            preConfirm: () => {
+                                const id_jabatan_non = $('#id_jabatan_non').val();
+                                const jabatan_nonmajelis = $('#jabatan_nonmajelis')
+                                    .val();
+                                const periode = $('#periode').val();
+
+                                // Validasi input
+                                if (!id_jabatan_non || !jabatan_nonmajelis || !
+                                    periode) {
+                                    Swal.showValidationMessage(
+                                        'Terdapat bagian yang tidak valid atau belum diisi!'
+                                    );
+                                    return false;
+                                }
+
+                                return new Promise((resolve, reject) => {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "{{ route('api.get.jabatan-non-majelis') }}",
+                                        data: {
+                                            _token: '{{ csrf_token() }}',
+                                            id: id_jabatan_non
+                                        },
+                                        dataType: "json",
+                                        success: function(
+                                            response) {
+                                            if (response.total >
+                                                0) {
+                                                if (response
+                                                    .rows[0]
+                                                    .id_jabatan_non !==
+                                                    id) {
+                                                    reject(
+                                                        'ID jabatan majelis sudah ada, silahkan gunakan ID jabatan majelis lain!'
+                                                    );
+                                                } else {
+                                                    resolve({
+                                                        id_jabatan_non: id_jabatan_non,
+                                                        jabatan_nonmajelis: jabatan_nonmajelis,
+                                                        periode: periode
+                                                    });
+                                                }
+                                            } else {
+                                                resolve({
+                                                    id_jabatan_non: id_jabatan_non,
+                                                    jabatan_nonmajelis: jabatan_nonmajelis,
+                                                    periode: periode
+                                                });
+                                            }
+                                        },
+                                        error: function(xhr, status,
+                                            error) {
+                                            reject(
+                                                'Terjadi kesalahan saat memvalidasi ID jabatan majelis.'
+                                            );
+                                        }
+                                    });
+                                }).catch(error => {
+                                    Swal.showValidationMessage(error);
+                                });
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed && result.value) {
+                                const {
+                                    id_jabatan_non,
+                                    jabatan_nonmajelis,
+                                    periode
+                                } = result.value;
+
+                                $.ajax({
+                                    url: "{{ route('api.update.jabatan-non-majelis') }}",
+                                    type: 'POST',
+                                    data: {
+                                        _token: '{{ csrf_token() }}',
+                                        id: id,
+                                        id_jabatan_non: id_jabatan_non,
+                                        jabatan_nonmajelis: jabatan_nonmajelis,
+                                        periode: periode
+                                    },
+                                    success: function(response) {
+                                        alert.fire({
+                                            icon: 'success',
+                                            title: 'Data jabatan non majelis berhasil dirubah!'
+                                        });
+                                        $table.bootstrapTable('refresh');
+                                    },
+                                    error: function(xhr, status, error) {
+                                        alert.fire({
+                                            icon: 'error',
+                                            title: 'Data jabatan non majelis gagal dirubah!'
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: " + error);
+                        console.error("Status: " + status);
+                        console.dir(xhr);
+                    }
+                });
+            });
+
+            $(document).on('click', '.btn-delete', function() {
+                event.preventDefault();
+                var id_jabatan_non = $(this).data('id');
 
                 Swal.fire({
-                    title: 'Edit Jabatan Majelis',
-                    html: `
-                        <form id="editForm">
-                            <div class="form-group">
-                                <label for="noJabatan">ID Jabatan Non Majelis</label>
-                                <input type="text" id="noJabatan" class="form-control" value="${id}" disabled>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="namaJabatan">Nama Jabatan Non Majelis</label>
-                                <input type="text" id="namaJabatan" class="form-control" value="${name}">
-                            </div>
-                        </form>
-                    `,
+                    title: 'Are you sure?',
+                    html: `<div class="text-delete">You won't be able to revert this!</div>`,
+                    icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Save',
-                    cancelButtonText: 'Cancel',
-                    preConfirm: () => {
-                        const newName = $('#namaJabatan').val();
-                        if (!newName) {
-                            Swal.showValidationMessage('Nama item tidak boleh kosong!');
-                            return false;
-                        }
-                        return {
-                            newName: newName
-                        };
-                    }
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const newName = result.value.newName;
-
-                        // Contoh: Update menggunakan AJAX
                         $.ajax({
-                            url: `/edit/${id}`,
-                            type: 'POST',
+                            type: "POST",
+                            url: `{{ route('api.delete.jabatan-non-majelis') }}`,
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                id: id,
-                                name: newName
+                                id: id_jabatan_non
                             },
+                            dataType: "json",
                             success: function(response) {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data Jabatan Non Majelis berhasil diupdate!'
+                                    title: 'Data Jabatan Non Majelis berhasil Dihapus!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
                                 alert.fire({
                                     icon: 'error',
-                                    title: 'Data Jabatan Non Majelis gagal diupdate!'
+                                    title: 'Data Jabatan Non Majelis gagal dihapus!'
                                 });
                             }
                         });
@@ -235,47 +395,12 @@
             });
         });
 
-        $(document).on('click', '.btn-delete', function() {
-            event.preventDefault();
-            var id = $(this).data('id');
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: `/delete/${id}`,
-                        type: 'DELETE',
-                        success: function(response) {
-                            alert.fire({
-                                icon: 'success',
-                                title: 'Data Jabatan Non Majelis berhasil Dihapus!'
-                            });
-                            $table.bootstrapTable('refresh');
-                        },
-                        error: function(xhr, status, error) {
-                            alert.fire({
-                                icon: 'error',
-                                title: 'Data Jabatan Non Majelis gagal dihapus!'
-                            });
-                        }
-                    });
-                }
-            });
-        });
-
         function ApiGetJabatanNonMajelis(params) {
             $.ajax({
-                type: "GET",
-                url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                type: "POST",
+                url: "{{ route('api.get.jabatan-non-majelis') }}",
                 data: {
-                    // _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}'
                 },
                 dataType: "json",
                 success: function(data) {

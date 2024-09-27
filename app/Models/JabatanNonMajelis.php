@@ -13,6 +13,7 @@ class JabatanNonMajelis extends Model
     protected $primaryKey = 'id_jabatan_non';
 
     protected $fillable = [
+        'id_jabatan_non',
         'jabatan_nonmajelis',
         'periode',
     ];

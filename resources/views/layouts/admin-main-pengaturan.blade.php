@@ -2,7 +2,7 @@
 
 @section('main-content')
     <!-- Page Heading -->
-    <h1 class="h3 mb-3 text-gray-800">{{ __('Pengaturan') }}</h1>
+    <h1 class="h3 mb-3 text-gray-800">{{ __('Data') }}</h1>
 
     <!-- Main Content goes here -->
     <div class="card shadow">

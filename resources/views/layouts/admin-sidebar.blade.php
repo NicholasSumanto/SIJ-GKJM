@@ -43,8 +43,8 @@
             </a>
         </li>
         <!-- Nav Item -->
-        <li class="nav-item">
-            <a class="nav-link" href="">
+        <li class="nav-item {{ Nav::isRoute('admin.transaksi.*') }}">
+            <a class="nav-link" href="{{ route('admin.transaksi.pernikahan') }}">
                 <i class="fa-solid fa-right-left"></i>
                 <span>{{ __('Transaksi') }}</span>
             </a>

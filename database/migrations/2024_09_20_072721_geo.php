@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kabupaten', function (Blueprint $table) {
-            $table->id('id_kabupaten');
+            $table->id('id_kabupaten')->primary();
             $table->unsignedBigInteger("id_provinsi");
             $table->string("kabupaten",100);
             $table->foreign('id_provinsi')->references('id_provinsi')->on('provinsi')
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('kecamatan', function (Blueprint $table) {
-            $table->id('id_kecamatan');
+            $table->id('id_kecamatan')->primary();
             $table->unsignedBigInteger("id_kabupaten");
             $table->string("kecamatan");
             $table->foreign('id_kabupaten')->references('id_kabupaten')->on('kabupaten')
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('kelurahan', function (Blueprint $table) {
-            $table->id('id_kelurahan');
+            $table->id('id_kelurahan')->primary();
             $table->unsignedBigInteger("id_kecamatan");
             $table->string("kelurahan");
             $table->foreign('id_kecamatan')->references('id_kecamatan')->on('kecamatan')

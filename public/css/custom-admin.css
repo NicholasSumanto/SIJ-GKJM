@@ -12,3 +12,16 @@ div#swal2-html-container.swal2-html-container {
     word-wrap: break-word;
     word-break: break-word;
 }
+
+.swal2-confirm.swal2-styled {
+    background-color: #01ba4b;
+}
+
+.text-delete {
+    text-align: center !important;
+    font-weight: normal !important;
+}
+
+.btn-warning {
+    color: #ffff;
+}
