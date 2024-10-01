@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\JemaatTitipan;
 use App\Models\Wilayah;
-use App\Models\Status;
 use App\Models\Kelurahan;
 use App\Models\Kecamatan;
 use App\Models\Kabupaten;
@@ -22,11 +21,10 @@ class JemaatTitipanFactory extends Factory
     {
         return [
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
-            'id_status' => Status::inRandomOrder()->first()->id_status,
             'nama_jemaat' => $this->faker->name,
             'tempat_lahir' => $this->faker->city,
             'tanggal_lahir' => $this->faker->date,
-            'agama' => $this->faker->randomElement(['Kristen','Katholik','Islam','Buddha','Hindu','Khonghucu','Lainnya']),
+            'agama' => $this->faker->randomElement(['Kristen']),
             'kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
             'alamat_jemaat' => $this->faker->address,
             'alamat_domisili' => $this->faker->address,

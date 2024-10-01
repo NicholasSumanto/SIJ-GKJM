@@ -14,7 +14,6 @@ class JemaatTitipan extends Model
 
     protected $fillable = [
         'id_wilayah',
-        'id_status',
         'nama_jemaat',
         'tempat_lahir',
         'tanggal_lahir',
@@ -52,11 +51,6 @@ class JemaatTitipan extends Model
     public function wilayah()
     {
         return $this->belongsTo(Wilayah::class, 'id_wilayah');
-    }
-
-    public function status()
-    {
-        return $this->belongsTo(Status::class, 'id_status');
     }
 
     public function kelurahan()

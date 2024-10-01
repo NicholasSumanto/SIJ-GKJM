@@ -31,7 +31,7 @@ class JemaatFactory extends Factory
             'nama_jemaat' => $this->faker->name(),
             'tempat_lahir' => $this->faker->city(),
             'tanggal_lahir' => $this->faker->date(),
-            'agama' => $this->faker->randomElement(['Kristen', 'Katolik']),
+            'agama' => $this->faker->randomElement(['Kristen']),
             'kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
             'alamat_jemaat' => $this->faker->address(),
             'id_provinsi' => Provinsi::inRandomOrder()->first()->id_provinsi,

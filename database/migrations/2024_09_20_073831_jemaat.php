@@ -87,7 +87,6 @@ return new class extends Migration
         Schema::create('jemaat_titipan', function (Blueprint $table) {
             $table->id('id_titipan')->primary();
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
-            $table->bigInteger('id_status')->unsigned()->nullable();
             $table->string('nama_jemaat', 200);
             $table->string('tempat_lahir', 100);
             $table->date('tanggal_lahir');
@@ -121,7 +120,6 @@ return new class extends Migration
             $table->string('surat', 100);
             $table->timestamps();
             $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_kelurahan')->references('id_kelurahan')->on('kelurahan')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_kecamatan')->references('id_kecamatan')->on('kecamatan')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_kabupaten')->references('id_kabupaten')->on('kabupaten')->onUpdate('cascade')->onDelete('set null');
@@ -163,8 +161,45 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('majelis', function (Blueprint $table) {
+            $table->id('id_majelis')->primary();
+            $table->string('nama_majelis');
+            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->bigInteger('id_gereja')->unsigned()->nullable();
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->bigInteger('id_jabatan')->unsigned()->nullable();
+            $table->bigInteger('id_status')->unsigned()->nullable();
+            $table->string('no_sk');
+            $table->string('berkas');
+            $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_jabatan')->references('id_jabatan')->on('jabatan_majelis')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
+            $table->timestamps();
+        });
 
+        Schema::create('nonmajelis', function (Blueprint $table) {
+            $table->id('id_nonmajelis')->primary();
+            $table->string('nama_majelis_non',);
+            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->bigInteger('id_gereja')->unsigned()->nullable();
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->bigInteger('id_jabatan_non')->unsigned()->nullable();
+            $table->bigInteger('id_status')->unsigned()->nullable();
+            $table->string('no_sk');
+            $table->string('berkas');
+            $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_jabatan_non')->references('id_jabatan_non')->on('jabatan_nonmajelis')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
+            $table->timestamps();
+        });
     }
+
+
+
 
 
 
@@ -179,5 +214,7 @@ return new class extends Migration
         Schema::dropIfExists('keluarga');
         Schema::dropIfExists('keluarga_detil');
         Schema::dropIfExists('kematian');
+        Schema::dropIfExists('nonmajelis');
+        Schema::dropIfExists('majelis');
     }
 };

@@ -18,7 +18,7 @@ class BaptisDewasa extends Model
         'nomor',
         'nama',
         'tempat_lahir',
-        'tangal_lahir',
+        'tanggal_lahir',
         'ayah',
         'ibu',
         'tanggal_baptis',
