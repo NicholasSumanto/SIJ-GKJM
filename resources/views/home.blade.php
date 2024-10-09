@@ -25,7 +25,7 @@
         <select id="Kelamin" name="Kelamin" onchange="this.form.submit()">
             <option value="">All</option>
             <option value="Laki-laki" {{ request('Kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-            <option value="Perempuan" {{ request('Kelamin') == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
+            <option value="Perempuan" {{ request('Kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
         </select>
     </form>
 
@@ -34,24 +34,24 @@
             <div class="col-md-4">
                 <br>
                 <h4>Jemaat per Wilayah</h4>
-                <canvas id="chartJemaatPerWilayah" style="width:100%; height:350px;"></canvas>
+                <canvas id="chartJemaatPerWilayah" style="width:100%; height:200px;"></canvas>
             </div>
             <div class="col-md-4">
                 <br>
                 <h4>Jemaat Meninggal</h4>
-                <canvas id="chartKeluarMasuk" style="width:100%; height:350px;"></canvas>
+                <canvas id="chartKeluarMasuk" style="width:100%; height:200px;"></canvas>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <br>
                 <h4>Baptisan</h4>
-                <canvas id="chartBaptis" style="width:100%; height:350px;"></canvas>
+                <canvas id="chartBaptis" style="width:100%; height:200px;"></canvas>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <br>
                 <h4>Pendidikan</h4>
-                <canvas id="chartPendidikan" style="width:100%; height:350px;"></canvas>
+                <canvas id="chartPendidikan" style="width:100%; height:100px;"></canvas>
             </div>
         </div>            
     </div>
@@ -189,10 +189,10 @@
     const pendidikan = new Chart(chart4, {
         type: 'pie',  
         data: {
-            labels: @json($labelJemaat),
+            labels: @json($labelPendidikan),
             datasets: [{
-                label: '',
-                data: @json($pendidikan),  
+                label: 'kkm',
+                data: @json($isiPendidikan),  
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1

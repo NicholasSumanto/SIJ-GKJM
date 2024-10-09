@@ -39,12 +39,6 @@ class HomeController extends Controller
             //...
         ];
         $gender = $request->input('Kelamin');
-        $jumlahJemaat = Jemaat::selectRaw('id_wilayah, COUNT(*) as jumlah')
-            ->when($gender, function ($query, $gender) {
-                return $query->where('Kelamin', $gender); 
-            })
-            ->groupBy('id_wilayah')
-            ->get();
         $jemaatMeninggal = Kematian::selectRaw('MONTH(tanggal_meninggal) as bulan, COUNT(*) as jumlah')
             ->join('jemaat', 'kematian.id_jemaat', '=', 'jemaat.id_jemaat')
             ->when($gender, function ($query, $gender) {
@@ -87,15 +81,32 @@ class HomeController extends Controller
             })
             ->groupBy('bulan')
             ->get();
-        $pendidikan = Jemaat::selectRaw('pendidikan.pendidikan as tingkatan, COUNT(*) as jumlah')
-            ->join('pendidikan', 'pendidikan.id_pendidikan', '=', 'jemaat.id_pendidikan')
+        $jumlahJemaat = Jemaat::selectRaw('wilayah.nama_wilayah as wil, COUNT(jemaat.id_wilayah) as jumlah')
+            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') 
+            ->when($gender, function ($query, $gender) {
+                return $query->where('jemaat.kelamin', $gender); 
+            })
+            ->groupBy('wil') 
+            ->get();
+        $pendidikan = Jemaat::selectRaw('pendidikan.nama_pendidikan as tingkatan, COUNT(jemaat.id_pendidikan) as jumlah')
+            ->join('pendidikan', 'jemaat.id_pendidikan','=','pendidikan.id_pendidikan' )
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
             ->groupBy('tingkatan')
             ->get();
+        $monthNames = [1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'];
 
-        $labelJemaat = $jumlahJemaat->pluck('id_wilayah');  
+        $jemaatMeninggal = $jemaatMeninggal->map(function($item) use ($monthNames) {
+            $item->bulan = $monthNames[$item->bulan];
+            return $item;
+        });
+        $baptisAnak = $baptisAnak->map(function($item) use ($monthNames) {
+            $item->bulan = $monthNames[$item->bulan];
+            return $item;
+        });
+
+        $labelJemaat = $jumlahJemaat->pluck('wil');  
         $isiJemaat = $jumlahJemaat->pluck('jumlah');
         $labelBulan = $jemaatMeninggal->pluck('bulan');  
         $isiKematian = $jemaatMeninggal->pluck('jumlah');
@@ -105,7 +116,7 @@ class HomeController extends Controller
         $labelBaptis = $baptisAnak->pluck('bulan');
         $isiMasuk = $atestasiMasuk->pluck('jumlah');
         $isiKeluar = $atestasiKeluar->pluck('jumlah');; 
-        $pendidikan = $pendidikan->pluck('jumlah');
+        $isiPendidikan = $pendidikan->pluck('jumlah');
         $labelPendidikan =$pendidikan->pluck('tingkatan');
         // Pass the filtered data to your view
         $data = [
@@ -119,6 +130,6 @@ class HomeController extends Controller
             'atestasiKeluar' => $atestasiKeluar->toArray(),
             'pendidikan' => $pendidikan ->toArray(),
         ];
-        return view('home',compact('labelJemaat','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','pendidikan'), $data);
+        return view('home',compact('labelJemaat','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan'), $data);
     }
 }

@@ -28,7 +28,7 @@ return new class extends Migration
         });
         Schema::create('pendidikan', function (Blueprint $table) {
             $table->id('id_pendidikan')->primary();
-            $table->string("pendidikan");
+            $table->string("nama_pendidikan");
             $table->timestamps();
         });
         Schema::create('pekerjaan', function (Blueprint $table) {
