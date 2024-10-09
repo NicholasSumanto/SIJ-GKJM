@@ -41,25 +41,19 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id',
-                    title: 'No'
-                }, {
-                    field: 'name',
+                    field: 'username',
                     title: 'User'
                 }, {
-                    field: 'name',
+                    field: 'nama_user',
                     title: 'Nama User'
                 }, {
-                    field: 'name',
-                    title: 'Level Admin'
-                }, {
-                    field: 'name',
-                    title: 'Wilayah'
+                    field: 'role',
+                    title: 'Role Admin'
                 }, {
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-warning btn-edit" data-no="${row.id}" data-user="${row.name}" data-nama-user="${name}" data-level-admin="${name}" data-wilayah="${name}" style="color: #ffff;">Edit</button>`;
+                        return `<button class="btn btn-warning btn-edit" data-no="${row.id}" data-user="${row.name}" data-nama-user="${row.name}" data-level-admin="${row.name}" data-wilayah="${row.name}" style="color: #ffff;">Edit</button>`;
                     },
                     align: 'center'
                 }, {
@@ -71,7 +65,7 @@
                     align: 'center'
                 }],
                 exportOptions: {
-                    columns: [0, 1]
+                    ignoreCoulomn: [3, 4]
                 }
             });
 
@@ -86,235 +80,411 @@
                         checkbox: true,
                         visible: exportDataType === 'selected'
                     }, {
-                        field: 'id',
-                        title: 'No'
-                    }, {
-                        field: 'name',
+                        field: 'username',
                         title: 'User'
                     }, {
-                        field: 'name',
+                        field: 'nama_user',
                         title: 'Nama User'
                     }, {
-                        field: 'name',
-                        title: 'Level Admin'
-                    }, {
-                        field: 'name',
-                        title: 'Wilayah'
+                        field: 'role',
+                        title: 'Role Admin'
                     }, {
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-no="${row.id}" data-user="${row.name}" data-nama-user="${row.name}" data-level-admin="${row.name}" data-wilayah="${row.name}" style="color: #ffff;">Edit</button>`;
+                            return `<button class="btn btn-warning btn-edit" data-username="${row.username}" style="color: #ffff;">Edit</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-username="${row.username}">Delete</button>`;
                         },
                         align: 'center'
-                    }]
+                    }],
+                    exportOptions: {
+                        ignoreCoulomn: [3, 4]
+                    }
                 });
             }).trigger('change');
 
             // Event listener untuk tombol tambah User Admin
             $('.tambah-user-admin').on('click', function() {
                 event.preventDefault();
+
                 Swal.fire({
                     title: 'Tambah User Admin Baru',
                     html: `
                         <form id="addUserAdminForm">
                             <div class="form-group">
-                                <label for="noUserAdmin">ID User Admin</label>
-                                <input type="text" id="noUserAdmin" class="form-control" placeholder="Masukkan Nomor User Admin">
+                                <label for="username">Username *</label>
+                                <input type="text" id="username" class="form-control" placeholder="Masukkan Username" required>
                             </div>
                             <div class="form-group">
-                                <label for="userAdmin">User Admin</label>
-                                <input type="text" id="userAdmin" class="form-control" placeholder="Masukkan User Admin">
+                                <label for="nama_user">Nama User *</label>
+                                <input type="text" id="nama_user" class="form-control" placeholder="Masukkan Nama User" required>
                             </div>
                             <div class="form-group">
-                                <label for="namaUserAdmin">Nama User Admin</label>
-                                <input type="text" id="namaUserAdmin" class="form-control" placeholder="Masukkan Nama User Admin">
+                                <label for="password">Password User *</label>
+                                <input type="password" id="password" class="form-control" placeholder="Masukkan Password User" required>
                             </div>
                             <div class="form-group">
-                                <label for="levelUserAdmin">Level User Admin</label>
-                                <input type="text" id="levelUserAdmin" class="form-control" placeholder="Masukkan Level User Admin">
+                                <label for="ulangi_password">Ulangi Password User *</label>
+                                <input type="password" id="ulangi_password" class="form-control" placeholder="Ulang Password User" required>
                             </div>
                             <div class="form-group mb-0">
-                                <label for="wilayahUserAdmin">Wilayah</label>
-                                <input type="text" id="wilayahUserAdmin" class="form-control" placeholder="Masukkan Wilayah User Admin">
+                                <label for="role_user">Role User *</label>
+                                <select id="role_user" class="form-control" required>
+                                    <option value="">Pilih Role User</option>
+                                    <!-- AJAX -->
+                                </select>
+                                <div id="new-role-container" style="margin-top: 10px; display: none;">
+                                    <input type="text" id="new_role" class="form-control" placeholder="Masukkan Role Baru">
+                                </div>
                             </div>
                         </form>
                     `,
                     showCancelButton: true,
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
-                    preConfirm: () => {
-                        const noUserAdmin = $('#noUserAdmin').val();
-                        const userAdmin = $('#userAdmin').val();
-                        const namaUserAdmin = $('#namaUserAdmin').val();
-                        const levelUserAdmin = $('#levelUserAdmin').val();
-                        const wilayahUserAdmin = $('#wilayahUserAdmin').val();
-
-                        // Validasi input
-                        if (!noUserAdmin || !userAdmin || !namaUserAdmin || !levelUserAdmin || !
-                            wilayahUserAdmin) {
-                            Swal.showValidationMessage(
-                                'Seluruh data User Admin harus diisi!'
-                            );
-                            return false;
-                        }
-
-                        return {
-                            noUserAdmin: noUserAdmin,
-                            userAdmin: userAdmin,
-                            namaUserAdmin: namaUserAdmin,
-                            levelUserAdmin: levelUserAdmin,
-                            wilayahUserAdmin: wilayahUserAdmin
-                        };
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Ambil data dari result.value
-                        const {
-                            noUserAdmin,
-                            userAdmin,
-                            namaUserAdmin,
-                            levelUserAdmin,
-                            wilayahUserAdmin
-                        } = result.value;
-
-                        // AJAX request untuk menambah User Admin
+                    didOpen: () => {
                         $.ajax({
-                            url: '/add-user0-admin',
-                            type: 'POST',
+                            url: "{{ route('api.get.roles') }}",
+                            type: "POST",
                             data: {
-                                _token: '{{ csrf_token() }}',
-                                noUserAdmin: noUserAdmin,
-                                userAdmin: userAdmin,
-                                namaUserAdmin: namaUserAdmin,
-                                levelUserAdmin: levelUserAdmin,
-                                wilayahUserAdmin: wilayahUserAdmin
+                                _token: '{{ csrf_token() }}'
                             },
+                            dataType: "json",
                             success: function(response) {
-                                alert.fire({
-                                    icon: 'success',
-                                    title: 'Data User Admin berhasil ditambahkan!'
+                                const $roleSelect = $('#role_user');
+                                response.rows.forEach(function(role) {
+                                    $roleSelect.append(
+                                        `<option value="${role.id_role}">${role.nama_role}</option>`
+                                    );
                                 });
+                                $roleSelect.append(
+                                    '<option value="add-new-role">+ Tambah Role Baru</option>'
+                                );
                             },
                             error: function(xhr, status, error) {
-                                alert.fire({
-                                    icon: 'error',
-                                    title: 'Terjadi keslahan saat menambahkan data User Admin!'
-                                });
+                                Swal.fire('Error', 'Gagal memuat data role user',
+                                    'error');
                             }
                         });
-                    }
-                });
-            });
 
-            // Event listener untuk tombol edit
-            $(document).on('click', '.btn-edit', function() {
-                event.preventDefault();
-                var id = $(this).data('no');
-                var user = $(this).data('user');
-                var namaUser = $(this).data('nama-user');
-                var levelAdmin = $(this).data('level-admin');
-                var wilayah = $(this).data('wilayah');
-
-                Swal.fire({
-                    title: 'Edit Jabatan Majelis',
-                    html: `
-                        <form id="addUserAdminForm">
-                            <div class="form-group">
-                                <label for="noUserAdmin">ID User Admin</label>
-                                <input type="text" id="noUserAdmin" class="form-control" placeholder="Masukkan Nomor User Admin" value="${id}" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="userAdmin">User Admin</label>
-                                <input type="text" id="userAdmin" class="form-control" placeholder="Masukkan User Admin" value="${user}">
-                            </div>
-                            <div class="form-group">
-                                <label for="namaUserAdmin">Nama User Admin</label>
-                                <input type="text" id="namaUserAdmin" class="form-control" placeholder="Masukkan Nama User Admin" value="${namaUser}">
-                            </div>
-                            <div class="form-group">
-                                <label for="levelUserAdmin">Level User Admin</label>
-                                <input type="text" id="levelUserAdmin" class="form-control" placeholder="Masukkan Level User Admin" value="${levelAdmin}">
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="wilayahUserAdmin">Wilayah</label>
-                                <input type="text" id="wilayahUserAdmin" class="form-control" placeholder="Masukkan Wilayah User Admin" value="${wilayah}">
-                            </div>
-                        </form>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Save',
-                    cancelButtonText: 'Cancel',
+                        // Event ketika opsi tambah role baru dipilih
+                        $('#role').on('change', function() {
+                            const selectedValue = $(this).val();
+                            if (selectedValue === 'add-new-role') {
+                                $('#new-role-container').show();
+                                $('#new-role').value('');
+                            } else {
+                                $('#new-role-container').hide();
+                                $('#new-role').value('');
+                            }
+                        });
+                    },
                     preConfirm: () => {
-                        const noUserAdmin = $('#noUserAdmin').val();
-                        const userAdmin = $('#userAdmin').val();
-                        const namaUserAdmin = $('#namaUserAdmin').val();
-                        const levelUserAdmin = $('#levelUserAdmin').val();
-                        const wilayahUserAdmin = $('#wilayahUserAdmin').val();
+                        const username = $('#username').val();
+                        const nama_user = $('#nama_user').val();
+                        const role_user = $('#role_user').val();
+                        const new_role = $('#new_role').val();
+                        const password = $('#password').val();
+                        const ulangi_password = $('#ulangi_password').val();
 
                         // Validasi input
-                        if (!noUserAdmin || !userAdmin || !namaUserAdmin || !levelUserAdmin || !
-                            wilayahUserAdmin) {
+                        if (!username || !nama_user || !role_user) {
                             Swal.showValidationMessage(
-                                'Seluruh data User Admin harus diisi!'
-                            );
+                                'Terdapat bagian yang tidak valid atau belum diisi!');
                             return false;
                         }
 
-                        return {
-                            noUserAdmin: noUserAdmin,
-                            userAdmin: userAdmin,
-                            namaUserAdmin: namaUserAdmin,
-                            levelUserAdmin: levelUserAdmin,
-                            wilayahUserAdmin: wilayahUserAdmin
-                        };
+                        if (password !== ulangi_password) {
+                            Swal.showValidationMessage('Password tidak sama!');
+                            return false;
+                        }
+
+                        if (password.lenght < 8) {
+                            Swal.showValidationMessage('Password minimal 8 karakter!');
+                            return false;
+                        }
+
+                        // Jika user memilih tambah role baru tapi tidak mengisi nama role
+                        if (role_user === 'add-new-role' && !new_role) {
+                            Swal.showValidationMessage('Nama Role baru belum diisi!');
+                            return false;
+                        }
+
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('api.get.user-admin') }}",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    username: username
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.total > 0) {
+                                        reject(
+                                            'Username sudah ada, silahkan gunakan Username lain!'
+                                        );
+                                    } else {
+                                        resolve({
+                                            username: username,
+                                            nama_user: nama_user,
+                                            role_user: role_user ===
+                                                'add-new-role' ?
+                                                '' : role_user,
+                                            new_role: new_role ===
+                                                '' ?
+                                                '' : new_role,
+                                            password: password
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    reject(
+                                        'Terjadi kesalahan saat memvalidasi ID jabatan majelis.'
+                                    );
+                                }
+                            });
+                        }).catch(error => {
+                            Swal.showValidationMessage(error);
+                        });
                     }
                 }).then((result) => {
-                    if (result.isConfirmed) {
+                    if (result.isConfirmed && result.value) {
                         const {
-                            noUserAdmin,
-                            userAdmin,
-                            namaUserAdmin,
-                            levelUserAdmin,
-                            wilayahUserAdmin
+                            username,
+                            nama_user,
+                            role_user,
+                            new_role,
+                            password
                         } = result.value;
 
-                        // Contoh: Update menggunakan AJAX
                         $.ajax({
-                            url: `/edit/${id}`,
+                            url: "{{ route('api.post.user') }}",
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                noUserAdmin: noUserAdmin,
-                                userAdmin: userAdmin,
-                                namaUserAdmin: namaUserAdmin,
-                                levelUserAdmin: levelUserAdmin,
-                                wilayahUserAdmin: wilayahUserAdmin
+                                username: username,
+                                nama_user: nama_user,
+                                role_user: role_user,
+                                new_role: new_role,
+                                password: password
                             },
                             success: function(response) {
-                                alert.fire({
+                                Swal.fire({
                                     icon: 'success',
-                                    title: 'Data User Admin berhasil diupdate!'
+                                    title: 'Data user admin berhasil ditambahkan!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
-                                alert.fire({
+                                Swal.fire({
                                     icon: 'error',
-                                    title: 'Data User Admin gagal diupdate!'
+                                    title: 'Data user admin gagal ditambahkan!'
                                 });
                             }
                         });
                     }
                 });
             });
+
+
+            // Event listener untuk tombol edit
+            $(document).on('click', '.btn-edit', function() {
+                var old_username = $(this).data('username'); // Fix typo
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('api.get.user-admin') }}",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        username: old_username
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        var username = response.rows[0].username;
+                        var nama_user = response.rows[0].nama_user;
+                        var role = response.rows[0].role;
+
+                        Swal.fire({
+                            title: 'Edit User Admin',
+                            html: `
+                            <form id="addUserAdminForm">
+                                <div class="form-group">
+                                    <label for="username">Username *</label>
+                                    <input type="text" id="username" class="form-control" placeholder="Masukkan Username" value="${username}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nama_user">Nama User *</label>
+                                    <input type="text" id="nama_user" class="form-control" placeholder="Masukkan Nama User" value="${nama_user}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password User * (Jika Berganti) </label>
+                                    <input type="password" id="password" class="form-control" placeholder="Masukkan Password User" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ulangi_password">Ulangi Password User * (Jika Berganti) </label>
+                                    <input type="password" id="ulangi_password" class="form-control" placeholder="Ulang Password User" required>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label for="role_user">Role User *</label>
+                                    <select id="role_user" class="form-control" required>
+                                        <option value="">Pilih Role User</option>
+                                        <!-- AJAX -->
+                                    </select>
+                                    <div id="new-role-container" style="margin-top: 10px; display: none;">
+                                        <input type="text" id="new_role" class="form-control" placeholder="Masukkan Role Baru">
+                                    </div>
+                                </div>
+                            </form>
+                            `,
+                            showCancelButton: true,
+                            confirmButtonText: 'Simpan',
+                            cancelButtonText: 'Batal',
+                            didOpen: () => {
+                                $.ajax({
+                                    url: "{{ route('api.get.roles') }}",
+                                    type: "POST",
+                                    data: {
+                                        _token: '{{ csrf_token() }}'
+                                    },
+                                    dataType: "json",
+                                    success: function(response) {
+                                        const $roleSelect = $(
+                                            '#role_user');
+                                        response.rows.forEach(function(
+                                            role) {
+                                            $roleSelect.append(
+                                                `<option value="${role.id_role}">${role.nama_role}</option>`
+                                            );
+                                        });
+                                        $roleSelect.append(
+                                            '<option value="add-new-role">+ Tambah Role Baru</option>'
+                                        );
+
+                                        // Pilih role yang sesuai dengan response
+                                        $('#role_user option').filter(
+                                            function() {
+                                                return $(this)
+                                                .text() === role;
+                                            }).prop('selected',
+                                            true);
+                                    },
+                                    error: function(xhr, status, error) {
+                                        Swal.fire('Error',
+                                            'Gagal memuat data role user',
+                                            'error');
+                                    }
+                                });
+
+                                // Event ketika opsi tambah role baru dipilih
+                                $('#role_user').on('change', function() {
+                                    const selectedValue = $(this).val();
+                                    if (selectedValue === 'add-new-role') {
+                                        $('#new-role-container').show();
+                                        $('#new_role').val(
+                                        ''); // Bersihkan input
+                                    } else {
+                                        $('#new-role-container').hide();
+                                        $('#new_role').val('');
+                                    }
+                                });
+                            },
+                            preConfirm: () => {
+                                const username = $('#username').val();
+                                const nama_user = $('#nama_user').val();
+                                const role_user = $('#role_user').val();
+                                const new_role = $('#new_role').val();
+                                const password = $('#password').val();
+                                const ulangi_password = $('#ulangi_password').val();
+
+                                // Validasi input
+                                if (!username || !nama_user || !role_user) {
+                                    Swal.showValidationMessage(
+                                        'Terdapat bagian yang tidak valid atau belum diisi!'
+                                        );
+                                    return false;
+                                }
+
+                                if (password != '' && password !== ulangi_password) {
+                                    Swal.showValidationMessage(
+                                        'Password tidak sama!');
+                                    return false;
+                                }
+
+                                if (password != '' && password.length < 8) {
+                                    Swal.showValidationMessage(
+                                        'Password minimal 8 karakter!');
+                                    return false;
+                                }
+
+                                if (role_user === 'add-new-role' && !new_role) {
+                                    Swal.showValidationMessage(
+                                        'Nama Role baru belum diisi!');
+                                    return false;
+                                }
+
+                                return {
+                                    username: username,
+                                    nama_user: nama_user,
+                                    role_user: role_user === 'add-new-role' ? '' :
+                                        role_user,
+                                    new_role: new_role === '' ? '' : new_role,
+                                    password: password
+                                };
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed && result.value) {
+                                const {
+                                    username,
+                                    nama_user,
+                                    role_user,
+                                    new_role,
+                                    password
+                                } = result.value;
+
+                                $.ajax({
+                                    url: "{{ route('api.update.user') }}",
+                                    type: 'POST',
+                                    data: {
+                                        _token: '{{ csrf_token() }}',
+                                        old_username: old_username,
+                                        username: username,
+                                        nama_user: nama_user,
+                                        role_user: role_user,
+                                        new_role: new_role,
+                                        password: password
+                                    },
+                                    success: function(response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Data user admin berhasil ditambahkan!'
+                                        });
+                                        $table.bootstrapTable('refresh');
+                                    },
+                                    error: function(xhr, status, error) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Data user admin gagal ditambahkan!'
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: " + error);
+                        console.error("Status: " + status);
+                        console.dir(xhr);
+                    }
+                });
+            });
+
         });
 
         $(document).on('click', '.btn-delete', function() {
@@ -354,10 +524,10 @@
 
         function ApiGetUserAdmin(params) {
             $.ajax({
-                type: "GET",
-                url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                type: "POST",
+                url: "{{ route('api.get.user-admin') }}",
                 data: {
-                    // _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}'
                 },
                 dataType: "json",
                 success: function(data) {

@@ -36,8 +36,12 @@ class FortifyServiceProvider extends ServiceProvider
             $user = User::where('username', $request->username)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
-                Auth::login($user);
-                return $user;
+                if($user->id_role === 1){
+                    Auth::login($user);
+                    return $user;
+                } else {
+                    return false;
+                }
             }
         });
         Fortify::createUsersUsing(CreateNewUser::class);

@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule as Rule;
+
 // PENGATURAN
 use App\Models\Wilayah as Wilayah;
 use App\Models\JabatanMajelis as JabatanMajelis;
 use App\Models\JabatanNonMajelis as JabatanNonMajelis;
 use App\Models\User as User;
+use App\Models\RolePengguna as Role;
 use App\Models\Pekerjaan as Pekerjaan;
 // daerah
 
@@ -183,6 +186,42 @@ public function ApiGetUser(Request $request)
     }
 }
 // GET USER END
+
+// GET ROLE USER START
+public function ApiGetRole(Request $request)
+{
+    if ($request->has('id')) {
+        $data = Role::where('id_role', $request->id)->get();
+
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Role::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_role' => $item->id_role,
+                    'nama_role' => $item->nama_role,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    } else {
+        $data = Role::all();
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Role::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_role' => $item->id_role,
+                    'nama_role' => $item->nama_role,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    }
+}
+// GET ROLE USER END
 
 // GET PEKERJAAN
 public function ApiGetPekerjaan(Request $request)
@@ -921,30 +960,48 @@ public function ApiGetBaptisSidi(Request $request) {
 // POST JABATAN NON MAJELIS END
 
 // POST USER
-// public function ApiPostUser(Request $request)
-// {
-//     $validatedData = $request->validate([
-//         'username' => 'required|string|max:255|unique:users',
-//         'nama_user' => 'required|string|max:255',
-//         'role_id' => 'required|exists:roles,id',
-//         'password' => 'required|string|min:6',
-//     ]);
-//     $user = User::create([
-//         'username' => $validatedData['username'],
-//         'nama_user' => $validatedData['nama_user'],
-//         'role_id' => $validatedData['role_id'],
-//         'password' => Hash::make($validatedData['password']),
-//     ]);
+public function ApiPostUser(Request $request)
+{
+    $validatedData = $request->validate([
+        'username' => 'required|string|max:255|unique:users',
+        'nama_user' => 'required|string|max:255',
+        'role_user' => 'string|max:255|nullable',
+        'new_role' => 'strng|max:255|nullable',
+        'password' => 'required|string',
+    ]);
 
-//     return response()->json([
-//         'message' => 'User created successfully',
-//         'user' => [
-//             'username' => $user->username,
-//             'nama_user' => $user->nama_user,
-//             'role' => $user->role ? $user->role->nama_role : null,
-//         ]
-//     ], 201);
-// }
+    if ($validatedData['role_user'] != null) {
+        $role = Role::where('id_role', $validatedData['role_user'])->first();
+        if ($role == null) {
+            return response()->json([
+                'message' => 'Role not found'
+            ], 404);
+        }
+        $validatedData['role_id'] = $validatedData['role_user'];
+    } else {
+        $new_role = Role::create([
+            'nama_role' => $validatedData['new_role']
+        ]);
+        $validatedData['role_id'] = $new_role->id;
+    }
+
+
+    $user = User::create([
+        'username' => $validatedData['username'],
+        'nama_user' => $validatedData['nama_user'],
+        'id_role' => $validatedData['role_id'],
+        'password' => Hash::make($validatedData['password']),
+    ]);
+
+    return response()->json([
+        'message' => 'User created successfully',
+        'user' => [
+            'username' => $user->username,
+            'nama_user' => $user->nama_user,
+            'role' => $user->role ? $user->role->nama_role : null,
+        ]
+    ], 201);
+}
 // POST USER END
 
 // POST PEKERJAAN
@@ -1334,46 +1391,53 @@ public function ApiUpdateJabatanNonMajelis(Request $request)
 // UPDATE JABATAN NON MAJELIS END
 
 // UPDATE USER
-// public function ApiUpdateUser(Request $request)
-// {
-//     $validatedData = $request->validate([
-//         'id' => 'required|exists:users,id', // Validate that the user exists
-//         'username' => 'sometimes|string|max:255|unique:users,username,' . $request->id,
-//         'nama_user' => 'sometimes|string|max:255',
-//         'role_id' => 'sometimes|exists:roles,id', // Assuming you have a role relationship
-//         'password' => 'sometimes|string|min:6', // Password validation
-//     ]);
 
-//     // Find the user and update
-//     $user = User::find($validatedData['id']);
+public function ApiUpdateUser(Request $request)
+{
+    $validatedData = $request->validate([
+        'old_username' => 'required|string|max:255',
+        'username' => 'required|string|max:255',
+        'nama_user' => 'required|string|max:255',
+        'role_user' => 'string|max:255|nullable',
+        'new_role' => 'strng|max:255|nullable',
+        'password' => 'string|nullable',
+    ]);
 
-//     if (isset($validatedData['username'])) {
-//         $user->username = $validatedData['username'];
-//     }
+    $user = User::find($validatedData['old_username']);
 
-//     if (isset($validatedData['nama_user'])) {
-//         $user->nama_user = $validatedData['nama_user'];
-//     }
+    if ($validatedData['role_user'] != null) {
+        $role = Role::where('id_role', $validatedData['role_user'])->first();
+        if ($role == null) {
+            return response()->json([
+                'message' => 'Role not found'
+            ], 404);
+        }
+        $validatedData['role_id'] = $validatedData['role_user'];
+    } else {
+        $new_role = Role::create([
+            'nama_role' => $validatedData['new_role']
+        ]);
+        $validatedData['role_id'] = $new_role->id;
+    }
 
-//     if (isset($validatedData['role_id'])) {
-//         $user->role_id = $validatedData['role_id'];
-//     }
+    $user->username = $validatedData['username'];
+    $user->nama_user = $validatedData['nama_user'];
+    $user->id_role = $validatedData['role_id'];
+    if (isset($validatedData['password'])) {
+        $user->password = Hash::make($validatedData['password']);
+    }
 
-//     if (isset($validatedData['password'])) {
-//         $user->password = Hash::make($validatedData['password']); // Hash the new password
-//     }
+    $user->save();
 
-//     $user->save();
-
-//     return response()->json([
-//         'message' => 'User updated successfully',
-//         'user' => [
-//             'username' => $user->username,
-//             'nama_user' => $user->nama_user,
-//             'role' => $user->role ? $user->role->nama_role : null,
-//         ]
-//     ]);
-// }
+    return response()->json([
+        'message' => 'User created successfully',
+        'user' => [
+            'username' => $user->username,
+            'nama_user' => $user->nama_user,
+            'role' => $user->role ? $user->role->nama_role : null,
+        ]
+    ], 201);
+}
 // UPDATE USER END
 
 // UPDATE PEKERJAAN

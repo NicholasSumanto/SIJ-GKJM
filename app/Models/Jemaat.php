@@ -19,7 +19,6 @@ class Jemaat extends Model
         'nama_jemaat',
         'tempat_lahir',
         'tanggal_lahir',
-        'agama',
         'kelamin',
         'alamat_jemaat',
         'id_kelurahan',

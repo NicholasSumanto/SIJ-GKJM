@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
         ],
 
+        'adminWilayah' => [
+            'driver' => 'session',
+            'provider' => 'adminWilayah',
+        ],
+
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
@@ -69,7 +74,15 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
+            'conditions' => [
+                'id_role' => 1,
+            ],
         ],
+
+        'adminWilayah' => [
+            'driver' => 'eloquent',
+            'model' => App\User::class,
+        ]
 
         // 'users' => [
         //     'driver' => 'database',

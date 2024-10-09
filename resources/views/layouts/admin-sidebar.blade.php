@@ -24,7 +24,7 @@
 
         <!-- Heading -->
         <div class="sidebar-heading">
-            {{ __('Settings') }}
+            {{ __('Tambahan') }}
         </div>
 
         <!-- Nav Item -->

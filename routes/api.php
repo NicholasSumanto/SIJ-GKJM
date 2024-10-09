@@ -25,7 +25,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/get/wilayah', [ApiController::class, 'ApiGetWilayah'])-> name('api.get.wilayah');
 Route::post('/get/jabatan-majelis', [ApiController::class, 'ApiGetJabatanMajelis'])-> name('api.get.jabatan-majelis');
 Route::post('/get/jabatan-non-majelis', [ApiController::class, 'ApiGetJabatanNonMajelis'])-> name('api.get.jabatan-non-majelis');
-Route::post('/get/user', [ApiController::class, 'ApiGetUser'])-> name('api.get.User');
+Route::post('/get/user', [ApiController::class, 'ApiGetUser'])-> name('api.get.user-admin');
+Route::post('/get/role', [ApiController::class, 'ApiGetRole'])-> name('api.get.roles');
 Route::post('/get/pekerjaan', [ApiController::class, 'ApiGetPekerjaan'])-> name('api.get.pekerjaan');
 //daerah
     //Data
@@ -42,14 +43,12 @@ Route::post('/get/baptisanak', [ApiController::class, 'ApiGetbaptisAnak'])-> nam
 Route::post('/get/baptisdewasa', [ApiController::class, 'ApiGetbaptisDewasa'])-> name('api.get.baptisdewasa');
 Route::post('/get/baptissidi', [ApiController::class, 'ApiGetbaptisSidi'])-> name('api.get.baptissidi');
 
-
-
 // POST
     //Pengaturan
 Route::post('/post/wilayah', [ApiController::class, 'ApiPostWilayah'])-> name('api.post.wilayah');
 Route::post('/post/jabatan-majelis', [ApiController::class, 'ApiPostJabatanMajelis'])-> name('api.post.jabatan-majelis');
 Route::post('/post/jabatan-non-majelis', [ApiController::class, 'ApiPostJabatanNonMajelis'])-> name('api.post.jabatan-non-majelis');
-// Route::post('/post/user', [ApiController::class, 'ApiPostUser'])-> name('api.post.User');
+Route::post('/post/user', [ApiController::class, 'ApiPostUser'])-> name('api.post.user');
 Route::post('/post/pekerjaan', [ApiController::class, 'ApiPostPekerjaan'])-> name('api.post.pekerjaan');
     //Data
 Route::post('/post/jemaat', [ApiController::class, 'ApiPostJemaat'])-> name('api.post.jemaat');
@@ -70,7 +69,7 @@ Route::post('/post/baptissidi', [ApiController::class, 'ApiPostbaptisSidi'])-> n
 Route::post('/update/wilayah', [ApiController::class, 'ApiUpdateWilayah'])-> name('api.update.wilayah');
 Route::post('/update/jabatan-majelis', [ApiController::class, 'ApiUpdateJabatanMajelis'])-> name('api.update.jabatan-majelis');
 Route::post('/update/jabatan-non-majelis', [ApiController::class, 'ApiUpdateJabatanNonMajelis'])-> name('api.update.jabatan-non-majelis');
-// Route::post('/update/user', [ApiController::class, 'ApiUpdateUser'])-> name('api.update.User');
+Route::post('/update/user', [ApiController::class, 'ApiUpdateUser'])-> name('api.update.user');
 Route::post('/update/pekerjaan', [ApiController::class, 'ApiUpdatePekerjaan'])-> name('api.update.pekerjaan');
 //daerah
     //Data

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('atestasi_keluar', function (Blueprint $table) {
             $table->id('id_keluar')->primary();
-            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->string('no_surat');
@@ -26,7 +26,7 @@ return new class extends Migration
         });
         Schema::create('atestasi_keluar_dtl', function (Blueprint $table) {
             $table->id('id_keluar')->primary();
-            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->unsignedInteger('id_jemaat')->nullable();
             $table->string('keterangan');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();

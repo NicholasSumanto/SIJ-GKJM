@@ -24,7 +24,7 @@ class JemaatTitipanFactory extends Factory
             'nama_jemaat' => $this->faker->name,
             'tempat_lahir' => $this->faker->city,
             'tanggal_lahir' => $this->faker->date,
-            'agama' => $this->faker->randomElement(['Kristen']),
+            'agama' => $this->faker->randomElement(['Kristen','Katholik','Islam','Buddha','Hindu','Khonghucu','Lainnya']),
             'kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
             'alamat_jemaat' => $this->faker->address,
             'alamat_domisili' => $this->faker->address,

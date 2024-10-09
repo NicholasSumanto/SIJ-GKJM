@@ -34,14 +34,13 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('jemaat', function (Blueprint $table) {
-            $table->id('id_jemaat')->primary();
+            $table->increments('id_jemaat');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_status')->unsigned()->nullable();
             $table->string('stamboek', 10);
             $table->string('nama_jemaat', 200);
             $table->string('tempat_lahir', 100);
             $table->date('tanggal_lahir');
-            $table->string('agama', 10);
             $table->string('kelamin', 10);
             $table->string('alamat_jemaat');
             $table->bigInteger('id_kelurahan')->unsigned()->nullable();
@@ -131,7 +130,7 @@ return new class extends Migration
 
         Schema::create('keluarga', function (Blueprint $table) {
             $table->id('id_keluarga')->primary();
-            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade')->onDelete('set null');
@@ -140,7 +139,7 @@ return new class extends Migration
 
         Schema::create('keluarga_detil', function (Blueprint $table) {
             $table->id('id_keluarga_detil')->primary();
-            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_keluarga')->unsigned()->nullable();
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_keluarga')->references('id_keluarga')->on('keluarga')->onUpdate('cascade')->onDelete('set null');
@@ -148,7 +147,7 @@ return new class extends Migration
         });
         Schema::create('kematian', function (Blueprint $table) {
             $table->id('id_kematian')->primary();
-            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->date('tanggal_meninggal');
@@ -164,7 +163,7 @@ return new class extends Migration
         Schema::create('majelis', function (Blueprint $table) {
             $table->id('id_majelis')->primary();
             $table->string('nama_majelis');
-            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
@@ -182,7 +181,7 @@ return new class extends Migration
         Schema::create('nonmajelis', function (Blueprint $table) {
             $table->id('id_nonmajelis')->primary();
             $table->string('nama_majelis_non',);
-            $table->bigInteger('id_jemaat')->unsigned()->nullable();
+            $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
