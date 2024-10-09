@@ -23,7 +23,7 @@ class BaptisDewasaFactory extends Factory
             'tanggal_lahir' => $this->faker->date(),
             'ayah' => $this->faker->name('male'),
             'ibu' => $this->faker->name('female'),
-            'tanggal_baptis' => Carbon::now()->subYears(rand(1, 10)),
+            'tanggal_baptis' => Carbon::now()->subMonth(rand(1, 12)),
             'ketua_majelis' => $this->faker->name(),
             'sekretaris_majelis' => $this->faker->name(),
         ];
