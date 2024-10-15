@@ -14,15 +14,15 @@ class MajelisFactory extends Factory
 {
     protected $model = Majelis::class;
 
-    // Store the counters for specific jabatan values
+
     protected static $jabatanCounter = [
-        1 => 0, // Counter for jabatan id 1
-        2 => 0, // Counter for jabatan id 2
+        1 => 0,
+        2 => 0,
     ];
 
     public function definition()
     {
-        // Attempt to fetch a random id_jabatan
+        
         do {
             $id_jabatan = JabatanMajelis::inRandomOrder()->first()->id_jabatan;
         } while (self::isJabatanLimitReached($id_jabatan));
@@ -47,15 +47,13 @@ class MajelisFactory extends Factory
 
     protected static function isJabatanLimitReached($id_jabatan)
     {
-        // Check if the jabatan is 1 or 2 and increment the counter accordingly
+
         if (in_array($id_jabatan, [1, 2])) {
             self::$jabatanCounter[$id_jabatan]++;
-
-            // If the counter exceeds 1, return true to indicate that the limit has been reached
             if (self::$jabatanCounter[$id_jabatan] > 1) {
-                return true; // Limit reached
+                return true;
             }
         }
-        return false; // Limit not reached
+        return false;
     }
 }

@@ -91,7 +91,7 @@ Route::post('/update/baptissidi', [ApiController::class, 'ApiUpdatebaptisSidi'])
 Route::post('/delete/wilayah', [ApiController::class, 'ApiDeleteWilayah'])-> name('api.delete.wilayah');
 Route::post('/delete/jabatan-majelis', [ApiController::class, 'ApiDeleteJabatanMajelis'])-> name('api.delete.jabatan-majelis');
 Route::post('/delete/jabatan-non-majelis', [ApiController::class, 'ApiDeleteJabatanNonMajelis'])-> name('api.delete.jabatan-non-majelis');
-// Route::post('/delete/user', [ApiController::class, 'ApiDeleteUser'])-> name('api.delete.User');
+Route::post('/delete/user', [ApiController::class, 'ApiDeleteUser'])-> name('api.delete.user');
 Route::post('/delete/pekerjaan', [ApiController::class, 'ApiDeletePekerjaan'])-> name('api.delete.pekerjaan');
 //daerah
     //Data

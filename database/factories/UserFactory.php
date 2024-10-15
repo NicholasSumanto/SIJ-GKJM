@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserFactory extends Factory
 {
-    protected $model = \App\Models\User::class; 
+    protected $model = \App\Models\User::class;
 
     public function definition()
     {
         return [
             'username' => $this->faker->unique()->userName(),
             'nama_user' => $this->faker->name(),
-            'password' => Hash::make('password'),
+            'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
         ];
     }

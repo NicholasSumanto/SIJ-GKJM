@@ -1660,23 +1660,23 @@ public function ApiDeleteJabatanNonMajelis(Request $request)
     return response()->json(['message' => 'Jabatan Non Majelis not found'], 404);
 }
 
-// public function ApiDeleteUser(Request $request)
-// {
-//     $validatedData = $request->validate([
-//         'id' => 'required|exists:users,id',
-//     ]);
+public function ApiDeleteUser(Request $request)
+{
+    $validatedData = $request->validate([
+        'username' => 'required|exists:users,username',
+    ]);
 
-//     $user = User::find($validatedData['id']);
-//     if ($user) {
-//         $user->delete();
-//         return response()->json([
-//             'message' => 'User deleted successfully',
-//             'data' => $user
-//         ]);
-//     }
+    $user = User::find($validatedData['username']);
+    if ($user) {
+        $user->delete();
+        return response()->json([
+            'message' => 'User deleted successfully',
+            'data' => $user
+        ]);
+    }
 
-//     return response()->json(['message' => 'User not found'], 404);
-// }
+    return response()->json(['message' => 'User not found'], 404);
+}
 
 public function ApiDeletePekerjaan(Request $request)
 {

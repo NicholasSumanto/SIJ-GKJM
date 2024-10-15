@@ -29,7 +29,7 @@
 
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user" name="username"
-                                                placeholder="{{ __('E-Mail Address') }}" value="{{ old('username') }}"
+                                                placeholder="{{ __('Username') }}" value="{{ old('username') }}"
                                                 required autofocus>
                                         </div>
 

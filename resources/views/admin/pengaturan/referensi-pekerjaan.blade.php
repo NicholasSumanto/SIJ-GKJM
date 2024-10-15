@@ -41,23 +41,23 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id',
-                    title: 'ID Wilayah'
+                    field: 'id_pekerjaan',
+                    title: 'ID Pekerjaan'
                 }, {
-                    field: 'name',
-                    title: 'Nama Jabatan'
+                    field: 'pekerjaan',
+                    title: 'Nama Pekerjaan'
                 }, {
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
+                        return `<button class="btn btn-warning btn-edit" data-id="${row.id_pekerjaan}">Edit</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
+                        return `<button class="btn btn-danger btn-delete" data-id="${row.id_pekerjaan}">Delete</button>`;
                     },
                     align: 'center'
                 }],
@@ -73,27 +73,23 @@
                     exportDataType: exportDataType,
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
-                        field: 'state',
-                        checkbox: true,
-                        visible: exportDataType === 'selected'
+                        field: 'id_pekerjaan',
+                        title: 'ID Pekerjaan'
                     }, {
-                        field: 'id',
-                        title: 'ID'
-                    }, {
-                        field: 'name',
-                        title: 'Nama Jabatan'
+                        field: 'pekerjaan',
+                        title: 'Nama Pekerjaan'
                     }, {
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}" style="color: #ffff;">Edit</button>`;
+                            return `<button class="btn btn-warning btn-edit" data-id="${row.id_pekerjaan}">Edit</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_pekerjaan}">Delete</button>`;
                         },
                         align: 'center'
                     }]
@@ -108,12 +104,12 @@
                     html: `
                         <form id="addReferensiPekerjaan">
                             <div class="form-group">
-                                <label for="idPekerjaan">ID Pekerjaan</label>
-                                <input type="text" id="idPekerjaan" class="form-control" placeholder="Masukkan ID Pekerjaan">
+                                <label for="id_pekerjaan">ID Pekerjaan</label>
+                                <input type="text" id="id_pekerjaan" class="form-control" placeholder="Masukkan ID Pekerjaan">
                             </div>
                             <div class="form-group mb-0">
-                                <label for="namaPekerjaan">Nama Pekerjaan</label>
-                                <input type="text" id="namaPekerjaan" class="form-control" placeholder="Masukkan Nama Pekerjaan">
+                                <label for="nama_pekerjaan">Nama Pekerjaan</label>
+                                <input type="text" id="nama_pekerjaan" class="form-control" placeholder="Masukkan Nama Pekerjaan">
                             </div>
                         </form>
                     `,
@@ -121,37 +117,63 @@
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
                     preConfirm: () => {
-                        const idPekerjaan = $('#idPekerjaan').val();
-                        const namaPekerjaan = $('#namaPekerjaan').val();
+                        const id_pekerjaan = $('#id_pekerjaan').val();
+                        const nama_pekerjaan = $('#nama_pekerjaan').val();
 
                         // Validasi input
-                        if (!idPekerjaan || !namaPekerjaan) {
+                        if (!id_pekerjaan || !nama_pekerjaan) {
                             Swal.showValidationMessage(
-                                'ID Pekerjaan atau Nama Pekerjaan harus diisi!');
+                                'Terdapat bagian yang tidak valid atau belum diisi!');
                             return false;
                         }
 
-                        return {
-                            idPekerjaan: idPekerjaan,
-                            namaPekerjaan: namaPekerjaan
-                        };
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('api.get.pekerjaan') }}",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id: id_pekerjaan
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.total > 0) {
+                                        reject(
+                                            'ID pekerjaan sudah ada, silahkan gunakan ID pekerjaan lain!'
+                                        );
+                                    } else {
+                                        resolve({
+                                            id_pekerjaan: id_pekerjaan,
+                                            nama_pekerjaan: nama_pekerjaan,
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    reject(
+                                        'Terjadi kesalahan saat memvalidasi ID pekerjaan.'
+                                    );
+                                }
+                            });
+                        }).catch(error => {
+                            Swal.showValidationMessage(error);
+                        });
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Ambil data dari result.value
                         const {
-                            idPekerjaan,
-                            namaPekerjaan
+                            id_pekerjaan,
+                            nama_pekerjaan
                         } = result.value;
 
                         // AJAX request untuk menambah wilayah
                         $.ajax({
-                            url: '/add-wilayah',
+                            url: "{{ route('api.post.pekerjaan') }}",
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                idPekerjaan: idPekerjaan,
-                                namaPekerjaan: namaPekerjaan
+                                id_pekerjaan: id_pekerjaan,
+                                nama_pekerjaan: nama_pekerjaan
                             },
                             success: function(response) {
                                 alert.fire({
@@ -175,62 +197,137 @@
             $(document).on('click', '.btn-edit', function() {
                 event.preventDefault();
                 var id = $(this).data('id');
-                var name = $(this).data('name');
 
-                Swal.fire({
-                    title: 'Edit Referensi Pekerjaan',
-                    html: `
-                        <form id="addReferensiPekerjaan">
-                            <div class="form-group">
-                                <label for="idPekerjaan">ID Pekerjaan</label>
-                                <input type="text" id="idPekerjaan" class="form-control" placeholder="Masukkan ID Pekerjaan" value="${id}" disabled>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="namaPekerjaan">Nama Pekerjaan</label>
-                                <input type="text" id="namaPekerjaan" class="form-control" placeholder="Masukkan Nama Pekerjaan" value="${name}">
-                            </div>
-                        </form>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Save',
-                    cancelButtonText: 'Cancel',
-                    preConfirm: () => {
-                        const namaPekerjaan = $('#namaPekerjaan').val();
-                        if (!newName) {
-                            Swal.showValidationMessage('Nama pekerjaan tidak boleh kosong!');
-                            return false;
-                        }
-                        return {
-                            namaPekerjaan: namaPekerjaan
-                        };
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const namaPekerjaan = result.value.namaPekerjaan;
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('api.get.jabatan-non-majelis') }}",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        var id_jabatan_non = response.rows[0].id_jabatan_non;
+                        var jabatan_nonmajelis = response.rows[0].jabatan_nonmajelis;
+                        var periode = response.rows[0].periode;
 
-                        // Contoh: Update menggunakan AJAX
-                        $.ajax({
-                            url: `/edit/${id}`,
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                id: id,
-                                namaPekerjaan: namaPekerjaan
-                            },
-                            success: function(response) {
-                                alert.fire({
-                                    icon: 'success',
-                                    title: 'Data pekerjaan berhasil diubah!'
+                        Swal.fire({
+                            title: 'Edit Jabatan Non Majelis Baru',
+                            html: `
+                                 <form id="editReferensiPekerjaan">
+                                    <div class="form-group">
+                                        <label for="id_pekerjaan">ID Pekerjaan</label>
+                                        <input type="text" id="id_pekerjaan" class="form-control" placeholder="Masukkan ID Pekerjaan">
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <label for="nama_pekerjaan">Nama Pekerjaan</label>
+                                        <input type="text" id="nama_pekerjaan" class="form-control" placeholder="Masukkan Nama Pekerjaan">
+                                    </div>
+                                </form>
+                            `,
+                            showCancelButton: true,
+                            confirmButtonText: 'Save',
+                            cancelButtonText: 'Cancel',
+                            preConfirm: () => {
+                                const id_jabatan_non = $('#id_jabatan_non').val();
+                                const jabatan_nonmajelis = $('#jabatan_nonmajelis')
+                                    .val();
+                                const periode = $('#periode').val();
+
+                                // Validasi input
+                                if (!id_jabatan_non || !jabatan_nonmajelis || !
+                                    periode) {
+                                    Swal.showValidationMessage(
+                                        'Terdapat bagian yang tidak valid atau belum diisi!'
+                                    );
+                                    return false;
+                                }
+
+                                return new Promise((resolve, reject) => {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "{{ route('api.get.jabatan-non-majelis') }}",
+                                        data: {
+                                            _token: '{{ csrf_token() }}',
+                                            id: id_jabatan_non
+                                        },
+                                        dataType: "json",
+                                        success: function(
+                                            response) {
+                                            if (response.total >
+                                                0) {
+                                                if (response
+                                                    .rows[0]
+                                                    .id_jabatan_non !==
+                                                    id) {
+                                                    reject(
+                                                        'ID jabatan majelis sudah ada, silahkan gunakan ID jabatan majelis lain!'
+                                                    );
+                                                } else {
+                                                    resolve({
+                                                        id_jabatan_non: id_jabatan_non,
+                                                        jabatan_nonmajelis: jabatan_nonmajelis,
+                                                        periode: periode
+                                                    });
+                                                }
+                                            } else {
+                                                resolve({
+                                                    id_jabatan_non: id_jabatan_non,
+                                                    jabatan_nonmajelis: jabatan_nonmajelis,
+                                                    periode: periode
+                                                });
+                                            }
+                                        },
+                                        error: function(xhr, status,
+                                            error) {
+                                            reject(
+                                                'Terjadi kesalahan saat memvalidasi ID jabatan majelis.'
+                                            );
+                                        }
+                                    });
+                                }).catch(error => {
+                                    Swal.showValidationMessage(error);
                                 });
-                                $table.bootstrapTable('refresh');
-                            },
-                            error: function(xhr, status, error) {
-                                alert.fire({
-                                    icon: 'danger',
-                                    title: 'Data pekerjaan gagal diupdate!'
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed && result.value) {
+                                const {
+                                    id_jabatan_non,
+                                    jabatan_nonmajelis,
+                                    periode
+                                } = result.value;
+
+                                $.ajax({
+                                    url: "{{ route('api.update.jabatan-non-majelis') }}",
+                                    type: 'POST',
+                                    data: {
+                                        _token: '{{ csrf_token() }}',
+                                        id: id,
+                                        id_jabatan_non: id_jabatan_non,
+                                        jabatan_nonmajelis: jabatan_nonmajelis,
+                                        periode: periode
+                                    },
+                                    success: function(response) {
+                                        alert.fire({
+                                            icon: 'success',
+                                            title: 'Data jabatan non majelis berhasil dirubah!'
+                                        });
+                                        $table.bootstrapTable('refresh');
+                                    },
+                                    error: function(xhr, status, error) {
+                                        alert.fire({
+                                            icon: 'error',
+                                            title: 'Data jabatan non majelis gagal dirubah!'
+                                        });
+                                    }
                                 });
                             }
                         });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: " + error);
+                        console.error("Status: " + status);
+                        console.dir(xhr);
                     }
                 });
             });
@@ -273,10 +370,10 @@
 
         function ApiGetReferensiPekerjaan(params) {
             $.ajax({
-                type: "GET",
-                url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                type: "POST",
+                url: "{{ route('api.get.pekerjaan') }}",
                 data: {
-                    // _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}'
                 },
                 dataType: "json",
                 success: function(data) {
