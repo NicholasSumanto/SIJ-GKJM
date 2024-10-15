@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Models\Jemaat;
 use App\Models\Kematian;
-use App\Models\BaptisDewasa;
-use App\Models\BaptisSidi;
-use App\Models\BaptisAnak;
+use Carbon\Carbon;
+use App\Models\Wilayah;
 use App\Models\AtestasiKeluar;
 use App\Models\AtestasiMasuk;
 use Illuminate\Support\Facades\DB;
@@ -38,12 +37,19 @@ class HomeController extends Controller
             'users' => $users,
             //...
         ];
+        // $tahun = Carbon::today()->year;
+        $tahun = date('Y');
         $gender = $request->input('Kelamin');
+        $wilayah = $request->input('Wilayah');
         $jemaatMeninggal = Kematian::selectRaw('MONTH(tanggal_meninggal) as bulan, COUNT(*) as jumlah')
             ->join('jemaat', 'kematian.id_jemaat', '=', 'jemaat.id_jemaat')
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
+            ->whereYear('tanggal_meninggal', $tahun)
             ->groupBy('bulan')
             ->get();
         $baptisSidi = Jemaat::select(DB::raw('MONTH(baptis_sidi.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_sidi) as total'))
@@ -51,6 +57,10 @@ class HomeController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
+            ->whereYear('baptis_sidi.tanggal_baptis', $tahun)
             ->groupBy('bulan')
             ->get();
         $baptisDewasa = Jemaat::select(DB::raw('MONTH(baptis_dewasa.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_bd) as total'))
@@ -58,6 +68,10 @@ class HomeController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
+            ->whereYear('baptis_dewasa.tanggal_baptis', $tahun)
             ->groupBy('bulan')
             ->get();
         $baptisAnak = Jemaat::select(DB::raw('MONTH(baptis_anak.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_ba) as total'))
@@ -65,6 +79,10 @@ class HomeController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
+            ->whereYear('baptis_anak.tanggal_baptis', $tahun)
             ->groupBy('bulan')
             ->get();
         $atestasiMasuk = AtestasiMasuk::selectRaw('MONTH(tanggal) as bulan, COUNT(*) as jumlah')
@@ -72,30 +90,45 @@ class HomeController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
+            ->whereYear('atestasi_masuk.created_at', $tahun) 
             ->groupBy('bulan')
             ->get();
+        
         $atestasiKeluar = AtestasiKeluar::selectRaw('MONTH(tanggal) as bulan, COUNT(*) as jumlah')
             ->join('jemaat', 'atestasi_keluar.id_jemaat', '=', 'jemaat.id_jemaat')
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
+            ->whereYear('tanggal', $tahun)
             ->groupBy('bulan')
             ->get();
         $jumlahJemaat = Jemaat::selectRaw('wilayah.nama_wilayah as wil, COUNT(jemaat.id_wilayah) as jumlah')
-            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') 
+            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
-            ->groupBy('wil') 
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
+            ->groupBy('wil')
             ->get();
         $pendidikan = Jemaat::selectRaw('pendidikan.nama_pendidikan as tingkatan, COUNT(jemaat.id_pendidikan) as jumlah')
             ->join('pendidikan', 'jemaat.id_pendidikan','=','pendidikan.id_pendidikan' )
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender); 
             })
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
             ->groupBy('tingkatan')
             ->get();
-        $monthNames = [1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'];
+        $monthNames = [1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ags', 9 => 'Sept', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'];
 
         $jemaatMeninggal = $jemaatMeninggal->map(function($item) use ($monthNames) {
             $item->bulan = $monthNames[$item->bulan];
@@ -106,7 +139,8 @@ class HomeController extends Controller
             return $item;
         });
 
-        $labelJemaat = $jumlahJemaat->pluck('wil');  
+        $dropWilayah = Wilayah::pluck('nama_wilayah', 'id_wilayah'); 
+        $labelWilayah = $jumlahJemaat->pluck('wil');
         $isiJemaat = $jumlahJemaat->pluck('jumlah');
         $labelBulan = $jemaatMeninggal->pluck('bulan');  
         $isiKematian = $jemaatMeninggal->pluck('jumlah');
@@ -118,7 +152,6 @@ class HomeController extends Controller
         $isiKeluar = $atestasiKeluar->pluck('jumlah');; 
         $isiPendidikan = $pendidikan->pluck('jumlah');
         $labelPendidikan =$pendidikan->pluck('tingkatan');
-        // Pass the filtered data to your view
         $data = [
             'widget' => $widget,
             'jumlahJemaat' => $jumlahJemaat ->toArray(),
@@ -130,6 +163,6 @@ class HomeController extends Controller
             'atestasiKeluar' => $atestasiKeluar->toArray(),
             'pendidikan' => $pendidikan ->toArray(),
         ];
-        return view('home',compact('labelJemaat','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan'), $data);
+        return view('home',compact('tahun','dropWilayah','labelWilayah','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan'), $data);
     }
 }
