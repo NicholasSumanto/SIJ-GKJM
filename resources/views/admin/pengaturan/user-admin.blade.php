@@ -488,44 +488,39 @@
         });
 
         $(document).on('click', '.btn-delete', function() {
-                event.preventDefault();
-                var username = $(this).data('username');
+            event.preventDefault();
+            var id = $(this).data('id');
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    html: `<div class="text-delete">You won't be able to revert this!</div>`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: "POST",
-                            url: `{{ route('api.delete.user') }}`,
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                username: username
-                            },
-                            dataType: "json",
-                            success: function(response) {
-                                alert.fire({
-                                    icon: 'success',
-                                    title: 'Data User Dihapus!'
-                                });
-                                $table.bootstrapTable('refresh');
-                            },
-                            error: function(xhr, status, error) {
-                                alert.fire({
-                                    icon: 'error',
-                                    title: 'Data User gagal dihapus!'
-                                });
-                            }
-                        });
-                    }
-                });
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/delete/${id}`,
+                        type: 'DELETE',
+                        success: function(response) {
+                            alert.fire({
+                                icon: 'success',
+                                title: 'Data Jabatan Non Majelis berhasil Dihapus!'
+                            });
+                            $table.bootstrapTable('refresh');
+                        },
+                        error: function(xhr, status, error) {
+                            alert.fire({
+                                icon: 'error',
+                                title: 'Data Jabatan Non Majelis gagal dihapus!'
+                            });
+                        }
+                    });
+                }
             });
+        });
 
         function ApiGetUserAdmin(params) {
             $.ajax({

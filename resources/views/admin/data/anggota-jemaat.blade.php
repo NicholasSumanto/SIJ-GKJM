@@ -61,7 +61,7 @@
                     formatter: function(value, row, index) {
                         return index + 1;
                     }
-                },{
+                }, {
                     field: 'id_jemaat',
                     title: 'ID Jemaat',
                     align: 'center'
@@ -117,7 +117,7 @@
                     align: 'center'
                 }],
                 exportOptions: {
-                    ignoreColumn: [7,8,9]
+                    ignoreColumn: [7, 8, 9]
                 }
             });
 
@@ -131,82 +131,82 @@
                         field: 'state',
                         checkbox: true,
                         visible: exportDataType === 'selected'
-                    },{
-                    field: 'no',
-                    title: 'No',
-                    align: 'center',
-                    formatter: function(value, row, index) {
-                        return index + 1;
-                    }
-                },{
-                    field: 'id_jemaat',
-                    title: 'Id Jemaat',
-                    align: 'center'
-                }, {
-                    field: 'nama_jemaat',
-                    title: 'Nama',
-                    align: 'center'
-                }, {
-                    field: 'nama_wilayah',
-                    title: 'Wilayah',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'kelamin',
-                    title: 'Kelamin',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'keterangan_status',
-                    title: 'Status',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'golongan_darah',
-                    title: 'Darah',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'pendidikan',
-                    title: 'Pendidikan',
-                    filterControl: 'select',
-                    align: 'center'
-                }, {
-                    field: 'view',
-                    title: 'View',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-success btn-view" data-id_jemaat="${row.id_jemaat}">View</button>`;
-                    },
-                    align: 'center'
+                    }, {
+                        field: 'no',
+                        title: 'No',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return index + 1;
+                        }
+                    }, {
+                        field: 'id_jemaat',
+                        title: 'Id Jemaat',
+                        align: 'center'
+                    }, {
+                        field: 'nama_jemaat',
+                        title: 'Nama',
+                        align: 'center'
+                    }, {
+                        field: 'nama_wilayah',
+                        title: 'Wilayah',
+                        filterControl: 'select',
+                        align: 'center'
+                    }, {
+                        field: 'kelamin',
+                        title: 'Kelamin',
+                        filterControl: 'select',
+                        align: 'center'
+                    }, {
+                        field: 'keterangan_status',
+                        title: 'Status',
+                        filterControl: 'select',
+                        align: 'center'
+                    }, {
+                        field: 'golongan_darah',
+                        title: 'Darah',
+                        filterControl: 'select',
+                        align: 'center'
+                    }, {
+                        field: 'pendidikan',
+                        title: 'Pendidikan',
+                        filterControl: 'select',
+                        align: 'center'
+                    }, {
+                        field: 'view',
+                        title: 'View',
+                        formatter: function(value, row, index) {
+                            return `<button class="btn btn-success btn-view" data-id_jemaat="${row.id_jemaat}">View</button>`;
+                        },
+                        align: 'center'
 
-                }, {
-                    field: 'edit',
-                    title: 'Edit',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id_jemaat="${row.id_jemaat}">Edit</button>`;
-                    },
-                    align: 'center'
-                }, {
-                    field: 'delete',
-                    title: 'Delete',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id_jemaat="${row.id_jemaat}">Delete</button>`;
-                    },
-                    align: 'center'
-                }],
-                exportOptions: {
-                        ignoreColumn: [7,8,9]
+                    }, {
+                        field: 'edit',
+                        title: 'Edit',
+                        formatter: function(value, row, index) {
+                            return `<button class="btn btn-primary btn-edit" data-id_jemaat="${row.id_jemaat}">Edit</button>`;
+                        },
+                        align: 'center'
+                    }, {
+                        field: 'delete',
+                        title: 'Delete',
+                        formatter: function(value, row, index) {
+                            return `<button class="btn btn-danger btn-delete" data-id_jemaat="${row.id_jemaat}">Delete</button>`;
+                        },
+                        align: 'center'
+                    }],
+                    exportOptions: {
+                        ignoreColumn: [7, 8, 9]
                     }
                 });
             }).trigger('change');
 
             $(document).on('click', '.btn-view', function() {
-            var id_jemaat = $(this).data('id_jemaat');
+                var id_jemaat = $(this).data('id_jemaat');
 
-            ApiGetJemaatById(id_jemaat, {
-                success: function(data) {
-                    // Membuat form untuk menampilkan detail jemaat
-                    var formHtml = `
+                ApiGetJemaatById(id_jemaat, {
+                    success: function(data) {
+                        // Membuat form untuk menampilkan detail jemaat
+                        var formHtml = `
                 <form id="jemaatDetailForm">
                     <div class="form-group">
                         <label for="id_jemaat">ID Jemaat:</label>
@@ -332,24 +332,24 @@
                 </form>
             `;
 
-                    Swal.fire({
-                        title: `${data.nama_jemaat}`,
-                        html: formHtml,
-                        showCloseButton: true,
-                        confirmButtonText: 'Tutup'
-                    });
-            }
-        });
-    });
+                        Swal.fire({
+                            title: `${data.nama_jemaat}`,
+                            html: formHtml,
+                            showCloseButton: true,
+                            confirmButtonText: 'Tutup'
+                        });
+                    }
+                });
+            });
 
 
 
-        // Event listener untuk tombol tambah jemaat
-        $('.tambah-jemaat').on('click', function(event) {
-            event.preventDefault();
-            Swal.fire({
-                title: 'Tambah Jemaat Baru',
-                html: `
+            // Event listener untuk tombol tambah jemaat
+            $('.tambah-jemaat').on('click', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Tambah Jemaat Baru',
+                    html: `
                     <form id="addJemaatForm">
                         <div class="form-group">
                             <label for="nama_jemaat">Nama Jemaat *</label>
@@ -439,70 +439,73 @@
                         </div>
                     </form>
                 `,
-                showCancelButton: true,
-                confirmButtonText: 'Simpan',
-                cancelButtonText: 'Batal',
-                preConfirm: () => {
-                    const data = {
-                        _token: '{{ csrf_token() }}',
-                        nama_jemaat: $('#nama_jemaat').val(),
-                        id_wilayah: $('#id_wilayah').val(),
-                        kelamin: $('#kelamin').val(),
-                        tanggal_lahir: $('#tanggal_lahir').val(),
-                        alamat_jemaat: $('#alamat_jemaat').val(),
-                        telepon: $('#telepon').val(),
-                        hp: $('#hp').val(),
-                        email: $('#email').val(),
-                        nik: $('#nik').val(),
-                        no_kk: $('#no_kk').val(),
-                        stamboek: $('#stamboek').val(),
-                        tempat_lahir: $('#tempat_lahir').val(),
-                        tanggal_baptis: $('#tanggal_baptis').val(),
-                        golongan_darah: $('#golongan_darah').val(),
-                        instansi: $('#instansi').val(),
-                        penghasilan: $('#penghasilan').val(),
-                        gereja_baptis: $('#gereja_baptis').val(),
-                        alat_transportasi: $('#alat_transportasi').val(),
-                    };
+                    showCancelButton: true,
+                    confirmButtonText: 'Simpan',
+                    cancelButtonText: 'Batal',
+                    preConfirm: () => {
+                        const data = {
+                            _token: '{{ csrf_token() }}',
+                            nama_jemaat: $('#nama_jemaat').val(),
+                            id_wilayah: $('#id_wilayah').val(),
+                            kelamin: $('#kelamin').val(),
+                            tanggal_lahir: $('#tanggal_lahir').val(),
+                            alamat_jemaat: $('#alamat_jemaat').val(),
+                            telepon: $('#telepon').val(),
+                            hp: $('#hp').val(),
+                            email: $('#email').val(),
+                            nik: $('#nik').val(),
+                            no_kk: $('#no_kk').val(),
+                            stamboek: $('#stamboek').val(),
+                            tempat_lahir: $('#tempat_lahir').val(),
+                            tanggal_baptis: $('#tanggal_baptis').val(),
+                            golongan_darah: $('#golongan_darah').val(),
+                            instansi: $('#instansi').val(),
+                            penghasilan: $('#penghasilan').val(),
+                            gereja_baptis: $('#gereja_baptis').val(),
+                            alat_transportasi: $('#alat_transportasi').val(),
+                        };
 
-                    const photo = $('#photo')[0].files[0];
-                    if (photo) {
-                        data.photo = photo;
-                    }
-
-                    // Validate required fields
-                    for (const key in data) {
-                        if (data[key] === '' && key !== 'photo') {
-                            Swal.showValidationMessage(`${key.replace(/_/g, ' ')} tidak boleh kosong!`);
-                            return false;
+                        const photo = $('#photo')[0].files[0];
+                        if (photo) {
+                            data.photo = photo;
                         }
-                    }
 
-                    return data;
-                }
-            }).then((result) => {
-                if (result.isConfirmed && result.value) {
-                    $.ajax({
-                        url: "{{ route('api.post.jemaat') }}",
-                        type: 'POST',
-                        data: result.value,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            if (response.message) {
-                                Swal.fire('Gagal!', response.message, 'error');
-                            } else {
-                                Swal.fire('Berhasil!', 'Jemaat berhasil ditambahkan!', 'success');
-                                $table.bootstrapTable('refresh');
+                        // Validate required fields
+                        for (const key in data) {
+                            if (data[key] === '' && key !== 'photo') {
+                                Swal.showValidationMessage(
+                                    `${key.replace(/_/g, ' ')} tidak boleh kosong!`);
+                                return false;
                             }
-                        },
-                        error: function(xhr) {
-                            Swal.fire('Gagal!', 'Jemaat gagal ditambahkan!', 'error');
                         }
-                    });
-                }
+
+                        return data;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed && result.value) {
+                        $.ajax({
+                            url: "{{ route('api.post.jemaat') }}",
+                            type: 'POST',
+                            data: result.value,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                if (response.message) {
+                                    Swal.fire('Gagal!', response.message, 'error');
+                                } else {
+                                    Swal.fire('Berhasil!',
+                                        'Jemaat berhasil ditambahkan!', 'success');
+                                    $table.bootstrapTable('refresh');
+                                }
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Gagal!', 'Jemaat gagal ditambahkan!',
+                                    'error');
+                            }
+                        });
+                    }
+                });
             });
-        });
 
 
 
@@ -605,7 +608,8 @@
                                 const instansi = $('#instansi').val();
                                 const penghasilan = $('#penghasilan').val();
                                 const gereja_baptis = $('#gereja_baptis').val();
-                                const alat_transportasi = $('#alat_transportasi').val();
+                                const alat_transportasi = $('#alat_transportasi')
+                                    .val();
 
 
                                 return {
@@ -642,8 +646,10 @@
                                         nama_jemaat: result.value.nama_jemaat,
                                         id_wilayah: result.value.id_wilayah,
                                         kelamin: result.value.kelamin,
-                                        tanggal_lahir: result.value.tanggal_lahir,
-                                        alamat_jemaat: result.value.alamat_jemaat,
+                                        tanggal_lahir: result.value
+                                            .tanggal_lahir,
+                                        alamat_jemaat: result.value
+                                            .alamat_jemaat,
                                         telepon: result.value.telepon,
                                         hp: result.value.hp,
                                         email: result.value.email,
@@ -651,12 +657,16 @@
                                         no_kk: result.value.no_kk,
                                         stamboek: result.value.stamboek,
                                         tempat_lahir: result.value.tempat_lahir,
-                                        tanggal_baptis: result.value.tanggal_baptis,
-                                        golongan_darah: result.value.golongan_darah,
+                                        tanggal_baptis: result.value
+                                            .tanggal_baptis,
+                                        golongan_darah: result.value
+                                            .golongan_darah,
                                         instansi: result.value.instansi,
                                         penghasilan: result.value.penghasilan,
-                                        gereja_baptis: result.value.gereja_baptis,
-                                        alat_transportasi: result.value.alat_transportasi
+                                        gereja_baptis: result.value
+                                            .gereja_baptis,
+                                        alat_transportasi: result.value
+                                            .alat_transportasi
                                     },
                                     success: function(response) {
                                         Swal.fire({
@@ -681,50 +691,49 @@
         });
 
         $(document).on('click', '.btn-delete', function(event) {
-    event.preventDefault();
-    var id_jemaat = $(this).data('id_jemaat'); // Mengambil ID jemaat dari data atribut
+            event.preventDefault();
+            var id_jemaat = $(this).data('id_jemaat'); // Mengambil ID jemaat dari data atribut
 
-    console.log("ID Jemaat yang akan dihapus:", id_jemaat); // Memastikan ID jemaat yang akan dihapus
+            console.log("ID Jemaat yang akan dihapus:", id_jemaat); // Memastikan ID jemaat yang akan dihapus
 
-    Swal.fire({
-        title: 'Are you sure?',
-        html: `<div class="text-delete">You won't be able to revert this!</div>`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                type: "POST",
-                url: "{{ route('api.delete.jemaat') }}", // Pastikan ini adalah rute yang benar untuk menghapus jemaat
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id_jemaat: id_jemaat
-                },
-                dataType: "json",
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Data Jemaat berhasil dihapus!'
-                    });
-                    $table.bootstrapTable('refresh'); // Segarkan tabel setelah penghapusan
-                },
-                error: function(xhr, status, error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Data Jemaat gagal dihapus!',
-                        text: xhr.responseJSON.message || 'Terjadi kesalahan saat menghapus data.' // Menampilkan pesan error dari server jika ada
+            Swal.fire({
+                title: 'Are you sure?',
+                html: `<div class="text-delete">You won't be able to revert this!</div>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('api.delete.jemaat') }}", // Pastikan ini adalah rute yang benar untuk menghapus jemaat
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            id_jemaat: id_jemaat
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Data Jemaat berhasil dihapus!'
+                            });
+                            $table.bootstrapTable(
+                            'refresh'); // Segarkan tabel setelah penghapusan
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data Jemaat gagal dihapus!',
+                                text: xhr.responseJSON.message ||
+                                    'Terjadi kesalahan saat menghapus data.' // Menampilkan pesan error dari server jika ada
+                            });
+                        }
                     });
                 }
             });
-        }
-    });
-});
-
-
-
+        });
 
         function ApiGetJemaat(params) {
             $.ajax({
@@ -746,23 +755,24 @@
         }
 
         function ApiGetJemaatById(id_jemaat, params) {
-    $.ajax({
-        type: "POST",
-        url: "{{ route('api.get.jemaat.by.id', ['id_jemaat' => '__ID__']) }}".replace('__ID__', id_jemaat), // Ganti __ID__ dengan id_jemaat
-        data: {
-            _token: '{{ csrf_token() }}'
-        },
-        dataType: "json",
-        success: function(data) {
-            params.success(data);
-        },
-        error: function(xhr, status, error) {
-            console.error("Error: " + error);
-            console.error("Status: " + status);
-            console.dir(xhr);
+            $.ajax({
+                type: "POST",
+                url: "{{ route('api.get.jemaat.by.id', ['id_jemaat' => '__ID__']) }}".replace('__ID__',
+                id_jemaat), // Ganti __ID__ dengan id_jemaat
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: "json",
+                success: function(data) {
+                    params.success(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + error);
+                    console.error("Status: " + status);
+                    console.dir(xhr);
 
+                }
+            });
         }
-    });
-}
     </script>
 @endpush

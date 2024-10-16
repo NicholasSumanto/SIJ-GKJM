@@ -24,12 +24,15 @@
                                         </div>
                                     @endif
 
-                                    <form method="POST" action="{{ route('login') }}" class="user">
+                                    <form method="POST" action="{{ route('api.post.login') }}" class="user">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                       <p>
+                                        {{ Auth::check() ? Auth::user()->nama_user : 'Guest' }}
+                                       </p>
 
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user" name="username"
-                                                placeholder="{{ __('Username') }}" value="{{ old('username') }}"
+                                                placeholder="{{ __('E-Mail Address') }}" value="{{ old('username') }}"
                                                 required autofocus>
                                         </div>
 

@@ -12,32 +12,32 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('status', function (Blueprint $table) {
-            $table->id('id_status')->primary();
+            $table->id('id_status');
             $table->string("keterangan_status",100);
             $table->timestamps();
         });
         Schema::create('gereja', function (Blueprint $table) {
-            $table->id('id_gereja')->primary();
+            $table->id('id_gereja');
             $table->string("nama_gereja");
             $table->timestamps();
         });
         Schema::create('bidangilmu', function (Blueprint $table) {
-            $table->id('id_ilmu')->primary();
+            $table->id('id_ilmu');
             $table->string("bidangilmu",100);
             $table->timestamps();
         });
         Schema::create('pendidikan', function (Blueprint $table) {
-            $table->id('id_pendidikan')->primary();
-            $table->string("nama_pendidikan");
+            $table->id('id_pendidikan');
+            $table->string("pendidikan");
             $table->timestamps();
         });
         Schema::create('pekerjaan', function (Blueprint $table) {
-            $table->id('id_pekerjaan')->primary();
+            $table->id('id_pekerjaan');
             $table->string("pekerjaan");
             $table->timestamps();
         });
         Schema::create('pendeta', function (Blueprint $table) {
-            $table->id('id_pendeta')->primary();
+            $table->id('id_pendeta');
             $table->string("nama_pendeta");
             $table->string("jenjang",50);
             $table->string("sekolah");
@@ -47,7 +47,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('pendeta_didik', function (Blueprint $table) {
-            $table->id('id_didik')->primary();
+            $table->id('id_didik');
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string("nama_pendeta_didik");
             $table->string("jenjang",50);
@@ -61,7 +61,7 @@ return new class extends Migration
         });
 
         Schema::create('wilayah', function (Blueprint $table) {
-            $table->id('id_wilayah')->primary();
+            $table->id('id_wilayah');
             $table->string("nama_wilayah");
             $table->string("alamat_wilayah");
             $table->string("kota_wilayah");
@@ -70,18 +70,18 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('provinsi', function (Blueprint $table) {
-            $table->id('id_provinsi')->primary();
+            $table->id('id_provinsi');
             $table->string("nama_provinsi",100);
             $table->timestamps();
         });
         Schema::create('jabatan_majelis', function (Blueprint $table) {
-            $table->id('id_jabatan')->primary();
+            $table->id('id_jabatan');
             $table->string("jabatan_majelis");
             $table->integer("periode");
             $table->timestamps();
         });
         Schema::create('jabatan_nonmajelis', function (Blueprint $table) {
-            $table->id('id_jabatan_non')->primary();
+            $table->id('id_jabatan_non');
             $table->string("jabatan_nonmajelis",50);
             $table->integer("periode");
             $table->timestamps();

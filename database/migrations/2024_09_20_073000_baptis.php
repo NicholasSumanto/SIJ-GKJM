@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('baptis_anak', function (Blueprint $table) {
-            $table->id('id_ba')->primary();
+            $table->id('id_ba');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string('nomor');
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('baptis_dewasa', function (Blueprint $table) {
-            $table->id('id_bd')->primary();
+            $table->id('id_bd');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string('nomor');
@@ -46,7 +46,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('baptis_sidi', function (Blueprint $table) {
-            $table->id('id_sidi')->primary();
+            $table->id('id_sidi');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string('nomor');

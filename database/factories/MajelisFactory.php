@@ -14,7 +14,6 @@ class MajelisFactory extends Factory
 {
     protected $model = Majelis::class;
 
-
     protected static $jabatanCounter = [
         1 => 0,
         2 => 0,
@@ -22,7 +21,6 @@ class MajelisFactory extends Factory
 
     public function definition()
     {
-        
         do {
             $id_jabatan = JabatanMajelis::inRandomOrder()->first()->id_jabatan;
         } while (self::isJabatanLimitReached($id_jabatan));
@@ -50,10 +48,12 @@ class MajelisFactory extends Factory
 
         if (in_array($id_jabatan, [1, 2])) {
             self::$jabatanCounter[$id_jabatan]++;
+
+
             if (self::$jabatanCounter[$id_jabatan] > 1) {
                 return true;
             }
         }
-        return false;
+        return false; 
     }
 }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pernikahan', function (Blueprint $table) {
-            $table->id('id_nikah')->primary();
+            $table->id('id_nikah');
             $table->string('nomor', 50);
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->date('tanggal_nikah');
@@ -84,7 +84,7 @@ return new class extends Migration
         });
 
         Schema::create('jemaat_titipan', function (Blueprint $table) {
-            $table->id('id_titipan')->primary();
+            $table->id('id_titipan');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->string('nama_jemaat', 200);
             $table->string('tempat_lahir', 100);
@@ -129,7 +129,7 @@ return new class extends Migration
         });
 
         Schema::create('keluarga', function (Blueprint $table) {
-            $table->id('id_keluarga')->primary();
+            $table->id('id_keluarga');
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
@@ -138,7 +138,7 @@ return new class extends Migration
         });
 
         Schema::create('keluarga_detil', function (Blueprint $table) {
-            $table->id('id_keluarga_detil')->primary();
+            $table->id('id_keluarga_detil');
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_keluarga')->unsigned()->nullable();
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
@@ -146,7 +146,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('kematian', function (Blueprint $table) {
-            $table->id('id_kematian')->primary();
+            $table->id('id_kematian');
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
@@ -161,7 +161,7 @@ return new class extends Migration
         });
 
         Schema::create('majelis', function (Blueprint $table) {
-            $table->id('id_majelis')->primary();
+            $table->id('id_majelis');
             $table->string('nama_majelis');
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
@@ -179,7 +179,7 @@ return new class extends Migration
         });
 
         Schema::create('nonmajelis', function (Blueprint $table) {
-            $table->id('id_nonmajelis')->primary();
+            $table->id('id_nonmajelis');
             $table->string('nama_majelis_non',);
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();

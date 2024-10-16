@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('atestasi_keluar', function (Blueprint $table) {
-            $table->id('id_keluar')->primary();
+            $table->id('id_keluar');
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->unsignedBiginteger('id_wilayah')->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamps();
         });
         Schema::create('atestasi_keluar_dtl', function (Blueprint $table) {
-            $table->id('id_keluar')->primary();
+            $table->id('id_keluar');
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->string('keterangan');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
@@ -35,7 +35,7 @@ return new class extends Migration
         });
 
         Schema::create('atestasi_masuk', function (Blueprint $table) {
-            $table->id('id_masuk')->primary();
+            $table->id('id_masuk');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_gereja')->unsigned()->nullable();
             $table->unsignedInteger('id_jemaat')->nullable();

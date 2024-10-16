@@ -21,6 +21,7 @@ class User extends Authenticatable
         'nama_user',
         'password',
         'id_role',
+        'remember_token',
     ];
 
     /**
@@ -69,5 +70,21 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(RolePengguna::class, 'id_role', 'id_role');
+    }
+
+    /**
+     * Scope a query to only include admin users.
+     */
+    public function scopeAdmin($query)
+    {
+        return $query->where('id_role', 1);
+    }
+
+    /**
+     * Scope a query to only include non-admin users (Wilayah).
+     */
+    public function scopeAdminWilayah($query)
+    {
+        return $query->where('id_role', '!=', 1);
     }
 }

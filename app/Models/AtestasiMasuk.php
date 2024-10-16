@@ -30,7 +30,6 @@ class AtestasiMasuk extends Model
     {
         return $this->belongsTo(Gereja::class, 'id_gereja');
     }
-    
     public function jemaat()
     {
         return $this->belongsTo(Jemaat::class, 'id_jemaat');

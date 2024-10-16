@@ -314,7 +314,15 @@ public function ApiGetJemaat(Request $request)
 
         return response()->json($formattedData);
     } else {
-        $data = Jemaat::all();
+        if($request->has('id_role')) {
+            $nama_wilayah = Role::where('id_role', $request->id_role)->first()->nama_role;
+            $parseWilayahString = preg_replace("/Admin\s*/", "", $nama_wilayah);
+            $idWilayah = Wilayah::where('nama_wilayah', $parseWilayahString)->first()->id_wilayah;
+
+            $data = Jemaat::where('id_wilayah', $idWilayah)->get();
+        } else {
+            $data = Jemaat::all();
+        }
         $formattedData = [
             'total' => $data->count(),
             'totalNotFiltered' => Jemaat::count(),
@@ -349,7 +357,7 @@ public function ApiGetJemaat(Request $request)
                     'tanggal_baptis' => $item->tanggal_baptis,
                     'golongan_darah' => $item->golongan_darah,
                     'id_pendidikan' => $item->id_pendidikan,
-                    'pendidikan' => $item->pendidikan ? $item->pendidikan->nama_pendidikan : null,
+                    'pendidikan' => $item->pendidikan ? $item->pendidikan->pendidikan : null,
                     'id_ilmu' => $item->id_ilmu,
                     'bidang_ilmu' => $item->ilmu ? $item->ilmu->nama_ilmu : null,
                     'id_pekerjaan' => $item->id_pekerjaan,
@@ -410,7 +418,7 @@ public function ApiGetJemaatById($id_jemaat)
         'tanggal_baptis' => $jemaat->tanggal_baptis,
         'golongan_darah' => $jemaat->golongan_darah,
         'id_pendidikan' => $jemaat->id_pendidikan,
-        'pendidikan' => $jemaat->pendidikan ? $jemaat->pendidikan->nama_pendidikan : null,
+        'pendidikan' => $jemaat->pendidikan ? $jemaat->pendidikan->pendidikan : null,
         'id_ilmu' => $jemaat->id_ilmu,
         'bidang_ilmu' => $jemaat->ilmu ? $jemaat->ilmu->bidangilmu : null,
         'id_pekerjaan' => $jemaat->id_pekerjaan,
