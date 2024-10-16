@@ -91,6 +91,22 @@ class Jemaat extends Model
     {
         return $this->belongsTo(Pekerjaan::class, 'id_pekerjaan');
     }
+    public function pernikahan()
+    {
+        return $this->belongsTo(Pernikahan::class, 'id_nikah');
+    }
+    public function sidi()
+    {
+        return $this->belongsTo(BaptisSidi::class, 'id_sidi');
+    }
+    public function baptisAnak()
+    {
+        return $this->belongsTo(BaptisAnak::class, 'id_ba');
+    }
+    public function baptisDewasa()
+    {
+        return $this->belongsTo(BaptisDewasa::class, 'id_bd');
+    }
 
 
 }

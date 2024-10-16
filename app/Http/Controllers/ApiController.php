@@ -274,12 +274,11 @@ public function ApiGetJemaat(Request $request)
                     'id_wilayah' => $item->id_wilayah,
                     'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
                     'id_status' => $item->id_status,
-                    'status' => $item->status ? $item->status->nama_status : null,
+                    'keterangan_status' => $item->status ? $item->status->keterangan_status : null,
                     'stamboek' => $item->stamboek,
                     'nama_jemaat' => $item->nama_jemaat,
                     'tempat_lahir' => $item->tempat_lahir,
                     'tanggal_lahir' => $item->tanggal_lahir,
-                    'agama' => $item->agama,
                     'kelamin' => $item->kelamin,
                     'alamat_jemaat' => $item->alamat_jemaat,
                     'id_kelurahan' => $item->id_kelurahan,
@@ -325,12 +324,11 @@ public function ApiGetJemaat(Request $request)
                     'id_wilayah' => $item->id_wilayah,
                     'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
                     'id_status' => $item->id_status,
-                    'status' => $item->status ? $item->status->nama_status : null,
+                    'keterangan_status' => $item->status ? $item->status->keterangan_status : null,
                     'stamboek' => $item->stamboek,
                     'nama_jemaat' => $item->nama_jemaat,
                     'tempat_lahir' => $item->tempat_lahir,
                     'tanggal_lahir' => $item->tanggal_lahir,
-                    'agama' => $item->agama,
                     'kelamin' => $item->kelamin,
                     'alamat_jemaat' => $item->alamat_jemaat,
                     'id_kelurahan' => $item->id_kelurahan,
@@ -368,6 +366,67 @@ public function ApiGetJemaat(Request $request)
     }
 }
 // GET JEMAAT END
+
+public function ApiGetJemaatById($id_jemaat)
+{
+    // Retrieve the Jemaat record by ID
+    $jemaat = Jemaat::with(['wilayah', 'status', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi', 'pendidikan', 'ilmu', 'pekerjaan', 'pernikahan'])->find($id_jemaat);
+
+    // Check if Jemaat exists
+    if (!$jemaat) {
+        return response()->json(['message' => 'Jemaat not found'], 404);
+    }
+
+    // Prepare formatted data for response
+    $formattedData = [
+        'id_jemaat' => $jemaat->id_jemaat,
+        'id_wilayah' => $jemaat->id_wilayah,
+        'nama_wilayah' => $jemaat->wilayah ? $jemaat->wilayah->nama_wilayah : null,
+        'id_status' => $jemaat->id_status,
+        'keterangan_status' => $jemaat->status ? $jemaat->status->keterangan_status : null,
+        'id_nikah' => $jemaat->id_nikah,
+        'nomor' => $jemaat->pernikahan ? $jemaat->pernikahan->nomor : null,
+        'stamboek' => $jemaat->stamboek,
+        'nama_jemaat' => $jemaat->nama_jemaat,
+        'tempat_lahir' => $jemaat->tempat_lahir,
+        'tanggal_lahir' => $jemaat->tanggal_lahir,
+        'kelamin' => $jemaat->kelamin,
+        'alamat_jemaat' => $jemaat->alamat_jemaat,
+        'id_kelurahan' => $jemaat->id_kelurahan,
+        'nama_kelurahan' => $jemaat->kelurahan ? $jemaat->kelurahan->nama_kelurahan : null,
+        'id_kecamatan' => $jemaat->id_kecamatan,
+        'nama_kecamatan' => $jemaat->kecamatan ? $jemaat->kecamatan->nama_kecamatan : null,
+        'id_kabupaten' => $jemaat->id_kabupaten,
+        'nama_kabupaten' => $jemaat->kabupaten ? $jemaat->kabupaten->nama_kabupaten : null,
+        'id_provinsi' => $jemaat->id_provinsi,
+        'nama_provinsi' => $jemaat->provinsi ? $jemaat->provinsi->nama_provinsi : null,
+        'kodepos' => $jemaat->kodepos,
+        'telepon' => $jemaat->telepon,
+        'hp' => $jemaat->hp,
+        'email' => $jemaat->email,
+        'nik' => $jemaat->nik,
+        'no_kk' => $jemaat->no_kk,
+        'photo' => $jemaat->photo,
+        'tanggal_baptis' => $jemaat->tanggal_baptis,
+        'golongan_darah' => $jemaat->golongan_darah,
+        'id_pendidikan' => $jemaat->id_pendidikan,
+        'pendidikan' => $jemaat->pendidikan ? $jemaat->pendidikan->nama_pendidikan : null,
+        'id_ilmu' => $jemaat->id_ilmu,
+        'bidang_ilmu' => $jemaat->ilmu ? $jemaat->ilmu->bidangilmu : null,
+        'id_pekerjaan' => $jemaat->id_pekerjaan,
+        'pekerjaan' => $jemaat->pekerjaan ? $jemaat->pekerjaan->pekerjaan : null,
+        'instansi' => $jemaat->instansi,
+        'penghasilan' => $jemaat->penghasilan,
+        'gereja_baptis' => $jemaat->gereja_baptis,
+        'alat_transportasi' => $jemaat->alat_transportasi,
+    ];
+
+    // Return formatted data as JSON response
+    return response()->json($formattedData, 200);
+}
+
+
+
 
 // GET KELUARGA
 public function ApiGetKeluarga(Request $request) {
@@ -1028,21 +1087,13 @@ public function ApiPostUser(Request $request)
 public function ApiPostJemaat(Request $request)
 {
 
-    if (Jemaat::where('id_jemaat', $request->id_jemaat)->first() != null) {
-        return response()->json([
-            'message' => 'Data already exists'
-        ]);
-    }
-
     $data = new Jemaat();
-    $data->id_jemaat = $request->id_jemaat;
     $data->id_wilayah = $request->id_wilayah;
     $data->id_status = $request->id_status;
     $data->stamboek = $request->stamboek;
     $data->nama_jemaat = $request->nama_jemaat;
     $data->tempat_lahir = $request->tempat_lahir;
     $data->tanggal_lahir = $request->tanggal_lahir;
-    $data->agama = $request->agama;
     $data->kelamin = $request->kelamin;
     $data->alamat_jemaat = $request->alamat_jemaat;
     $data->id_kelurahan = $request->id_kelurahan;
@@ -1476,7 +1527,6 @@ public function ApiUpdateJemaat(Request $request)
     $data->nama_jemaat = $request->nama_jemaat;
     $data->tempat_lahir = $request->tempat_lahir;
     $data->tanggal_lahir = $request->tanggal_lahir;
-    $data->agama = $request->agama;
     $data->kelamin = $request->kelamin;
     $data->alamat_jemaat = $request->alamat_jemaat;
     $data->id_kelurahan = $request->id_kelurahan;

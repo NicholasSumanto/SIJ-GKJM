@@ -15,7 +15,7 @@ class BaptisAnak extends Model
     protected $fillable = [
         'id_wilayah',
         'id_pendeta',
-        'nomor',
+        'nomor_ba',
         'nama',
         'tempat_lahir',
         'tanggal_lahir',

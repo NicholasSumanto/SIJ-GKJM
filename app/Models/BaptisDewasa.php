@@ -15,7 +15,7 @@ class BaptisDewasa extends Model
     protected $fillable = [
         'id_wilayah',
         'id_pendeta',
-        'nomor',
+        'nomor_bd',
         'nama',
         'tempat_lahir',
         'tanggal_lahir',

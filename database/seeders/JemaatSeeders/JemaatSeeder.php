@@ -9,6 +9,6 @@ class JemaatSeeder extends Seeder
 {
     public function run()
     {
-        Jemaat::factory()->count(120)->create();
+        Jemaat::factory()->count(20)->create();
     }
 }

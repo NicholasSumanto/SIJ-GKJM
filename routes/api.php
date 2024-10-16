@@ -42,6 +42,11 @@ Route::post('/get/atestasimasuk', [ApiController::class, 'ApiGetAtestasiMasuk'])
 Route::post('/get/baptisanak', [ApiController::class, 'ApiGetbaptisAnak'])-> name('api.get.baptisanak');
 Route::post('/get/baptisdewasa', [ApiController::class, 'ApiGetbaptisDewasa'])-> name('api.get.baptisdewasa');
 Route::post('/get/baptissidi', [ApiController::class, 'ApiGetbaptisSidi'])-> name('api.get.baptissidi');
+    // Detail
+Route::post('/get/jemaat/{id_jemaat}', [ApiController::class, 'ApiGetJemaatById'])->name('api.get.jemaat.by.id');
+
+
+
 
 // POST
     //Pengaturan
