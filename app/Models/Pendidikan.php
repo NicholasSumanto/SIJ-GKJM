@@ -13,6 +13,6 @@ class Pendidikan extends Model
     protected $primaryKey = 'id_pendidikan';
 
     protected $fillable = [
-        'pendidikan',
+        'nama_pendidikan',
     ];
 }

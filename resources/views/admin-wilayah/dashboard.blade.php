@@ -27,10 +27,6 @@
                 <option value="Laki-laki" {{ request('Kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                 <option value="Perempuan" {{ request('Kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
             </select>
-            <span>
-                <label class="fw-bold">&nbsp; Wilayah {{ $wilayah }}</label>
-
-            </span>
         </form>
 
         <div class="container">

@@ -16,14 +16,14 @@ class PendidikanSeeder extends Seeder
     public function run()
     {
         DB::table('pendidikan')->insert([
-            ['pendidikan' => 'SD', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['pendidikan' => 'SMA', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['pendidikan' => 'D1', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['pendidikan' => 'D2', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['pendidikan' => 'D3', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['pendidikan' => 'S1', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['pendidikan' => 'S2', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
-            ['pendidikan' => 'S3', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['nama_pendidikan' => 'SD', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['nama_pendidikan' => 'SMA', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['nama_pendidikan' => 'D1', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['nama_pendidikan' => 'D2', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['nama_pendidikan' => 'D3', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['nama_pendidikan' => 'S1', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['nama_pendidikan' => 'S2', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
+            ['nama_pendidikan' => 'S3', 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()],
         ]);
     }
 }
