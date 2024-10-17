@@ -53,14 +53,14 @@
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-warning btn-edit" data-no="${row.id}" data-user="${row.name}" data-nama-user="${row.name}" data-level-admin="${row.name}" data-wilayah="${row.name}" style="color: #ffff;">Edit</button>`;
+                        return `<button class="btn btn-warning btn-edit" data-username="${row.username}" style="color: #ffff;">Edit</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
+                        return `<button class="btn btn-danger btn-delete" data-username="${row.username}">Delete</button>`;
                     },
                     align: 'center'
                 }],
@@ -276,14 +276,14 @@
                                 password: password
                             },
                             success: function(response) {
-                                Swal.fire({
+                                alert.fire({
                                     icon: 'success',
                                     title: 'Data user admin berhasil ditambahkan!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
-                                Swal.fire({
+                                alert.fire({
                                     icon: 'error',
                                     title: 'Data user admin gagal ditambahkan!'
                                 });
@@ -371,7 +371,8 @@
                                         $('#role_user option').filter(
                                             function() {
                                                 return $(this)
-                                                .text() === role;
+                                                    .text() ===
+                                                    role;
                                             }).prop('selected',
                                             true);
                                     },
@@ -388,7 +389,7 @@
                                     if (selectedValue === 'add-new-role') {
                                         $('#new-role-container').show();
                                         $('#new_role').val(
-                                        ''); // Bersihkan input
+                                            ''); // Bersihkan input
                                     } else {
                                         $('#new-role-container').hide();
                                         $('#new_role').val('');
@@ -407,11 +408,12 @@
                                 if (!username || !nama_user || !role_user) {
                                     Swal.showValidationMessage(
                                         'Terdapat bagian yang tidak valid atau belum diisi!'
-                                        );
+                                    );
                                     return false;
                                 }
 
-                                if (password != '' && password !== ulangi_password) {
+                                if (password != '' && password !==
+                                    ulangi_password) {
                                     Swal.showValidationMessage(
                                         'Password tidak sama!');
                                     return false;
@@ -461,16 +463,16 @@
                                         password: password
                                     },
                                     success: function(response) {
-                                        Swal.fire({
+                                        alert.fire({
                                             icon: 'success',
-                                            title: 'Data user admin berhasil ditambahkan!'
+                                            title: 'Data user admin berhasil dirubah!'
                                         });
                                         $table.bootstrapTable('refresh');
                                     },
                                     error: function(xhr, status, error) {
-                                        Swal.fire({
+                                        alert.fire({
                                             icon: 'error',
-                                            title: 'Data user admin gagal ditambahkan!'
+                                            title: 'Data user admin gagal dirubah!'
                                         });
                                     }
                                 });
@@ -489,11 +491,11 @@
 
         $(document).on('click', '.btn-delete', function() {
             event.preventDefault();
-            var id = $(this).data('id');
+            var username = $(this).data('username');
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                html: `<div class="text-delete">You won't be able to revert this!</div>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -502,19 +504,23 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/delete/${id}`,
-                        type: 'DELETE',
+                        url: `{{ route('api.delete.user') }}`,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            username: username
+                        },
                         success: function(response) {
                             alert.fire({
                                 icon: 'success',
-                                title: 'Data Jabatan Non Majelis berhasil Dihapus!'
+                                title: 'Data user admin berhasil dihapus!'
                             });
                             $table.bootstrapTable('refresh');
                         },
                         error: function(xhr, status, error) {
                             alert.fire({
                                 icon: 'error',
-                                title: 'Data Jabatan Non Majelis gagal dihapus!'
+                                title: 'Data user admin gagal dihapus!'
                             });
                         }
                     });

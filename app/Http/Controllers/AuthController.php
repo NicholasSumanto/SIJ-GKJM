@@ -22,19 +22,21 @@ class AuthController extends Controller
 
         $user = User::where('username', $request->username)->first();
 
-        if ($user->id_role == 1) {
-            if (Auth::guard('admin')->attempt($request->only('username', 'password'))) {
-                return redirect()->intended(route('admin.dashboard'));
+        if ($user) {
+            if ($user->id_role == 1) {
+                if (Auth::guard('admin')->attempt($request->only('username', 'password'))) {
+                    return redirect()->intended(route('admin.dashboard'));
+                }
+            } else {
+                if (Auth::guard('adminWilayah')->attempt($request->only('username', 'password'))) {
+                    return redirect()->intended(route('admin-wilayah.dashboard'));
+                }
             }
         } else {
-            if (Auth::guard('adminWilayah')->attempt($request->only('username', 'password'))) {
-                return redirect()->intended(route('admin-wilayah.dashboard'));
-            }
+            return back()->withErrors([
+                'username' => 'The provided credentials do not match our records.',
+            ]);
         }
-
-        return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ]);
     }
 
     public function logout()

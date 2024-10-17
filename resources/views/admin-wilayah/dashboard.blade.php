@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        <form id="form" method="GET" action="{{ route('home') }}">
+        <form id="form" method="GET" action="{{ route('admin-wilayah.dashboard') }}">
             <label for="Kelamin">Pilih Gender:</label>
             <select id="Kelamin" name="Kelamin" onchange="this.form.submit()">
                 <option value="">All</option>
@@ -28,14 +28,8 @@
                 <option value="Perempuan" {{ request('Kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
             </select>
             <span>
-                <label for="Wilayah">Pilih Wilayah:</label>
-                <select id="Wilayah" name="Wilayah" onchange="this.form.submit()">
-                    <option value="" {{ request('Wilayah') == '' ? 'selected' : '' }}>All</option>
-                    @foreach ($dropWilayah as $id_wilayah => $wilayahName)
-                        <option value="{{ $id_wilayah }}" {{ request('Wilayah') == $id_wilayah ? 'selected' : '' }}>
-                            {{ $wilayahName }}</option>
-                    @endforeach
-                </select>
+                <label class="fw-bold">&nbsp; Wilayah {{ $wilayah }}</label>
+
             </span>
         </form>
 
@@ -50,7 +44,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">Jemaat Keluar Masuk {{ $tahun }}</h4>
                         <span>
-                            <form id="keluarMasuk" method="GET" action="{{ route('home') }}">
+                            <form id="keluarMasuk" method="GET" action="{{ route('admin-wilayah.dashboard') }}">
                                 <select id="InOut" name="InOut" class="form-select" onchange="this.form.submit()">
                                     <option value="">All</option>
                                     <option value="Masuk" {{ request('InOut') == 'Masuk' ? 'selected' : '' }}>Masuk

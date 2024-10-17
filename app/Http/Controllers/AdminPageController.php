@@ -27,6 +27,7 @@ class AdminPageController extends Controller
             'users' => $users,
             //...
         ];
+
         // $tahun = Carbon::today()->year;
         $tahun = date('Y');
         $gender = $request->input('Kelamin');

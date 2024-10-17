@@ -9,7 +9,9 @@ use App\Models\Jemaat;
 use App\Models\AtestasiMasuk;
 use App\Models\AtestasiKeluar;
 use App\Models\Wilayah;
+use App\Models\RolePengguna as Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AdminWilayahPageController extends Controller
 {
@@ -21,10 +23,14 @@ class AdminWilayahPageController extends Controller
             'users' => $users,
             //...
         ];
+
+        $id_role = Auth::user()->id_role;
+        $nama_wilayah = Role::where('id_role', $id_role)->first()->nama_role;
+
         // $tahun = Carbon::today()->year;
         $tahun = date('Y');
         $gender = $request->input('Kelamin');
-        $wilayah = $request->input('Wilayah');
+        $wilayah = preg_replace("/Admin Wilayah\s*/", "", $nama_wilayah);
         $jemaatMeninggal = Kematian::selectRaw('MONTH(tanggal_meninggal) as bulan, COUNT(*) as jumlah')
             ->join('jemaat', 'kematian.id_jemaat', '=', 'jemaat.id_jemaat')
             ->when($gender, function ($query, $gender) {
@@ -147,7 +153,7 @@ class AdminWilayahPageController extends Controller
             'atestasiKeluar' => $atestasiKeluar->toArray(),
             'pendidikan' => $pendidikan->toArray(),
         ];
-        return view('admin-wilayah.dashboard', compact('tahun', 'dropWilayah', 'labelWilayah', 'isiJemaat', 'labelBulan', 'isiKematian', 'labelBaptis', 'isiBA', 'isiBS', 'isiBD', 'isiMasuk', 'isiKeluar', 'isiPendidikan', 'labelPendidikan'), $data);
+        return view('admin-wilayah.dashboard', compact('tahun', 'dropWilayah', 'labelWilayah', 'isiJemaat', 'labelBulan', 'isiKematian', 'labelBaptis', 'isiBA', 'isiBS', 'isiBD', 'isiMasuk', 'isiKeluar', 'isiPendidikan', 'labelPendidikan', 'wilayah'), $data);
     }
 
     public function adminWilayahDataAnggotaJemaat()
