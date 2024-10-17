@@ -176,6 +176,11 @@ class AdminPageController extends Controller
         return view('admin.pengaturan.wilayah');
     }
 
+    public function geoDashboard()
+    {
+        return view('admin.birthdayDash');
+    }
+
     public function adminPengaturanJabatanMajelis()
     {
         return view('admin.pengaturan.jabatan-majelis');

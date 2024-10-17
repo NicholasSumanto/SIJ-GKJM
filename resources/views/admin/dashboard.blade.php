@@ -23,14 +23,14 @@
     <form id="form" method="GET" action="{{ route('admin.dashboard') }}" class="container mt-4">
         <div class="card p-3 shadow-sm">
             <div class="form-row align-items-center">
-                <div class="col-auto">
+                {{-- <div class="col-auto">
                     <label for="Kelamin" class="mr-2 font-weight-bold">Pilih Gender:</label>
                     <select id="Kelamin" name="Kelamin" class="custom-select" onchange="this.form.submit()">
                         <option value="">All</option>
                         <option value="Laki-laki" {{ request('Kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                         <option value="Perempuan" {{ request('Kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                     </select>
-                </div>
+                </div> --}}
                 <div class="col-auto">
                     <label for="Wilayah" class="mr-2 font-weight-bold">Pilih Wilayah:</label>
                     <select id="Wilayah" name="Wilayah" class="custom-select" onchange="this.form.submit()">
@@ -116,22 +116,22 @@
                 label: 'Jumlah',
                 data: @json($jumlahStatus),  
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',  // Color for the first item
-                    'rgba(54, 162, 235, 0.2)',  // Color for the second item
-                    'rgba(255, 206, 86, 0.2)',  // Color for the third item
-                    'rgba(75, 192, 192, 0.2)',  // Color for the fourth item
-                    'rgba(153, 102, 255, 0.2)', // Color for the fifth item
-                    'rgba(255, 159, 64, 0.2)',  // Color for the sixth item
-                    'rgba(201, 203, 207, 0.2)'  // Color for the seventh item
+                    'rgba(54, 162, 235, 0.2)',  
+                    'rgba(255, 198, 189, 0.2)', 
+                    'rgba(75, 192, 192, 0.2)', 
+                    'rgba(255, 99, 132, 0.2)',  
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)', 
+                    'rgba(201, 203, 207, 0.2)'  
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',    // Border color for the first item
-                    'rgba(54, 162, 235, 1)',    // Border color for the second item
-                    'rgba(255, 206, 86, 1)',    // Border color for the third item
-                    'rgba(75, 192, 192, 1)',    // Border color for the fourth item
-                    'rgba(153, 102, 255, 1)',   // Border color for the fifth item
-                    'rgba(255, 159, 64, 1)',    // Border color for the sixth item
-                    'rgba(201, 203, 207, 1)'    // Border color for the seventh item
+                    'rgba(54, 162, 235, 1)', 
+                    'rgba(255, 198, 189, 1)',   
+                    'rgba(75, 192, 192, 1)',   
+                    'rgba(255, 99, 132, 1)', 
+                    'rgba(153, 102, 255, 1)', 
+                    'rgba(255, 159, 64, 1)',  
+                    'rgba(201, 203, 207, 1)'    
                 ],
                 borderWidth: 1
             }]
