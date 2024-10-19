@@ -86,7 +86,7 @@
                     filterControl: 'select',
                     align: 'center'
                 }, {
-                    field: 'pendidikan',
+                    field: 'nama_pendidikan',
                     title: 'Pendidikan',
                     filterControl: 'select',
                     align: 'center'
@@ -159,7 +159,7 @@
                         filterControl: 'select',
                         align: 'center'
                     }, {
-                        field: 'pendidikan',
+                        field: 'nama_pendidikan',
                         title: 'Pendidikan',
                         filterControl: 'select',
                         align: 'center'
@@ -290,7 +290,7 @@
                     </div>
                     <div class="form-group">
                         <label for="pendidikan">Pendidikan:</label>
-                        <input type="text" id="pendidikan" class="form-control" value="${data.pendidikan}" readonly>
+                        <input type="text" id="nama_pendidikan" class="form-control" value="${data.nama_pendidikan}" readonly>
                     </div>
                     <div class="form-group">
                         <label for="bidangilmu">Bidang Ilmu:</label>

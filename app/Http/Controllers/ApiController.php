@@ -450,7 +450,7 @@ public function ApiGetJemaat(Request $request)
                     'tanggal_baptis' => $item->tanggal_baptis,
                     'golongan_darah' => $item->golongan_darah,
                     'id_pendidikan' => $item->id_pendidikan,
-                    'pendidikan' => $item->pendidikan ? $item->pendidikan->nama_pendidikan : null,
+                    'nama_pendidikan' => $item->pendidikan ? $item->pendidikan->nama_pendidikan : null,
                     'id_ilmu' => $item->id_ilmu,
                     'bidang_ilmu' => $item->ilmu ? $item->ilmu->nama_ilmu : null,
                     'id_pekerjaan' => $item->id_pekerjaan,
