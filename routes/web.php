@@ -5,7 +5,9 @@ use App\Http\Controllers\BasicController;
 use App\Http\Controllers\AdminPageController;
 use App\Http\Controllers\AdminWilayahPageController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BirthdayController;
 use App\Http\Controllers\CustomLoginController;
+use App\Http\Controllers\GeoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,7 @@ Route::get('/about', function () {
 Route::middleware('auth:admin')->group(function () {
     // Admin Routes Start
     Route::get('/admin/dashboard', AdminPageController::class . '@adminDashboard')->name('admin.dashboard');
+    Route::get('/admin/BirthdayDashboard', BirthdayController::class . '@birthdayDashboard')->name('admin.birthdayDash');
     // Pengaturan Routes
     Route::get('/admin/pengaturan/wilayah', AdminPageController::class . '@adminPengaturanWilayah')->name('admin.pengaturan.wilayah');
     Route::get('/admin/pengaturan/jabatan-majelis', AdminPageController::class . '@adminPengaturanJabatanMajelis')->name('admin.pengaturan.jabatan-majelis');

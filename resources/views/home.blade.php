@@ -101,10 +101,65 @@
             }
         }
     });
-    const chart2 = document.getElementById('chartKeluarMasuk').getContext('2d');
+    const chart4 = document.getElementById('chartPendidikan').getContext('2d');
+    const pendidikan = new Chart(chart4, {
+        type: 'doughnut',
+        data: {
+            labels: @json($labelPendidikan),
+            datasets: [{
+                label: 'kkm',
+                data: @json($isiPendidikan),
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+    const chart3 = document.getElementById('chartBaptis').getContext('2d');
+    const Baptis = new Chart(chart3, {
+        type: 'line',
+        data: {
+            labels: @json($labelBaptis),
+            datasets: [{
+                label: 'Baptis Anak',
+                data: @json($isiBA),
+                backgroundColor: 'rgba(255, 153, 153, 1)',
+                borderColor: 'rgba(255, 153, 153,1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Baptis Sidi',
+                data: @json($isiBS),
+                backgroundColor: 'rgba(255, 222, 41, 1)',
+                borderColor: 'rgba(255, 222, 41, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Baptis Dewasa',
+                data: @json($isiBD),
+                backgroundColor: 'rgba(153, 153, 255, 1)',
+                borderColor: 'rgba(153, 153, 255, 1)',
+                borderWidth: 1
+            }
+        ]
+        },
+        options: {
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    grid: {
+                        drawOnChartArea: false,
+                    }
+                }
+            }
+        }
+    });
+    const chart4 = document.getElementById('chartKeluarMasuk').getContext('2d');
     var selectedOption = document.getElementById('InOut').value;
     if (selectedOption === 'Masuk') {
-        const keluarMasuk = new Chart(chart2, {
+        const keluarMasuk = new Chart(chart4, {
         type: 'bar',
         data: {
             labels: @json($labelBulan),
@@ -139,7 +194,7 @@
         }
     });
     }else if (selectedOption === 'Keluar') {
-        const keluarMasuk = new Chart(chart2, {
+        const keluarMasuk = new Chart(chart4, {
         type: 'bar',
         data: {
             labels: @json($labelBulan),
@@ -168,7 +223,7 @@
         }
     });
     }else{
-        const keluarMasuk = new Chart(chart2, {
+        const keluarMasuk = new Chart(chart4, {
         type: 'bar',
         data: {
             labels: @json($labelBulan),
@@ -223,61 +278,6 @@
         }
     });
     }
-    const chart3 = document.getElementById('chartBaptis').getContext('2d');
-    const Baptis = new Chart(chart3, {
-        type: 'line',
-        data: {
-            labels: @json($labelBaptis),
-            datasets: [{
-                label: 'Baptis Anak',
-                data: @json($isiBA),
-                backgroundColor: 'rgba(255, 153, 153, 1)',
-                borderColor: 'rgba(255, 153, 153,1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Baptis Sidi',
-                data: @json($isiBS),
-                backgroundColor: 'rgba(255, 222, 41, 1)',
-                borderColor: 'rgba(255, 222, 41, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Baptis Dewasa',
-                data: @json($isiBD),
-                backgroundColor: 'rgba(153, 153, 255, 1)',
-                borderColor: 'rgba(153, 153, 255, 1)',
-                borderWidth: 1
-            }
-        ]
-        },
-        options: {
-            scales: {
-                y: {
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    grid: {
-                        drawOnChartArea: false,
-                    }
-                }
-            }
-        }
-    });
-    const chart4 = document.getElementById('chartPendidikan').getContext('2d');
-    const pendidikan = new Chart(chart4, {
-        type: 'pie',
-        data: {
-            labels: @json($labelPendidikan),
-            datasets: [{
-                label: 'kkm',
-                data: @json($isiPendidikan),
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        }
-    });
 
 </script>
 @endpush

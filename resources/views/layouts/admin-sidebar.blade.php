@@ -13,10 +13,18 @@
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item {{ Nav::isRoute('admin.dashboard') }}">
-            <a class="nav-link" href="{{ route('admin.dashboard') }}">
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseDashboard" aria-expanded="false" aria-controls="collapseDashboard">
                 <i class="fa-solid fa-gauge-high"></i>
-                <span>{{ __('Dashboard') }}</span></a>
+                <span>{{ __('Dashboard') }}</span>
+            </a>
+            <div id="collapseDashboard" class="collapse" aria-labelledby="headingDashboard" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Dashboard</h6>
+                    <a class="collapse-item" href="{{ route('admin.dashboard') }}">Dashboard Jemaat</a>
+                    <a class="collapse-item" href="{{ route('admin.birthdayDash') }}">Dashboard Ulangtahun</a>
+                </div>
+            </div>
         </li>
 
         <!-- Divider -->
