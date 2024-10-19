@@ -13,6 +13,10 @@ use App\Models\JabatanNonMajelis as JabatanNonMajelis;
 use App\Models\User as User;
 use App\Models\RolePengguna as Role;
 use App\Models\Pekerjaan as Pekerjaan;
+use App\Models\Provinsi as Provinsi;
+use App\Models\Kabupaten as Kabupaten;
+use App\Models\Kecamatan as Kecamatan;
+use App\Models\Kelurahan as Kelurahan;
 // daerah
 
 // DATA
@@ -258,6 +262,153 @@ public function ApiGetPekerjaan(Request $request)
     }
 }
 // GET PEKERJAAN END
+
+//  GET DAERAH START
+public function ApiGetDaerahProvinsi(Request $request){
+    if ($request->has('id')) {
+        $data = Provinsi::where('id_provinsi', $request->id)->get();
+
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Provinsi::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_provinsi' => $item->id_provinsi,
+                    'nama_provinsi' => $item->nama_provinsi,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    } else {
+        $data = Provinsi::all();
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Provinsi::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_provinsi' => $item->id_provinsi,
+                    'nama_provinsi' => $item->nama_provinsi,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    }
+}
+
+public function ApiGetDaerahKabupaten(Request $request)
+{
+    if ($request->has('id')) {
+        $data = Kabupaten::where('id_kabupaten', $request->id)->get();
+
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Kabupaten::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_kabupaten' => $item->id_kabupaten,
+                    'kabupaten' => $item->kabupaten,
+                    'id_provinsi' => $item->id_provinsi,
+                    'nama_provinsi' => $item->provinsi ? $item->provinsi->nama_provinsi : null,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    } else {
+        $data = Kabupaten::where('id_provinsi', $request->id_provinsi)->get();
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Kabupaten::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_kabupaten' => $item->id_kabupaten,
+                    'kabupaten' => $item->kabupaten,
+                    'id_provinsi' => $item->id_provinsi,
+                    'nama_provinsi' => $item->provinsi ? $item->provinsi->nama_provinsi : null,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    }
+}
+
+public function ApiGetDaerahKecamatan(Request $request) {
+    if ($request->has('id')) {
+        $data = Kecamatan::where('id_kecamatan', $request->id)->get();
+
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Kecamatan::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_kecamatan' => $item->id_kecamatan,
+                    'nama_kecamatan' => $item->nama_kecamatan,
+                    'id_kabupaten' => $item->id_kabupaten,
+                    'nama_kabupaten' => $item->kabupaten ? $item->kabupaten->nama_kabupaten : null,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    } else {
+        $data = Kecamatan::where('id_kabupaten', $request->id_kabupaten)->get();
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Kecamatan::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_kecamatan' => $item->id_kecamatan,
+                    'kecamatan' => $item->kecamatan,
+                    'id_kabupaten' => $item->id_kabupaten,
+                    'nama_kabupaten' => $item->kabupaten ? $item->kabupaten->nama_kabupaten : null,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    }
+}
+public function ApiGetDaerahKelurahan(Request $request) {
+    if ($request->has('id')) {
+        $data = Kelurahan::where('id_kelurahan', $request->id)->get();
+
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Kelurahan::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_kelurahan' => $item->id_kelurahan,
+                    'nama_kelurahan' => $item->nama_kelurahan,
+                    'id_kecamatan' => $item->id_kecamatan,
+                    'nama_kecamatan' => $item->kecamatan ? $item->kecamatan->nama_kecamatan : null,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    } else {
+        $data = Kelurahan::where('id_kecamatan', $request->id_kecamatan)->get();
+        $formattedData = [
+            'total' => $data->count(),
+            'totalNotFiltered' => Kelurahan::count(),
+            'rows' => $data->map(function ($item) {
+                return [
+                    'id_kelurahan' => $item->id_kelurahan,
+                    'nama_kelurahan' => $item->nama_kelurahan,
+                    'id_kecamatan' => $item->id_kecamatan,
+                    'nama_kecamatan' => $item->kecamatan ? $item->kecamatan->nama_kecamatan : null,
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($formattedData);
+    }
+}
+
+//  GET DAERAH END
 
 // GET JEMAAT
 public function ApiGetJemaat(Request $request)
@@ -1072,7 +1223,7 @@ public function ApiPostUser(Request $request)
 // POST USER END
 
 // POST PEKERJAAN
-    public function ApiPostPekerjaan(Request $request)
+public function ApiPostPekerjaan(Request $request)
 {
 
     if (Pekerjaan::where('id_pekerjaan', $request->id_pekerjaan)->first() != null) {
@@ -1088,8 +1239,25 @@ public function ApiPostUser(Request $request)
 
     return response()->json($data);
 }
-
 // POST PEKERJAAN END
+
+// POST PROVINSI START
+public function ApiPostProvinsi(Request $request)
+{
+    if (Provinsi::where('id_provinsi', $request->id_provinsi)->first() != null) {
+        return response()->json([
+            'message' => 'Data already exists'
+        ]);
+    }
+
+    $data = new Provinsi();
+    $data->id_provinsi = $request->id_provinsi;
+    $data->nama_provinsi = $request->nama_provinsi;
+    $data->save();
+
+    return response()->json($data);
+}
+// POST PROVINSI END
 
 // POST JEMAAT
 public function ApiPostJemaat(Request $request)
@@ -1749,6 +1917,46 @@ public function ApiDeletePekerjaan(Request $request)
 
     return response()->json(['message' => 'Pekerjaan not found'], 404);
 }
+
+public function ApiDeleteProvinsi(Request $request)
+{
+    // Cari provinsi berdasarkan id_provinsi
+    $provinsi = Provinsi::find($request->id_provinsi);
+
+    if ($provinsi) {
+        // Cari semua kabupaten yang terkait dengan provinsi
+        $kabupaten = Kabupaten::where('id_provinsi', $request->id_provinsi)->get();
+
+        if ($kabupaten->isNotEmpty()) {
+            foreach ($kabupaten as $kab) {
+                $kecamatan = Kecamatan::where('id_kabupaten', $kab->id_kabupaten)->get();
+
+                if ($kecamatan->isNotEmpty()) {
+                    foreach ($kecamatan as $kec) {
+                        $kelurahan = Kelurahan::where('id_kecamatan', $kec->id_kecamatan)->get();
+
+                        if ($kelurahan->isNotEmpty()) {
+                            foreach ($kelurahan as $kel) {
+                                $kel->delete();
+                            }
+                        }
+                        $kec->delete();
+                    }
+                }
+                $kab->delete();
+            }
+        }
+        $provinsi->delete();
+
+        return response()->json([
+            'message' => 'Provinsi deleted successfully',
+            'data' => $provinsi
+        ]);
+    }
+
+    return response()->json(['message' => 'Provinsi not found'], 404);
+}
+
 
 public function ApiDeleteKeluarga(Request $request)
 {

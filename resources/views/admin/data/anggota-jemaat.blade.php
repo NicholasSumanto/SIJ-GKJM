@@ -62,10 +62,6 @@
                         return index + 1;
                     }
                 }, {
-                    field: 'id_jemaat',
-                    title: 'ID Jemaat',
-                    align: 'center'
-                }, {
                     field: 'nama_jemaat',
                     title: 'Nama',
                     align: 'center'
@@ -138,11 +134,7 @@
                         formatter: function(value, row, index) {
                             return index + 1;
                         }
-                    }, {
-                        field: 'id_jemaat',
-                        title: 'Id Jemaat',
-                        align: 'center'
-                    }, {
+                    },  {
                         field: 'nama_jemaat',
                         title: 'Nama',
                         align: 'center'
@@ -195,7 +187,7 @@
                         align: 'center'
                     }],
                     exportOptions: {
-                        ignoreColumn: [7, 8, 9]
+                        ignoreColumn: [6, 7, 8]
                     }
                 });
             }).trigger('change');

@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ApiOutsideController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomLoginController;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +30,9 @@ Route::post('/get/jabatan-non-majelis', [ApiController::class, 'ApiGetJabatanNon
 Route::post('/get/user', [ApiController::class, 'ApiGetUser'])-> name('api.get.user-admin');
 Route::post('/get/role', [ApiController::class, 'ApiGetRole'])-> name('api.get.roles');
 Route::post('/get/pekerjaan', [ApiController::class, 'ApiGetPekerjaan'])-> name('api.get.pekerjaan');
+Route::post('/get/provinsi', [ApiController::class, 'ApiGetDaerahProvinsi'])-> name('api.get.provinsi');
+Route::post('/get/kabupaten', [ApiController::class, 'ApiGetDaerahKabupaten'])-> name('api.get.kabupaten');
+Route::post('/get/kecamatan', [ApiController::class, 'ApiGetDaerahKecamatan'])-> name('api.get.kecamatan');
 //daerah
     //Data
 Route::post('/get/jemaat', [ApiController::class, 'ApiGetJemaat'])-> name('api.get.jemaat');
@@ -45,9 +50,6 @@ Route::post('/get/baptissidi', [ApiController::class, 'ApiGetbaptisSidi'])-> nam
     // Detail
 Route::post('/get/jemaat/{id_jemaat}', [ApiController::class, 'ApiGetJemaatById'])->name('api.get.jemaat.by.id');
 
-
-
-
 // POST
     //Pengaturan
 Route::post('/post/wilayah', [ApiController::class, 'ApiPostWilayah'])-> name('api.post.wilayah');
@@ -55,6 +57,7 @@ Route::post('/post/jabatan-majelis', [ApiController::class, 'ApiPostJabatanMajel
 Route::post('/post/jabatan-non-majelis', [ApiController::class, 'ApiPostJabatanNonMajelis'])-> name('api.post.jabatan-non-majelis');
 Route::post('/post/user', [ApiController::class, 'ApiPostUser'])-> name('api.post.user');
 Route::post('/post/pekerjaan', [ApiController::class, 'ApiPostPekerjaan'])-> name('api.post.pekerjaan');
+Route::post('/post/provinsi', [ApiController::class, 'ApiPostProvinsi'])-> name('api.post.provinsi');
     //Data
 Route::post('/post/jemaat', [ApiController::class, 'ApiPostJemaat'])-> name('api.post.jemaat');
 Route::post('/post/keluarga', [ApiController::class, 'ApiPostKeluarga'])-> name('api.post.keluarga');
@@ -98,6 +101,7 @@ Route::post('/delete/jabatan-majelis', [ApiController::class, 'ApiDeleteJabatanM
 Route::post('/delete/jabatan-non-majelis', [ApiController::class, 'ApiDeleteJabatanNonMajelis'])-> name('api.delete.jabatan-non-majelis');
 Route::post('/delete/user', [ApiController::class, 'ApiDeleteUser'])-> name('api.delete.user');
 Route::post('/delete/pekerjaan', [ApiController::class, 'ApiDeletePekerjaan'])-> name('api.delete.pekerjaan');
+Route::post('/delete/provinsi', [ApiController::class, 'ApiDeleteProvinsi'])-> name('api.delete.provinsi');
 //daerah
     //Data
 Route::post('/delete/jemaat', [ApiController::class, 'ApiDeleteJemaat'])-> name('api.delete.jemaat');
@@ -113,3 +117,5 @@ Route::post('/delete/baptisanak', [ApiController::class, 'ApiDeletebaptisAnak'])
 Route::post('/delete/baptisdewasa', [ApiController::class, 'ApiDeletebaptisDewasa'])-> name('api.delete.baptisdewasa');
 Route::post('/delete/baptissidi', [ApiController::class, 'ApiDeletebaptisSidi'])-> name('api.delete.baptissidi');
 
+// API Outside
+Route::post('/proxy-wilayah', [ApiOutsideController::class, 'ApiOutsideGetWilayah'])->name('api.proxy.wilayah');

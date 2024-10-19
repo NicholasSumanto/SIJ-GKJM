@@ -1,6 +1,6 @@
 @extends('layouts.admin-main-pengaturan')
 
-@section('title', 'Pengaturan Referensi Daerah')
+@section('title', 'Pengaturan Referensi Daerah Provinsi')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -12,9 +12,7 @@
     <div class="card-body">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="#">Kabupaten</a></li>
-                <li class="breadcrumb-item active"><a href="#">Kecamatan</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Kelurahan</li>
+                <li class="breadcrumb-item active" aria-current="page">Provinsi</li>
             </ol>
         </nav>
         <a href="" class="btn btn-success tambah-daerah">Tambah Referensi Daerah</a>
@@ -32,6 +30,7 @@
     </div>
 @endsection
 
+
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/bootstrap-table.js') }}"></script>
@@ -48,28 +47,28 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id',
-                    title: 'Kode'
+                    field: 'id_provinsi',
+                    title: 'ID Provinsi'
                 }, {
-                    field: 'name',
-                    title: 'Nama Kabupaten'
+                    field: 'nama_provinsi',
+                    title: 'Nama Provinsi'
                 }, {
-                    field: 'edit',
-                    title: 'Edit',
+                    field: 'view',
+                    title: 'View',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
+                        return `<button class="btn btn-success btn-view" data-id="${row.id_provinsi}">View</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
+                        return `<button class="btn btn-danger btn-delete" data-id="${row.id_provinsi}">Delete</button>`;
                     },
                     align: 'center'
                 }],
                 exportOptions: {
-                    columns: [0, 1]
+                    ignoreColumn: [2, 3, 4]
                 }
             });
 
@@ -84,93 +83,154 @@
                         checkbox: true,
                         visible: exportDataType === 'selected'
                     }, {
-                        field: 'id',
-                        title: 'Kode'
+                        field: 'id_provinsi',
+                        title: 'ID Provinsi'
                     }, {
-                        field: 'name',
-                        title: 'Nama Kabupaten'
+                        field: 'nama_provinsi',
+                        title: 'Nama Provinsi'
                     }, {
-                        field: 'edit',
-                        title: 'Edit',
+                        field: 'view',
+                        title: 'View',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}" style="color: #ffff;">Edit</button>`;
+                            return `<button class="btn btn-success btn-view" data-id="${row.id_provinsi}">View</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_provinsi}">Delete</button>`;
                         },
                         align: 'center'
-                    }]
+                    }],
+                    exportOptions: {
+                        ignoreColumn: [2, 3, 4]
+                    }
                 });
             }).trigger('change');
 
-            // Event listener untuk tombol tambah daerah
-            $('.tambah-daerah').on('click', function() {
+            // Event listener untuk tombol tambah wilayah
+            $('.tambah-daerah').on('click', function(event) {
                 event.preventDefault();
                 Swal.fire({
-                    title: 'Tambah Referensi Daerah Baru',
+                    title: 'Tambah Wilayah Baru',
                     html: `
-                        <form id="addReferensiDaerahh">
-                            <div class="form-group">
-                                <label for="kodeDaerah">Kode Daerah (Kabupaten)</label>
-                                <input type="text" id="kodeDaerah" class="form-control" placeholder="Masukkan Kode Daerah Kabupaten">
+                        <form id="addWilayahBaru">
+                           <div class="form-group">
+                                <label for="id_provinsi">ID Provinsi *</label>
+                                <input type="text" id="id_provinsi" class="form-control" placeholder="ID Provinsi" required disabled>
                             </div>
                             <div class="form-group mb-0">
-                                <label for="namaDaerah">Nama Daerah (Kabupaten)</label>
-                                <input type="text" id="namaDaerah" class="form-control" placeholder="Masukkan Nama Daerah Kabupaten">
+                                <label for="nama_provinsi">Nama Provinsi *</label>
+                                <select id="nama_provinsi" class="form-control" required>
+                                    <option value="">Pilih Nama Provinsi</option>
+                                    <!-- AJAX -->
+                                </select>
                             </div>
                         </form>
                     `,
                     showCancelButton: true,
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
+                    didOpen: () => {
+                        $.ajax({
+                            url: "{{ route('api.proxy.wilayah') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $provinsiSelect = $('#nama_provinsi');
+                                Object.entries(response).forEach(function([key,
+                                    value
+                                ]) {
+                                    $provinsiSelect.append(
+                                        `<option value="${value}" data-key="${key}">${value}</option>`
+                                    );
+                                });
+
+                                $provinsiSelect.on('change', function() {
+                                    const selectedKey = $(this).find(
+                                        'option:selected').data('key');
+
+                                    $('#id_provinsi').val(selectedKey);
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error', 'Gagal memuat data wilayah',
+                                    'error');
+                            }
+                        });
+                    },
                     preConfirm: () => {
-                        const kodeDaerah = $('#kodeDaerah').val();
-                        const namaDaerah = $('#namaDaerah').val();
+                        const id_provinsi = $('#id_provinsi').val();
+                        const nama_provinsi = $('#nama_provinsi').val();
 
                         // Validasi input
-                        if (!kodeDaerah || !namaDaerah) {
+                        if (!id_provinsi || !nama_provinsi) {
                             Swal.showValidationMessage(
-                                'Kode Daerah atau Nama Daerah harus diisi!');
+                                'Terdapat bagian yang tidak valid atau belum diisi!');
                             return false;
                         }
 
-                        return {
-                            kodeDaerah: kodeDaerah,
-                            namaDaerah: namaDaerah
-                        };
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('api.get.provinsi') }}",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id: id_provinsi
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.total > 0) {
+                                        reject(
+                                            'Provinsi sudah ada, silahkan gunakan provinsi lain!'
+                                        );
+                                    } else {
+                                        resolve({
+                                            id_provinsi: id_provinsi,
+                                            nama_provinsi: nama_provinsi,
+                                        });
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    reject(
+                                        'Terjadi kesalahan saat memvalidasi Provinsi.'
+                                    );
+                                }
+                            });
+                        }).catch(error => {
+                            Swal.showValidationMessage(error);
+                        });
                     }
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Ambil data dari result.value
+                    if (result.isConfirmed && result.value) {
                         const {
-                            kodeDaerah,
-                            namaDaerah
+                            id_provinsi,
+                            nama_provinsi,
                         } = result.value;
 
-                        // AJAX request untuk menambah daerah
                         $.ajax({
-                            url: '/add-daerah',
+                            url: "{{ route('api.post.provinsi') }}",
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                kodeDaerah: kodeDaerah,
-                                namaDaerah: namaDaerah
+                                id_provinsi: id_provinsi,
+                                nama_provinsi: nama_provinsi
                             },
                             success: function(response) {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data referensi daerah kabupaten berhasil ditambahkan!'
+                                    title: 'Data provinsi berhasil ditambahkan!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
                                 alert.fire({
-                                    icon: 'success',
-                                    title: 'Data referensi daerah kabupaten gagal ditambahkan!'
+                                    icon: 'error',
+                                    title: 'Data provinsi gagal ditambahkan!'
                                 });
                             }
                         });
@@ -178,116 +238,63 @@
                 });
             });
 
-            // Event listener untuk tombol edit
-            $(document).on('click', '.btn-edit', function() {
+            $(document).on('click', '.btn-view', function() {
+                var idProvinsi = $(this).data('id');
+
+                var url = '{{ route('admin.pengaturan.referensi-daerah-kabupaten', ':id') }}';
+                url = url.replace(':id', idProvinsi);
+
+                window.location.href = url;
+            });
+
+
+            $(document).on('click', '.btn-delete', function() {
                 event.preventDefault();
-                var kodeDaerah = $(this).data('id');
-                var namaDaerah = $(this).data('name');
+                var id_provinsi = $(this).data('id');
 
                 Swal.fire({
-                    title: 'Edit Referensi Daerah',
-                    html: `
-                        <form id="addReferensiDaerah">
-                            <div class="form-group">
-                                <label for="kodeDaerah">Kode Daerah (Kabupaten)</label>
-                                <input type="text" id="kodeDaerah" class="form-control" placeholder="Masukkan Kode Daerah Kabupaten" value=${kodeDaerah} disabled>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="namaDaerah">Nama Daerah (Kabupaten)</label>
-                                <input type="text" id="namaDaerah" class="form-control" placeholder="Masukkan Nama Wiayah Kabupaten" value=${namaDaerah}>
-                            </div>
-                        </form>
-                    `,
+                    title: 'Are you sure?',
+                    html: `<div class="text-delete">You won't be able to revert this!</div>`,
+                    icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Save',
-                    cancelButtonText: 'Cancel',
-                    preConfirm: () => {
-                        const namaDaerah = $('#namaDaerah').val();
-
-                        // Validasi input
-                        if (!namaDaerah) {
-                            Swal.showValidationMessage(
-                                'Nama Daerah harus diisi!');
-                            return false;
-                        }
-
-                        return {
-                            namaDaerah: namaDaerah
-                        };
-                    }
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const namaDaerah = result.value.namaDaerah;
-
-                        // Contoh: Update menggunakan AJAX
                         $.ajax({
-                            url: `/edit/${id}`,
+                            url: `{{ route('api.delete.provinsi') }}`,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                kodeDaerah: kodeDaerah,
-                                namaDaerah: namaDaerah
+                                id_provinsi: id_provinsi
                             },
+                            dataType: "json",
                             success: function(response) {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data referensi daerah kabupaten berhasil diubah!'
+                                    title: 'Data provinsi berhasil dihapus!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
                                 alert.fire({
-                                    icon: 'danger',
-                                    title: 'Data referensi daerah kabupaten gagal diupdate!'
+                                    icon: 'error',
+                                    title: 'Data provinsi gagal dihapus!'
                                 });
                             }
                         });
                     }
                 });
-            });
-        });
-
-        $(document).on('click', '.btn-delete', function() {
-            event.preventDefault();
-            var id = $(this).data('id');
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: `/delete/${id}`,
-                        type: 'DELETE',
-                        success: function(response) {
-                            alert.fire({
-                                icon: 'success',
-                                title: 'Data referensi daerah kabupaten berhasil dihapus!'
-                            });
-                            $table.bootstrapTable('refresh');
-                        },
-                        error: function(xhr, status, error) {
-                            alert.fire({
-                                icon: 'error',
-                                title: 'Data referensi daerah kabupaten gagal dihapus!'
-                            });
-                        }
-                    });
-                }
             });
         });
 
         function ApiGetReferensiDaerah(params) {
             $.ajax({
-                type: "GET",
-                url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                type: "POST",
+                url: "{{ route('api.get.provinsi') }}",
                 data: {
-                    // _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}'
                 },
                 dataType: "json",
                 success: function(data) {

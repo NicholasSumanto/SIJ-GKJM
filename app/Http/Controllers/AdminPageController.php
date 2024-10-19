@@ -8,6 +8,8 @@ use App\Models\Kematian;
 use App\Models\Jemaat;
 use App\Models\AtestasiMasuk;
 use App\Models\AtestasiKeluar;
+use App\Models\Kabupaten;
+use App\Models\Provinsi;
 use App\Models\Wilayah;
 use Illuminate\Support\Facades\DB;
 
@@ -186,6 +188,19 @@ class AdminPageController extends Controller
     public function adminReferensiDaerah()
     {
         return view('admin.pengaturan.referensi-daerah');
+    }
+
+    public function adminReferensiDaerahKabupaten($id_provinsi)
+    {
+        $provinsi = Provinsi::find($id_provinsi);
+        return view('admin.pengaturan.referensi-daerah-kabupaten')->with('provinsi', $provinsi);
+    }
+
+    public function adminReferensiDaerahKecamatan($id_kecamatan)
+    {
+        $kabupaten = Kabupaten::find($id_kecamatan);
+        $provinsi = Provinsi::find($kabupaten->id_provinsi);
+        return view('admin.pengaturan.referensi-daerah-kecamatan', compact('kabupaten', 'provinsi'));
     }
     // admin pengaturan end
 
