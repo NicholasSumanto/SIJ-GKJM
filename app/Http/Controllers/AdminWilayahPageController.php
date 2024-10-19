@@ -40,7 +40,7 @@ class AdminWilayahPageController extends Controller
             'users' => $users,
             //...
         ];
-        
+
         $id_role = Auth::user()->id_role;
         $nama_wilayah = Role::where('id_role', $id_role)->first()->nama_role;
 
@@ -50,14 +50,14 @@ class AdminWilayahPageController extends Controller
         $id_wilayah = Wilayah::where('nama_wilayah', $wilayahName)->first()->id_wilayah;
         $tahun = date('Y');
         $bulan = date('M');
-        
+
         $gender = $request->input('Kelamin');
         $wilayah = $request->input('Wilayah');
         $jemaatMeninggal = Kematian::selectRaw('MONTH(tanggal_meninggal) as bulan, COUNT(*) as jumlah')
             ->join('jemaat', 'kematian.id_jemaat', '=', 'jemaat.id_jemaat')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') // Join with wilayah table
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($wilayahName, function ($query) use ($wilayahName) {
                 return $query->where('wilayah.nama_wilayah', $wilayahName);
@@ -67,7 +67,7 @@ class AdminWilayahPageController extends Controller
         $baptisSidi = Jemaat::select(DB::raw('MONTH(baptis_sidi.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_sidi) as total'))
             ->join('baptis_sidi', 'jemaat.id_sidi', '=', 'baptis_sidi.id_sidi')
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('baptis_sidi.id_wilayah', $id_wilayah);
@@ -77,7 +77,7 @@ class AdminWilayahPageController extends Controller
         $baptisDewasa = Jemaat::select(DB::raw('MONTH(baptis_dewasa.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_bd) as total'))
             ->join('baptis_dewasa', 'jemaat.id_bd', '=', 'baptis_dewasa.id_bd')
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('baptis_dewasa.id_wilayah', $id_wilayah);
@@ -87,7 +87,7 @@ class AdminWilayahPageController extends Controller
         $baptisAnak = Jemaat::select(DB::raw('MONTH(baptis_anak.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_ba) as total'))
             ->join('baptis_anak', 'jemaat.id_ba', '=', 'baptis_anak.id_ba')
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('baptis_anak.id_wilayah', $id_wilayah);
@@ -98,19 +98,19 @@ class AdminWilayahPageController extends Controller
             ->join('jemaat', 'atestasi_masuk.id_jemaat', '=', 'jemaat.id_jemaat')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') // Join with wilayah table
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($wilayahName, function ($query) use ($wilayahName) {
                 return $query->where('wilayah.nama_wilayah', $wilayahName);
             })
             ->groupBy('bulan')
             ->get();
-        
+
         $atestasiKeluar = AtestasiKeluar::selectRaw('MONTH(tanggal) as bulan, COUNT(*) as jumlah')
             ->join('jemaat', 'atestasi_keluar.id_jemaat', '=', 'jemaat.id_jemaat')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') // Join with wilayah table
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($wilayahName, function ($query) use ($wilayahName) {
                 return $query->where('wilayah.nama_wilayah', $wilayahName);
@@ -120,7 +120,7 @@ class AdminWilayahPageController extends Controller
         $jumlahJemaat = Jemaat::selectRaw('wilayah.nama_wilayah as wil, COUNT(jemaat.id_wilayah) as jumlah')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($wilayahName, function ($query) use ($wilayahName) {
                 return $query->where('wilayah.nama_wilayah', $wilayahName);
@@ -131,7 +131,7 @@ class AdminWilayahPageController extends Controller
             ->join('pendidikan', 'jemaat.id_pendidikan','=','pendidikan.id_pendidikan' )
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') // Join with wilayah table
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($wilayahName, function ($query) use ($wilayahName) {
                 return $query->where('wilayah.nama_wilayah', $wilayahName);
@@ -151,7 +151,7 @@ class AdminWilayahPageController extends Controller
         $status = Jemaat::selectRaw('status.keterangan_status as stat, COUNT(jemaat.id_status) as jumlah')
             ->join('status', 'jemaat.id_status','=','status.id_status' )
             ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
+                return $query->where('jemaat.kelamin', $gender);
             })
             ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
                 return $query->where('jemaat.id_wilayah', $wilayah);
@@ -159,19 +159,19 @@ class AdminWilayahPageController extends Controller
             ->groupBy('stat')
             ->get();
 
-        $dropWilayah = Wilayah::pluck('nama_wilayah', 'id_wilayah'); 
+        $dropWilayah = Wilayah::pluck('nama_wilayah', 'id_wilayah');
         $dropKab = Kabupaten::pluck('kabupaten','id_kabupaten');
         $dropKec = Kecamatan::pluck('kecamatan','id_kecamatan');
         $labelWilayah = $jumlahJemaat->pluck('wil');
         $isiJemaat = $jumlahJemaat->pluck('jumlah');
-        $labelBulan = $jemaatMeninggal->pluck('bulan');  
+        $labelBulan = $jemaatMeninggal->pluck('bulan');
         $isiKematian = $jemaatMeninggal->pluck('jumlah');
         $isiBA = $baptisAnak->pluck('total');
         $isiBS = $baptisSidi->pluck('total');
         $isiBD = $baptisDewasa->pluck('total');
         $labelBaptis = $baptisAnak->pluck('bulan');
         $isiMasuk = $atestasiMasuk->pluck('jumlah');
-        $isiKeluar = $atestasiKeluar->pluck('jumlah');; 
+        $isiKeluar = $atestasiKeluar->pluck('jumlah');;
         $isiPendidikan = $pendidikan->pluck('jumlah');
         $labelPendidikan =$pendidikan->pluck('tingkatan');
         $labelStatus =$status->pluck('stat');
@@ -188,6 +188,16 @@ class AdminWilayahPageController extends Controller
             'pendidikan' => $pendidikan ->toArray(),
             'status' => $status ->toArray(),
         ];
+
+
         return view('admin-wilayah.dashboard',compact('tahun','bulan','dropWilayah','dropKab','dropKec','labelWilayah','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan', 'labelStatus', 'jumlahStatus'), $data);
+    }
+    public function adminWilayahDataAnggotaJemaat()
+    {
+        return view('admin-wilayah.data.anggota-jemaat');
+    }
+    public function adminWilayahDataAnggotaJemaatKeluarga()
+    {
+        return view('admin-wilayah.data.anggota-jemaat-keluarga');
     }
 }
