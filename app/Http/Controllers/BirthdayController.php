@@ -10,9 +10,11 @@ use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\AtestasiMasuk;
 use App\Models\AtestasiKeluar;
+use App\Models\Pernikahan;
 use App\Models\Wilayah;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Unique;
+use Illuminate\Support\Carbon;
 
 class BirthdayController extends Controller
 {
@@ -28,12 +30,9 @@ class BirthdayController extends Controller
 
         $widget = [
             'users' => $users,
-            //...
         ];
 
         $tahun = date('Y');
-        $gender = $request->input('Kelamin');
-        $wilayah = $request->input('Wilayah');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $isiJemaat = Jemaat::select('jemaat.nama_jemaat', 'jemaat.tanggal_lahir', 'wilayah.nama_wilayah as wil')
@@ -44,36 +43,72 @@ class BirthdayController extends Controller
                     date('m-d', strtotime($endDate))
                 ]);
             })
+            ->orderByRaw('MONTH(tanggal_lahir), DAY(tanggal_lahir)')
             ->orderBy('wilayah.nama_wilayah')
             ->get();
-        $monthNames = [1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ags', 9 => 'Sept', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'];
-        $status = Jemaat::selectRaw('status.keterangan_status as stat, COUNT(jemaat.id_status) as jumlah')
-            ->join('status', 'jemaat.id_status','=','status.id_status' )
-            ->when($gender, function ($query, $gender) {
-                return $query->where('jemaat.kelamin', $gender); 
-            })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
-            })
-            ->groupBy('stat')
+
+            
+        $weddingsByWilayah = Pernikahan::select(DB::raw('count(*) as total_weddings, jemaat.id_wilayah, wilayah.nama_wilayah'))
+            ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah') 
+            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
+            ->groupBy('jemaat.id_wilayah', 'wilayah.nama_wilayah')
             ->get();
+            
+        $pagination = Jemaat::select('jemaat.nama_jemaat', 'jemaat.tanggal_lahir', 'wilayah.nama_wilayah as wil')
+            ->leftJoin('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), [
+                    date('m-d', strtotime($startDate)),
+                    date('m-d', strtotime($endDate))
+                ]);
+            })
+            ->orderByRaw('MONTH(tanggal_lahir), DAY(tanggal_lahir)')
+            ->orderBy('wilayah.nama_wilayah')
+            ->paginate(8);
 
-        $dropWilayah = Wilayah::pluck('nama_wilayah', 'id_wilayah'); 
-        $dropKab = Kabupaten::pluck('kabupaten','id_kabupaten');
-        $dropKec = Kecamatan::pluck('kecamatan','id_kecamatan');
-        $labelWilayah = $isiJemaat->pluck('wil')->keys()->toArray();
-        $labelStatus =$status->pluck('stat');
-        $jumlahStatus = $status->pluck('jumlah');
+        $paginationMarried = Pernikahan::select('pernikahan.tanggal_nikah', 'pernikahan.pengantin_pria', 'pernikahan.pengantin_wanita', 'wilayah.nama_wilayah')
+            ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah') // Adjust this according to your actual foreign key
+            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [
+                    date('m-d', strtotime($startDate)),
+                    date('m-d', strtotime($endDate))
+                ]);
+            })
+            ->orderByRaw('MONTH(tanggal_nikah), DAY(tanggal_nikah)')
+            ->paginate(8);
 
+
+        $isiJemaat->map(function($jemaat) {
+            $jemaat->tanggal_lahir = Carbon::parse($jemaat->tanggal_lahir)->format('d-m-Y');
+            return $jemaat;
+        });
+        $pagination->map(function($jemaat) {
+            $jemaat->tanggal_lahir = Carbon::parse($jemaat->tanggal_lahir)->format('d-m-Y');
+            return $jemaat;
+        });
+        $paginationMarried->map(function($pernikahan) {
+            $pernikahan->tanggal_nikah = Carbon::parse($pernikahan->tanggal_nikah)->format('d-m-Y');
+            return $pernikahan;
+        });
+
+
+        $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+        $labelWilayah = $isiJemaat->pluck('wil')->unique()->values()->toArray();
+        $wilayahNames = $weddingsByWilayah->pluck('nama_wilayah')->toArray(); 
+        $weddingCounts = $weddingsByWilayah->pluck('total_weddings')->toArray();
         $dataCount = $isiJemaat->groupBy('wil')->map(function ($group) {
             return $group->count();
         })->values()->toArray();
+        $dataMarried = array_fill(0, 12, 0);
+
         $data = [
             'widget' => $widget,
             'jumlahJemaat' => $isiJemaat ->toArray(),
-            'status' => $status ->toArray(),
         ];
-        return view('admin.birthdayDash',compact('tahun','dropWilayah','labelWilayah','isiJemaat','labelStatus','jumlahStatus','dataCount'), $data);
+
+
+        return view('admin.birthdayDash',compact('monthNames','tahun','pagination','labelWilayah','isiJemaat','paginationMarried','dataCount','dataMarried', 'wilayahNames', 'weddingCounts'), $data);
     }
     
 
