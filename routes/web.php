@@ -43,13 +43,16 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/pengaturan/jabatan-non-majelis', AdminPageController::class . '@adminPengaturanJabatanNonMajelis')->name('admin.pengaturan.jabatan-non-majelis');
     Route::get('/admin/pengaturan/user-admin', AdminPageController::class . '@adminPengaturanUserAdmin')->name('admin.pengaturan.user-admin');
     Route::get('/admin/pengaturan/referensi-pekerjaan', AdminPageController::class . '@adminReferensiPekerjaan')->name('admin.pengaturan.referensi-pekerjaan');
-    Route::get('/admin/pengaturan/referensi-daerah-provinsi', AdminPageController::class . '@adminReferensiDaerah')->name('admin.pengaturan.referensi-daerah');
-    Route::get('/admin/pengaturan/referensi-daerah-kabupaten/{id_provinsi}', AdminPageController::class . '@adminReferensiDaerahKabupaten')->name('admin.pengaturan.referensi-daerah-kabupaten');
-    Route::get('/admin/pengaturan/referensi-daerah-kecamatan/{id_kecamatan}', AdminPageController::class . '@adminReferensiDaerahKecamatan')->name('admin.pengaturan.referensi-daerah-kecamatan');
+    Route::get('/admin/pengaturan/referensi-daerah/provinsi', AdminPageController::class . '@adminReferensiDaerah')->name('admin.pengaturan.referensi-daerah');
+    Route::get('/admin/pengaturan/referensi-daerah/kabupaten/{id_provinsi}', AdminPageController::class . '@adminReferensiDaerahKabupaten')->name('admin.pengaturan.referensi-daerah-kabupaten');
+    Route::get('/admin/pengaturan/referensi-daerah/kecamatan/{id_kabupaten}', AdminPageController::class . '@adminReferensiDaerahKecamatan')->name('admin.pengaturan.referensi-daerah-kecamatan');
+    Route::get('/admin/pengaturan/referensi-daerah/kelurahan/{id_kecamatan}', AdminPageController::class . '@adminReferensiDaerahKelurahan')->name('admin.pengaturan.referensi-daerah-kelurahan');
     // Data
     Route::get('/admin/data/anggota-jemaat', AdminPageController::class . '@adminDataAnggotaJemaat')->name('admin.data.anggota-jemaat');
+    Route::get('/admin/data/anggota-jemaat/{id}', AdminPageController::class . '@adminDataAnggotaJemaatDetail')->name('admin.data.anggota-jemaat-keluarga-detail');
     Route::get('/admin/data/anggota-jemaat-keluarga', AdminPageController::class . '@adminDataAnggotaJemaatKeluarga')->name('admin.data.anggota-jemaat-keluarga');
     Route::get('/admin/data/jemaat-baru', AdminPageController::class . '@adminDataJemaatBaru')->name('admin.data.jemaat-baru');
+    Route::get('/admin/data/penddeta', AdminPageController::class . '@adminDataPendeta')->name('admin.data.pendeta');
     Route::get('/admin/data/majelis', AdminPageController::class . '@adminDataMajelis')->name('admin.data.majelis');
     Route::get('/admin/data/non-majelis', AdminPageController::class . '@adminDataNonMajelis')->name('admin.data.non-majelis');
     Route::get('/admin/data/jemaat-titipan', AdminPageController::class . '@adminDataJemaatTitipan')->name('admin.data.jemaat-titipan');

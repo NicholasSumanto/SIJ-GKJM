@@ -7,7 +7,7 @@ use Database\Seeders\UserSeeders\{RoleSeeder, UsersSeeder};
 use Database\Seeders\ParentSeeders\{StatusSeeder, GerejaSeeder, BidangIlmuSeeder, PendidikanSeeder, PekerjaanSeeder, PendetaSeeder, PendetaDidikSeeder, WilayahSeeder, ProvinsiSeeder, JabatanMajelisSeeder, JabatanNonMajelisSeeder};
 use Database\Seeders\GeoSeeders\{KabupatenSeeder,KecamatanSeeder,KelurahanSeeder};
 use Database\Seeders\BaptisSeeders\{BaptisAnakSeeder,BaptisDewasaSeeder,BaptisSidiSeeder};
-use Database\Seeders\JemaatSeeders\{PernikahanSeeder,jemaatSeeder,JemaatTitipanSeeder,KeluargaSeeder,KeluargaDetilSeeder,KematianSeeder,MajelisSeeder,NonMajelisSeeder};
+use Database\Seeders\JemaatSeeders\{PernikahanSeeder,jemaatSeeder,JemaatTitipanSeeder,KeluargaSeeder,AnggotaKeluargaSeeder,KematianSeeder,MajelisSeeder,NonMajelisSeeder};
 use Database\Seeders\AtestasiSeeders\{AtestasiKeluarSeeder,AtestasiKeluarDtlSeeder,AtestasiMasukSeeder};
 class DatabaseSeeder extends Seeder
 {
@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
             JemaatSeeder::class,
             JemaatTitipanSeeder::class,
             KeluargaSeeder::class,
-            KeluargaDetilSeeder::class,
+            AnggotaKeluargaSeeder::class,
             KematianSeeder::class,
             MajelisSeeder::class,
             NonMajelisSeeder::class,

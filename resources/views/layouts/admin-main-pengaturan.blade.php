@@ -25,7 +25,7 @@
                     <a class="nav-link {{ Nav::isRoute('admin.pengaturan.referensi-pekerjaan') }}" aria-current="true" href="{{ route('admin.pengaturan.referensi-pekerjaan') }}">REF PEKERJAAN</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.pengaturan.referensi-daerah') }}" aria-current="true" href="{{ route('admin.pengaturan.referensi-daerah') }}">REF DAERAH</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.pengaturan.referensi-daerah*') }}" aria-current="true" href="{{ route('admin.pengaturan.referensi-daerah') }}">REF DAERAH</a>
                 </li>
             </ul>
         </div>

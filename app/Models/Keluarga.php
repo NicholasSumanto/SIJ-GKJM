@@ -14,16 +14,16 @@ class Keluarga extends Model
 
     protected $fillable = [
         'id_jemaat',
-        'id_gereja',
+        'kepala_keluarga',
+        'id_wilayah',
     ];
-
     public function jemaat()
     {
         return $this->belongsTo(Jemaat::class, 'id_jemaat');
     }
-
-    public function gereja()
+    public function wilayah()
     {
-        return $this->belongsTo(Gereja::class, 'id_gereja');
+        return $this->belongsTo(Wilayah::class, 'id_wilayah');
     }
+
 }

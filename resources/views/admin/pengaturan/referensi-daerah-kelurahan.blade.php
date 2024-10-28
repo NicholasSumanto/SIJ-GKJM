@@ -1,6 +1,6 @@
 @extends('layouts.admin-main-pengaturan')
 
-@section('title', 'Pengaturan Referensi Daerah Provinsi')
+@section('title', 'Pengaturan Referensi Daerah Kelurahan')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -12,10 +12,16 @@
     <div class="card-body">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Provinsi</li>
+                <li class="breadcrumb-item active"><a href="{{ route('admin.pengaturan.referensi-daerah') }}">Provinsi
+                        ({{ $provinsi->nama_provinsi }})</a></li>
+                <li class="breadcrumb-item active"><a href="{{ route('admin.pengaturan.referensi-daerah-kabupaten', $provinsi->id_provinsi) }}">Kabupaten
+                        ({{ $kabupaten->kabupaten }})</a></li>
+                <li class="breadcrumb-item active"><a href="{{ route('admin.pengaturan.referensi-daerah-kecamatan', $kabupaten->id_kabupaten) }}">Kecamatan
+                        ({{ $kecamatan->kecamatan }})</a></li>
+                <li class="breadcrumb-item" aria-current="page">Kelurahan</li>
             </ol>
         </nav>
-        <a href="" class="btn btn-success tambah-daerah">Tambah Referensi Daerah</a>
+        <a href="" class="btn btn-success tambah-daerah-kelurahan">Tambah Referensi Daerah</a>
         <div id="toolbar" class="select">
             <select class="form-control">
                 <option value="">Export (Hanya yang Ditampilkan)</option>
@@ -25,7 +31,7 @@
         </div>
         <table id="table" data-show-export="true" data-pagination="true" data-click-to-select="true"
             data-toolbar="#toolbar" data-search="true" data-show-toggle="true" data-show-columns="true"
-            data-ajax="ApiGetReferensiDaerah">
+            data-ajax="ApiGetReferensiDaerahKelurahan">
         </table>
     </div>
 @endsection
@@ -47,28 +53,21 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id_provinsi',
-                    title: 'ID Provinsi'
+                    field: 'id_kelurahan',
+                    title: 'ID Kelurahan'
                 }, {
-                    field: 'nama_provinsi',
-                    title: 'Nama Provinsi'
-                }, {
-                    field: 'view',
-                    title: 'View',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-success btn-view" data-id="${row.id_provinsi}">View</button>`;
-                    },
-                    align: 'center'
+                    field: 'kelurahan',
+                    title: 'Nama Kelurahan'
                 }, {
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id_provinsi}">Delete</button>`;
+                        return `<button class="btn btn-danger btn-delete" data-id="${row.id_kelurahan}">Delete</button>`;
                     },
                     align: 'center'
                 }],
                 exportOptions: {
-                    ignoreColumn: [2, 3, 4]
+                    ignoreColumn: [2]
                 }
             });
 
@@ -83,47 +82,40 @@
                         checkbox: true,
                         visible: exportDataType === 'selected'
                     }, {
-                        field: 'id_provinsi',
-                        title: 'ID Provinsi'
+                        field: 'id_kelurahan',
+                        title: 'ID Kelurahan'
                     }, {
-                        field: 'nama_provinsi',
-                        title: 'Nama Provinsi'
-                    }, {
-                        field: 'view',
-                        title: 'View',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-success btn-view" data-id="${row.id_provinsi}">View</button>`;
-                        },
-                        align: 'center'
+                        field: 'kelurahan',
+                        title: 'Nama Kelurahan'
                     }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_provinsi}">Delete</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_kelurahan}">Delete</button>`;
                         },
                         align: 'center'
                     }],
                     exportOptions: {
-                        ignoreColumn: [2, 3, 4]
+                        ignoreColumn: [2]
                     }
                 });
             }).trigger('change');
 
             // Event listener untuk tombol tambah wilayah
-            $('.tambah-daerah').on('click', function(event) {
+            $('.tambah-daerah-kelurahan').on('click', function(event) {
                 event.preventDefault();
                 Swal.fire({
-                    title: 'Tambah Wilayah Provinsi Baru',
+                    title: 'Tambah Wilayah Kelurahan Baru',
                     html: `
                         <form id="addWilayahBaru">
                            <div class="form-group">
-                                <label for="id_provinsi">ID Provinsi *</label>
-                                <input type="text" id="id_provinsi" class="form-control" placeholder="ID Provinsi" required disabled>
+                                <label for="id_kelurahan">ID Kelurahan *</label>
+                                <input type="text" id="id_kelurahan" class="form-control" placeholder="ID Kelurahan" required disabled>
                             </div>
                             <div class="form-group mb-0">
-                                <label for="nama_provinsi">Nama Provinsi *</label>
-                                <select id="nama_provinsi" class="form-control" required>
-                                    <option value="">Pilih Nama Provinsi</option>
+                                <label for="nama_kelurahan">Nama Kelurahan *</label>
+                                <select id="nama_kelurahan" class="form-control" required>
+                                    <option value="">Pilih Nama Kelurahan</option>
                                     <!-- AJAX -->
                                 </select>
                             </div>
@@ -137,24 +129,27 @@
                             url: "{{ route('api.proxy.wilayah') }}",
                             type: "POST",
                             data: {
-                                _token: '{{ csrf_token() }}'
+                                _token: '{{ csrf_token() }}',
+                                id_provinsi: `{{ $provinsi->id_provinsi }}`,
+                                id_kabupaten: `{{ str_pad($kabupaten->id_kabupaten - $provinsi->id_provinsi * 100, 2, '0', STR_PAD_LEFT) }}`,
+                                id_kecamatan: `0{{ str_pad($kecamatan->id_kecamatan - $kabupaten->id_kabupaten * 1000, 2, '0', STR_PAD_LEFT) }}`
                             },
                             dataType: "json",
                             success: function(response) {
-                                const $provinsiSelect = $('#nama_provinsi');
+                                const $kelurahanSelect = $('#nama_kelurahan');
                                 Object.entries(response).forEach(function([key,
                                     value
                                 ]) {
-                                    $provinsiSelect.append(
+                                    $kelurahanSelect.append(
                                         `<option value="${value}" data-key="${key}">${value}</option>`
                                     );
                                 });
 
-                                $provinsiSelect.on('change', function() {
+                                $kelurahanSelect.on('change', function() {
                                     const selectedKey = $(this).find(
                                         'option:selected').data('key');
 
-                                    $('#id_provinsi').val(selectedKey);
+                                    $('#id_kelurahan').val(selectedKey);
                                 });
                             },
                             error: function(xhr, status, error) {
@@ -164,11 +159,11 @@
                         });
                     },
                     preConfirm: () => {
-                        const id_provinsi = $('#id_provinsi').val();
-                        const nama_provinsi = $('#nama_provinsi').val();
+                        const id_kelurahan = $('#id_kelurahan').val();
+                        const nama_kelurahan = $('#nama_kelurahan').val();
 
                         // Validasi input
-                        if (!id_provinsi || !nama_provinsi) {
+                        if (!id_kelurahan || !nama_kelurahan) {
                             Swal.showValidationMessage(
                                 'Terdapat bagian yang tidak valid atau belum diisi!');
                             return false;
@@ -177,27 +172,27 @@
                         return new Promise((resolve, reject) => {
                             $.ajax({
                                 type: "POST",
-                                url: "{{ route('api.get.provinsi') }}",
+                                url: "{{ route('api.get.kelurahan') }}",
                                 data: {
                                     _token: '{{ csrf_token() }}',
-                                    id: id_provinsi
+                                    id: id_kelurahan
                                 },
                                 dataType: "json",
                                 success: function(response) {
                                     if (response.total > 0) {
                                         reject(
-                                            'Provinsi sudah ada, silahkan gunakan provinsi lain!'
+                                            'Kelurahan sudah ada, silahkan gunakan kelurahan lain!'
                                         );
                                     } else {
                                         resolve({
-                                            id_provinsi: id_provinsi,
-                                            nama_provinsi: nama_provinsi,
+                                            id_kelurahan: id_kelurahan,
+                                            nama_kelurahan: nama_kelurahan,
                                         });
                                     }
                                 },
                                 error: function(xhr, status, error) {
                                     reject(
-                                        'Terjadi kesalahan saat memvalidasi Provinsi.'
+                                        'Terjadi kesalahan saat memvalidasi kabupaten.'
                                     );
                                 }
                             });
@@ -208,29 +203,30 @@
                 }).then((result) => {
                     if (result.isConfirmed && result.value) {
                         const {
-                            id_provinsi,
-                            nama_provinsi,
+                            id_kelurahan,
+                            nama_kelurahan,
                         } = result.value;
 
                         $.ajax({
-                            url: "{{ route('api.post.provinsi') }}",
+                            url: "{{ route('api.post.kelurahan') }}",
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                id_provinsi: id_provinsi,
-                                nama_provinsi: nama_provinsi
+                                id_kecamatan: `{{ $kecamatan->id_kecamatan }}`,
+                                id_kelurahan: id_kelurahan,
+                                nama_kelurahan: nama_kelurahan
                             },
                             success: function(response) {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data provinsi berhasil ditambahkan!'
+                                    title: 'Data kelurahan berhasil ditambahkan!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
                                 alert.fire({
                                     icon: 'error',
-                                    title: 'Data provinsi gagal ditambahkan!'
+                                    title: 'Data kelurahan gagal ditambahkan!'
                                 });
                             }
                         });
@@ -238,19 +234,9 @@
                 });
             });
 
-            $(document).on('click', '.btn-view', function() {
-                var idProvinsi = $(this).data('id');
-
-                var url = '{{ route('admin.pengaturan.referensi-daerah-kabupaten', ':id') }}';
-                url = url.replace(':id', idProvinsi);
-
-                window.location.href = url;
-            });
-
-
             $(document).on('click', '.btn-delete', function() {
                 event.preventDefault();
-                var id_provinsi = $(this).data('id');
+                var id_kelurahan = $(this).data('id');
 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -263,24 +249,24 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `{{ route('api.delete.provinsi') }}`,
+                            url: `{{ route('api.delete.kelurahan') }}`,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                id_provinsi: id_provinsi
+                                id_kelurahan: id_kelurahan
                             },
                             dataType: "json",
                             success: function(response) {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data provinsi berhasil dihapus!'
+                                    title: 'Data kelurahan berhasil dihapus!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
                                 alert.fire({
                                     icon: 'error',
-                                    title: 'Data provinsi gagal dihapus!'
+                                    title: 'Data kelurahan gagal dihapus!'
                                 });
                             }
                         });
@@ -289,12 +275,13 @@
             });
         });
 
-        function ApiGetReferensiDaerah(params) {
+        function ApiGetReferensiDaerahKelurahan(params) {
             $.ajax({
                 type: "POST",
-                url: "{{ route('api.get.provinsi') }}",
+                url: "{{ route('api.get.kelurahan') }}",
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    id_kecamatan: `{{ $kecamatan->id_kecamatan }}`
                 },
                 dataType: "json",
                 success: function(data) {

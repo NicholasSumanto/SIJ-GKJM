@@ -1,21 +1,22 @@
 @extends('layouts.admin-main-data')
 
-@section('title', 'Anggota Jemaat Keluarga')
+@section('title', 'Pendeta')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-table-filter-control.css') }}">
     <style>
-        .btn-keluarga {
-            color: white;
+        th {
+            vertical-align: top !important;
         }
     </style>
 @endpush
 
 @section('content')
     <div class="card-body">
-        <a href="" class="btn btn-success tambah-keluarga">Tambah Keluarga</a>
+        <a href="" class="btn btn-success tambah-pendeta">Tambah Pendeta</a>
         <div id="toolbar" class="select">
             <select class="form-control">
                 <option value="">Export (Hanya yang Ditampilkan)</option>
@@ -25,7 +26,7 @@
         </div>
         <table id="table" data-show-export="true" data-pagination="true" data-click-to-select="true"
             data-toolbar="#toolbar" data-search="true" data-show-toggle="true" data-show-columns="true"
-            data-ajax="ApiGetKeluarga">
+            data-filter-control="true" data-ajax="ApiGetPendeta">
         </table>
     </div>
 @endsection
@@ -40,80 +41,55 @@
     <script src="{{ asset('js/table-export/FileSaver/FileSaver.min.js') }}"></script>
     <script src="{{ asset('js/table-export/js-xlsx/xlsx.core.min.js') }}"></script>
     <script src="{{ asset('js/table-export/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('js/table-export/filter-control/bootstrap-table-filter-control.js') }}"></script>
+    <script src="{{ asset('js/table-export/filter-control/utils.js') }}"></script>
     <script>
         var $table = $('#table');
         $(document).ready(function() {
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id_keluarga',
-                    title: 'ID Keluarga',
+                    field: 'nama_pendeta',
+                    title: 'Nama Pendeta',
                     align: 'center'
                 }, {
-                    field: 'kepala_keluarga',
-                    title: 'Nama Kepala Keluarga',
-                    align: 'center'
-                },{
-                    field: 'nama_wilayah',
-                    title: 'Wilayah',
-                    align: 'center'
-                },{
-                    field: 'edit_kepala_keluarga',
-                    title: 'Edit Kepala Keluarga',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-warning btn-edi" type="button" data-id="${row.id_keluarga}">Edit</button>`;
-                    },
+                    field: 'jenjang',
+                    title: 'Jenjang',
                     align: 'center'
                 }, {
-                    field: 'edit_keluarga',
-                    title: 'Edit Anggota Keluarga',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-warning btn-edi" type="button" data-id="${row.id_keluarga}">Edit</button>`;
-                    },
+                    field: 'sekolah',
+                    title: 'Sekolah',
+                    align: 'center'
+                }, {
+                    field: 'tahun_lulus',
+                    title: 'Tahun Lulus',
+                    filterControl: 'select',
+                    align: 'center'
+                }, {
+                    field: 'keterangan',
+                    title: 'Keterangan',
+                    align: 'center'
+                }, {
+                    field: 'ijazah',
+                    title: 'Ijazah',
                     align: 'center'
                 }, {
                     field: 'edit',
-                    title: 'Lihat Keluarga',
+                    title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `
-                        <button class="btn btn-success btn-keluarga" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${row.id_keluarga}" aria-expanded="false" aria-controls="collapse-${row.id_keluarga}" data-id="${row.id_keluarga}">
-                            Lihat Keluarga
-                        </button>
-
-                        <div class="collapse" id="collapse-${row.id_keluarga}">
-                            <div class="card card-body mt-2">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>ID Jemaat</th>
-                                            <th>Nama Jemaat</th>
-                                            <th>Tanggal Lahir</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${row.jemaat.map(j => `
-                                                <tr>
-                                                    <td>${j.id_jemaat}</td>
-                                                    <td>${j.nama_jemaat}</td>
-                                                    <td>${j.tanggal_lahir}</td>
-                                                </tr>
-                                            `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>`;
+                        return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id_keluarga}">Delete</button>`;
+                        return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
                     },
                     align: 'center'
                 }],
                 exportOptions: {
-                    ignoreColumn: [4, 5]
+                    ignoreColumns: [6, 7]
                 }
             });
 
@@ -124,114 +100,55 @@
                     exportDataType: exportDataType,
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
-                        field: 'state',
-                        checkbox: true,
-                        visible: exportDataType === 'selected'
-                    }, {
-                        field: 'id_keluarga',
-                        title: 'ID Keluarga',
+                        field: 'nama_pendeta',
+                        title: 'Nama Pendeta',
                         align: 'center'
                     }, {
-                        field: 'kepala_keluarga',
-                        title: 'Nama Kepala Keluarga',
-                        align: 'center'
-                    },{
-                        field: 'nama_wilayah',
-                        title: 'Wilayah',
+                        field: 'jenjang',
+                        title: 'Jenjang',
                         align: 'center'
                     }, {
-                        field: 'Keluarga',
-                        title: 'Lihat Keluarga',
+                        field: 'sekolah',
+                        title: 'Sekolah',
+                        align: 'center'
+                    }, {
+                        field: 'tahun_lulus',
+                        title: 'Tahun Lulus',
+                        align: 'center'
+                    }, {
+                        field: 'keterangan',
+                        title: 'Keterangan',
+                        align: 'center'
+                    }, {
+                        field: 'ijazah',
+                        title: 'Ijazah',
+                        align: 'center'
+                    }, {
+                        field: 'edit',
+                        title: 'Edit',
                         formatter: function(value, row, index) {
-                            return `
-                                <button class="btn btn-success btn-keluarga" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${row.id_keluarga}" aria-expanded="false" aria-controls="collapse-${row.id_keluarga}" data-id="${row.id_keluarga}">
-                                    Lihat Keluarga
-                                </button>
-
-                                <div class="collapse" id="collapse-${row.id_keluarga}">
-                                    <div class="card card-body mt-2">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID Jemaat</th>
-                                                    <th>Nama Anggota</th>
-                                                    <th>Keterangan Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="anggota-keluarga-body-${row.id_keluarga}">
-                                                <!-- Data anggota keluarga akan dimuat di sini -->
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            `;
-                        },
-                        align: 'center'
-                    }, {
-                        field: 'edit_kepala_keluarga',
-                        title: 'Edit Kepala Keluarga',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edi" type="button" data-id="${row.id_keluarga}">Edit</button>`;
-                        },
-                        align: 'center'
-                    }, {
-                        field: 'edit_keluarga',
-                        title: 'Edit Anggota Keluarga',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edi" type="button" data-id="${row.id_keluarga}">Edit</button>`;
+                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_keluarga}">Delete</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
                         },
                         align: 'center'
                     }],
                     exportOptions: {
-                        ignoreColumn: [4, 5]
+                        ignoreColumns: [6, 7]
                     }
                 });
             }).trigger('change');
 
-            // Event listener untuk tombol keluarga
-            $(document).on('click', '.btn-keluarga', function() {
-            const idKeluarga = $(this).data('id');
-            const tbody = $(`#anggota-keluarga-body-${idKeluarga}`);
-            if (tbody.children().length > 0) return;
-
-            $.ajax({
-                url: "{{ route('api.get.anggotakeluarga') }}",
-                method: 'POST',
-                data: { id_keluarga: idKeluarga },
-                success: function(anggotaKeluarga) {
-                    anggotaKeluarga.forEach(anggota => {
-                        tbody.append(`
-                            <tr>
-                                <td>${anggota.id_jemaat || 'N/A'}</td>
-                                <td>${anggota.nama_anggota || 'N/A'}</td>
-                                <td>${anggota.keterangan_status || 'N/A'}</td>
-                            </tr>
-                        `);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching anggota keluarga:", error);
-                    tbody.append(`
-                        <tr>
-                            <td colspan="3" class="text-center">Gagal memuat data anggota keluarga</td>
-                        </tr>
-                    `);
-                }
-            });
-        });
-
             // Event listener untuk tombol tambah wilayah
-            $('.tambah-anggota-keluarga').on('click', function() {
+            $('.tambah-wilayah').on('click', function() {
                 event.preventDefault();
                 Swal.fire({
-                    title: 'Tambah Keluarga Baru',
+                    title: 'Tambah Wilayah Baru',
                     html: `
                         <form id="addWilayahForm">
                             <div class="form-group">
@@ -305,7 +222,7 @@
                 var name = $(this).data('name');
 
                 Swal.fire({
-                    title: 'Edit Keluarga',
+                    title: 'Edit Wilayah',
                     html: `
                         <form id="editForm">
                             <div class="form-group">
@@ -398,10 +315,10 @@
             });
         });
 
-        function ApiGetKeluarga(params) {
+        function ApiGetPendeta(params) {
             $.ajax({
                 type: "POST",
-                url: "{{ route('api.get.keluarga') }}",
+                url: "{{ route('api.get.pendeta') }}",
                 data: {
                     _token: '{{ csrf_token() }}'
                 },

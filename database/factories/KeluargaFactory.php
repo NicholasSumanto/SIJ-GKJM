@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Keluarga;
 use App\Models\Jemaat;
-use App\Models\Gereja; 
+use App\Models\Wilayah;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class KeluargaFactory extends Factory
@@ -15,8 +15,8 @@ class KeluargaFactory extends Factory
     {
         return [
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
-            'id_gereja' => Gereja::inRandomOrder()->first()->id_gereja,
+            'kepala_keluarga' => Jemaat::inRandomOrder()->first()->nama_jemaat,
+            'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
         ];
     }
 }
-

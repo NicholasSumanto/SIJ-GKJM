@@ -213,11 +213,19 @@ class AdminPageController extends Controller
         return view('admin.pengaturan.referensi-daerah-kabupaten')->with('provinsi', $provinsi);
     }
 
-    public function adminReferensiDaerahKecamatan($id_kecamatan)
+    public function adminReferensiDaerahKecamatan($id_kabupaten)
     {
-        $kabupaten = Kabupaten::find($id_kecamatan);
+        $kabupaten = Kabupaten::find(id: $id_kabupaten);
         $provinsi = Provinsi::find($kabupaten->id_provinsi);
         return view('admin.pengaturan.referensi-daerah-kecamatan', compact('kabupaten', 'provinsi'));
+    }
+
+    public function adminReferensiDaerahKelurahan($id_kecamatan)
+    {
+        $kecamatan = Kecamatan::find($id_kecamatan);
+        $kabupaten = Kabupaten::find($kecamatan->id_kabupaten);
+        $provinsi = Provinsi::find($kabupaten->id_provinsi);
+        return view('admin.pengaturan.referensi-daerah-kelurahan', compact('kecamatan', 'kabupaten', 'provinsi'));
     }
     // admin pengaturan end
 
@@ -225,6 +233,12 @@ class AdminPageController extends Controller
     public function adminDataAnggotaJemaat()
     {
         return view('admin.data.anggota-jemaat');
+    }
+
+    public function adminDataAnggotaJemaatDetail($id)
+    {
+        $jemaat = Jemaat::find($id);
+        return view('admin.data.anggota-jemaat-detail', compact('jemaat'));
     }
 
     public function adminDataAnggotaJemaatKeluarga()
@@ -237,6 +251,10 @@ class AdminPageController extends Controller
         return view('admin.data.jemaat-baru');
     }
 
+    public function adminDataPendeta()
+    {
+        return view('admin.data.pendeta');
+    }
     public function adminDataMajelis()
     {
         return view('admin.data.majelis');

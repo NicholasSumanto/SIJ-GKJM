@@ -62,7 +62,7 @@
                     align: 'center'
                 }],
                 exportOptions: {
-                    columns: [0, 1]
+                    ignoreColumn: [2, 3]
                 }
             });
 
@@ -92,11 +92,14 @@
                             return `<button class="btn btn-danger btn-delete" data-id="${row.id_pekerjaan}">Delete</button>`;
                         },
                         align: 'center'
-                    }]
+                    }],
+                    exportOptions: {
+                        ignoreColumn: [2, 3]
+                    }
                 });
             }).trigger('change');
 
-            // Event listener untuk tombol tambah wilayah
+            // Event listener untuk tombol tambah pekerjaan
             $('.tambah-pekerjaan').on('click', function() {
                 event.preventDefault();
                 Swal.fire({
@@ -108,8 +111,8 @@
                                 <input type="text" id="id_pekerjaan" class="form-control" placeholder="Masukkan ID Pekerjaan">
                             </div>
                             <div class="form-group mb-0">
-                                <label for="nama_pekerjaan">Nama Pekerjaan</label>
-                                <input type="text" id="nama_pekerjaan" class="form-control" placeholder="Masukkan Nama Pekerjaan">
+                                <label for="pekerjaan">Nama Pekerjaan</label>
+                                <input type="text" id="pekerjaan" class="form-control" placeholder="Masukkan Nama Pekerjaan">
                             </div>
                         </form>
                     `,
@@ -118,10 +121,10 @@
                     cancelButtonText: 'Batal',
                     preConfirm: () => {
                         const id_pekerjaan = $('#id_pekerjaan').val();
-                        const nama_pekerjaan = $('#nama_pekerjaan').val();
+                        const pekerjaan = $('#pekerjaan').val();
 
                         // Validasi input
-                        if (!id_pekerjaan || !nama_pekerjaan) {
+                        if (!id_pekerjaan || !pekerjaan) {
                             Swal.showValidationMessage(
                                 'Terdapat bagian yang tidak valid atau belum diisi!');
                             return false;
@@ -144,7 +147,7 @@
                                     } else {
                                         resolve({
                                             id_pekerjaan: id_pekerjaan,
-                                            nama_pekerjaan: nama_pekerjaan,
+                                            pekerjaan: pekerjaan,
                                         });
                                     }
                                 },
@@ -163,7 +166,7 @@
                         // Ambil data dari result.value
                         const {
                             id_pekerjaan,
-                            nama_pekerjaan
+                            pekerjaan
                         } = result.value;
 
                         // AJAX request untuk menambah wilayah
@@ -173,7 +176,7 @@
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 id_pekerjaan: id_pekerjaan,
-                                nama_pekerjaan: nama_pekerjaan
+                                pekerjaan: pekerjaan
                             },
                             success: function(response) {
                                 alert.fire({
@@ -200,28 +203,27 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('api.get.jabatan-non-majelis') }}",
+                    url: "{{ route('api.get.pekerjaan') }}",
                     data: {
                         _token: '{{ csrf_token() }}',
                         id: id
                     },
                     dataType: "json",
                     success: function(response) {
-                        var id_jabatan_non = response.rows[0].id_jabatan_non;
-                        var jabatan_nonmajelis = response.rows[0].jabatan_nonmajelis;
-                        var periode = response.rows[0].periode;
+                        var id_pekerjaan = response.rows[0].id_pekerjaan;
+                        var pekerjaan = response.rows[0].pekerjaan;
 
                         Swal.fire({
-                            title: 'Edit Jabatan Non Majelis Baru',
+                            title: 'Edit Pekerjaan',
                             html: `
-                                 <form id="editReferensiPekerjaan">
+                                  <form id="addReferensiPekerjaan">
                                     <div class="form-group">
                                         <label for="id_pekerjaan">ID Pekerjaan</label>
-                                        <input type="text" id="id_pekerjaan" class="form-control" placeholder="Masukkan ID Pekerjaan">
+                                        <input type="text" id="id_pekerjaan" class="form-control" value="${id_pekerjaan}" placeholder="Masukkan ID Pekerjaan">
                                     </div>
                                     <div class="form-group mb-0">
-                                        <label for="nama_pekerjaan">Nama Pekerjaan</label>
-                                        <input type="text" id="nama_pekerjaan" class="form-control" placeholder="Masukkan Nama Pekerjaan">
+                                        <label for="pekerjaan">Nama Pekerjaan</label>
+                                        <input type="text" id="pekerjaan" class="form-control" value="${pekerjaan}" placeholder="Masukkan Nama Pekerjaan">
                                     </div>
                                 </form>
                             `,
@@ -229,14 +231,11 @@
                             confirmButtonText: 'Save',
                             cancelButtonText: 'Cancel',
                             preConfirm: () => {
-                                const id_jabatan_non = $('#id_jabatan_non').val();
-                                const jabatan_nonmajelis = $('#jabatan_nonmajelis')
-                                    .val();
-                                const periode = $('#periode').val();
+                                const id_pekerjaan = $('#id_pekerjaan').val();
+                                const pekerjaan = $('#pekerjaan').val();
 
                                 // Validasi input
-                                if (!id_jabatan_non || !jabatan_nonmajelis || !
-                                    periode) {
+                                if (!id_pekerjaan || !pekerjaan) {
                                     Swal.showValidationMessage(
                                         'Terdapat bagian yang tidak valid atau belum diisi!'
                                     );
@@ -246,10 +245,10 @@
                                 return new Promise((resolve, reject) => {
                                     $.ajax({
                                         type: "POST",
-                                        url: "{{ route('api.get.jabatan-non-majelis') }}",
+                                        url: "{{ route('api.get.pekerjaan') }}",
                                         data: {
                                             _token: '{{ csrf_token() }}',
-                                            id: id_jabatan_non
+                                            id: id_pekerjaan
                                         },
                                         dataType: "json",
                                         success: function(
@@ -258,30 +257,28 @@
                                                 0) {
                                                 if (response
                                                     .rows[0]
-                                                    .id_jabatan_non !==
+                                                    .id_pekerjaan !==
                                                     id) {
                                                     reject(
-                                                        'ID jabatan majelis sudah ada, silahkan gunakan ID jabatan majelis lain!'
+                                                        'ID Pekerjaan sudah ada, silahkan gunakan ID Pekerjaan lain!'
                                                     );
                                                 } else {
                                                     resolve({
-                                                        id_jabatan_non: id_jabatan_non,
-                                                        jabatan_nonmajelis: jabatan_nonmajelis,
-                                                        periode: periode
+                                                        id_pekerjaan: id_pekerjaan,
+                                                        pekerjaan: pekerjaan
                                                     });
                                                 }
                                             } else {
                                                 resolve({
-                                                    id_jabatan_non: id_jabatan_non,
-                                                    jabatan_nonmajelis: jabatan_nonmajelis,
-                                                    periode: periode
+                                                    id_pekerjaan: id_pekerjaan,
+                                                    pekerjaan: pekerjaan
                                                 });
                                             }
                                         },
                                         error: function(xhr, status,
                                             error) {
                                             reject(
-                                                'Terjadi kesalahan saat memvalidasi ID jabatan majelis.'
+                                                'Terjadi kesalahan saat memvalidasi ID Pekerjaan.'
                                             );
                                         }
                                     });
@@ -292,32 +289,30 @@
                         }).then((result) => {
                             if (result.isConfirmed && result.value) {
                                 const {
-                                    id_jabatan_non,
-                                    jabatan_nonmajelis,
-                                    periode
+                                    id_pekerjaan,
+                                    pekerjaan
                                 } = result.value;
 
                                 $.ajax({
-                                    url: "{{ route('api.update.jabatan-non-majelis') }}",
+                                    url: "{{ route('api.update.pekerjaan') }}",
                                     type: 'POST',
                                     data: {
                                         _token: '{{ csrf_token() }}',
                                         id: id,
-                                        id_jabatan_non: id_jabatan_non,
-                                        jabatan_nonmajelis: jabatan_nonmajelis,
-                                        periode: periode
+                                        id_pekerjaan: id_pekerjaan,
+                                        pekerjaan: pekerjaan
                                     },
                                     success: function(response) {
                                         alert.fire({
                                             icon: 'success',
-                                            title: 'Data jabatan non majelis berhasil dirubah!'
+                                            title: 'Data Refrensi Pekerjaan berhasil dirubah!'
                                         });
                                         $table.bootstrapTable('refresh');
                                     },
                                     error: function(xhr, status, error) {
                                         alert.fire({
                                             icon: 'error',
-                                            title: 'Data jabatan non majelis gagal dirubah!'
+                                            title: 'Data Refrensi Pekerjaan gagal dirubah!'
                                         });
                                     }
                                 });
@@ -335,11 +330,11 @@
 
         $(document).on('click', '.btn-delete', function() {
             event.preventDefault();
-            var id = $(this).data('id');
+            var id_pekerjaan = $(this).data('id');
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                html: `<div class="text-delete">You won't be able to revert this!</div>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -348,8 +343,13 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/delete/${id}`,
-                        type: 'DELETE',
+                        url: `{{ route('api.delete.pekerjaan') }}`,
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            id_pekerjaan: id_pekerjaan
+                        },
+                        dataType: "json",
                         success: function(response) {
                             alert.fire({
                                 icon: 'success',
@@ -358,15 +358,17 @@
                             $table.bootstrapTable('refresh');
                         },
                         error: function(xhr, status, error) {
-                            alert.fire({
+                            Swal.fire({
                                 icon: 'error',
-                                title: 'Data pekerjaan gagal dihapus!'
+                                title: 'Data pekerjaan gagal dihapus!',
+                                text: xhr.responseText
                             });
                         }
                     });
                 }
             });
         });
+
 
         function ApiGetReferensiPekerjaan(params) {
             $.ajax({

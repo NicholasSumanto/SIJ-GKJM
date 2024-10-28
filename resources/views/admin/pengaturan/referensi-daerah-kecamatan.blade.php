@@ -1,6 +1,6 @@
 @extends('layouts.admin-main-pengaturan')
 
-@section('title', 'Pengaturan Referensi Daerah Kabupaten')
+@section('title', 'Pengaturan Referensi Daerah Kecamatan')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -12,12 +12,15 @@
     <div class="card-body">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="{{ route('admin.pengaturan.referensi-daerah') }}">Provinsi ({{$provinsi->nama_provinsi}})</a></li>
-                <li class="breadcrumb-item active"><a href="{{ route('admin.pengaturan.referensi-daerah-kabupaten', $provinsi->id_provinsi) }}">Kabupaten ({{$kabupaten->kabupaten}})</a></li>
+                <li class="breadcrumb-item active"><a href="{{ route('admin.pengaturan.referensi-daerah') }}">Provinsi
+                        ({{ $provinsi->nama_provinsi }})</a></li>
+                <li class="breadcrumb-item active"><a
+                        href="{{ route('admin.pengaturan.referensi-daerah-kabupaten', $provinsi->id_provinsi) }}">Kabupaten
+                        ({{ $kabupaten->kabupaten }})</a></li>
                 <li class="breadcrumb-item" aria-current="page">Kecamatan</li>
             </ol>
         </nav>
-        <a href="" class="btn btn-success tambah-daerah-kabupaten">Tambah Referensi Daerah</a>
+        <a href="" class="btn btn-success tambah-daerah-kecamatan">Tambah Referensi Daerah</a>
         <div id="toolbar" class="select">
             <select class="form-control">
                 <option value="">Export (Hanya yang Ditampilkan)</option>
@@ -58,14 +61,7 @@
                     field: 'view',
                     title: 'View',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-success" data-id="${row.id_kecamatan}">View</button>`;
-                    },
-                    align: 'center'
-                }, {
-                    field: 'edit',
-                    title: 'Edit',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id="${row.id_kecamatan}">Edit</button>`;
+                        return `<button class="btn btn-success btn-view" data-id="${row.id_kecamatan}">View</button>`;
                     },
                     align: 'center'
                 }, {
@@ -92,30 +88,23 @@
                         checkbox: true,
                         visible: exportDataType === 'selected'
                     }, {
-                        field: 'id_kabupaten',
-                        title: 'ID Kabupaten'
+                        field: 'id_kecamatan',
+                        title: 'ID Kecamatan'
                     }, {
-                        field: 'kabupaten',
-                        title: 'Nama Kabupaten'
+                        field: 'kecamatan',
+                        title: 'Nama Kecamatan'
                     }, {
                         field: 'view',
                         title: 'View',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-success" data-id="${row.id_kabupaten}">View</button>`;
-                        },
-                        align: 'center'
-                    }, {
-                        field: 'edit',
-                        title: 'Edit',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-primary btn-edit" data-id="${row.id_kabupaten}">Edit</button>`;
+                            return `<button class="btn btn-success btn-view" data-id="${row.id_kecamatan}">View</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_kabupaten}">Delete</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_kecamatan}">Delete</button>`;
                         },
                         align: 'center'
                     }],
@@ -126,92 +115,96 @@
             }).trigger('change');
 
             // Event listener untuk tombol tambah wilayah
-            $('.tambah-wilayah').on('click', function(event) {
+            $('.tambah-daerah-kecamatan').on('click', function(event) {
                 event.preventDefault();
                 Swal.fire({
-                    title: 'Tambah Wilayah Baru',
+                    title: 'Tambah Daerah kecamatan',
                     html: `
-                        <form id="addWilayahForm">
-                            <div class="form-group">
-                                <label for="id_wilayah">ID Wilayah *</label>
-                                <input type="text" id="id_wilayah" class="form-control" placeholder="Masukkan ID Wilayah" required>
+                        <form id="addDaerahKecamatanBaru">
+                           <div class="form-group">
+                                <label for="id_kecamatan">ID Kecamatan *</label>
+                                <input type="text" id="id_kecamatan" class="form-control" placeholder="ID Kecamatan" required disabled>
                             </div>
-                            <div class="form-group">
-                                <label for="nama_wilayah">Nama Wilayah *</label>
-                                <input type="text" id="nama_wilayah" class="form-control" placeholder="Masukkan Nama Wilayah" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="alamat_wilayah">Alamat Wilayah *</label>
-                                <input type="text" id="alamat_wilayah" class="form-control" placeholder="Masukkan Alamat Wilayah" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="kota_wilayah">Kota Wilayah *</label>
-                                <input type="text" id="kota_wilayah" class="form-control" placeholder="Masukkan Kota Wilayah" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email_wilayah">Email Wilayah *</label>
-                                <input type="email" id="email_wilayah" class="form-control" placeholder="Masukkan Email Wilayah" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="telepon_wilayah">Nomor Telepon Wilayah *</label>
-                                <input type="text" id="telepon_wilayah" class="form-control" placeholder="Masukkan Nomor Telepon Wilayah" required>
+                            <div class="form-group mb-0">
+                                <label for="nama_kecamatan">Nama Kecamatan *</label>
+                                <select id="nama_kecamatan" class="form-control" required>
+                                    <option value="">Pilih Nama Kecamatan</option>
+                                    <!-- AJAX -->
+                                </select>
                             </div>
                         </form>
                     `,
                     showCancelButton: true,
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
+                    didOpen: () => {
+                        $.ajax({
+                            url: "{{ route('api.proxy.wilayah') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                id_provinsi: `{{ $provinsi->id_provinsi }}`,
+                                id_kabupaten: `{{ str_pad($kabupaten->id_kabupaten - $provinsi->id_provinsi * 100, 2, '0', STR_PAD_LEFT) }}`
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $kecamatanSelect = $('#nama_kecamatan');
+                                Object.entries(response).forEach(function([key,
+                                    value
+                                ]) {
+                                    $kecamatanSelect.append(
+                                        `<option value="${value}" data-key="${key}">${value}</option>`
+                                    );
+                                });
+
+                                $kecamatanSelect.on('change', function() {
+                                    const selectedKey = $(this).find(
+                                        'option:selected').data('key');
+
+                                    $('#id_kecamatan').val(selectedKey);
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire('Error', 'Gagal memuat data wilayah',
+                                    'error');
+                            }
+                        });
+                    },
                     preConfirm: () => {
-                        const id_wilayah = $('#id_wilayah').val();
-                        const nama_wilayah = $('#nama_wilayah').val();
-                        const alamat_wilayah = $('#alamat_wilayah').val();
-                        const kota_wilayah = $('#kota_wilayah').val();
-                        const email_wilayah = $('#email_wilayah').val();
-                        const telepon_wilayah = $('#telepon_wilayah').val();
+                        const id_kecamatan = $('#id_kecamatan').val();
+                        const nama_kecamatan = $('#nama_kecamatan').val();
 
                         // Validasi input
-                        if (!id_wilayah || !nama_wilayah || !alamat_wilayah || !kota_wilayah ||
-                            !email_wilayah || !telepon_wilayah) {
+                        if (!id_kecamatan || !nama_kecamatan) {
                             Swal.showValidationMessage(
                                 'Terdapat bagian yang tidak valid atau belum diisi!');
-                            return false;
-                        }
-
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        if (!emailRegex.test(email_wilayah)) {
-                            Swal.showValidationMessage(
-                                'Email tidak valid, silakan masukkan email yang benar!');
                             return false;
                         }
 
                         return new Promise((resolve, reject) => {
                             $.ajax({
                                 type: "POST",
-                                url: "{{ route('api.get.wilayah') }}",
+                                url: "{{ route('api.get.kecamatan') }}",
                                 data: {
                                     _token: '{{ csrf_token() }}',
-                                    id: id_wilayah
+                                    id: id_kecamatan
                                 },
                                 dataType: "json",
                                 success: function(response) {
                                     if (response.total > 0) {
                                         reject(
-                                            'ID wilayah sudah ada, silahkan gunakan ID wilayah lain!'
+                                            'Kecamatan sudah ada, silahkan gunakan kabupaten lain!'
                                         );
                                     } else {
                                         resolve({
-                                            id_wilayah: id_wilayah,
-                                            nama_wilayah: nama_wilayah,
-                                            alamat_wilayah: alamat_wilayah,
-                                            kota_wilayah: kota_wilayah,
-                                            email_wilayah: email_wilayah,
-                                            telepon_wilayah: telepon_wilayah
+                                            id_kecamatan: id_kecamatan,
+                                            nama_kecamatan: nama_kecamatan,
                                         });
                                     }
                                 },
                                 error: function(xhr, status, error) {
                                     reject(
-                                        'Terjadi kesalahan saat memvalidasi ID wilayah.'
+                                        'Terjadi kesalahan saat memvalidasi kabupaten.'
                                     );
                                 }
                             });
@@ -222,37 +215,30 @@
                 }).then((result) => {
                     if (result.isConfirmed && result.value) {
                         const {
-                            id_wilayah,
-                            nama_wilayah,
-                            alamat_wilayah,
-                            kota_wilayah,
-                            email_wilayah,
-                            telepon_wilayah
+                            id_kecamatan,
+                            nama_kecamatan,
                         } = result.value;
 
                         $.ajax({
-                            url: "{{ route('api.post.wilayah') }}",
+                            url: "{{ route('api.post.kecamatan') }}",
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                id_wilayah: id_wilayah,
-                                nama_wilayah: nama_wilayah,
-                                alamat_wilayah: alamat_wilayah,
-                                kota_wilayah: kota_wilayah,
-                                email_wilayah: email_wilayah,
-                                telepon_wilayah: telepon_wilayah
+                                id_kabupaten: '{{ $kabupaten->id_kabupaten }}',
+                                id_kecamatan: id_kecamatan,
+                                nama_kecamatan: nama_kecamatan
                             },
                             success: function(response) {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data wilayah berhasil ditambahkan!'
+                                    title: 'Data kecamatan berhasil ditambahkan!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
                                 alert.fire({
                                     icon: 'error',
-                                    title: 'Data wilayah gagal ditambahkan!'
+                                    title: 'Data kecamatan gagal ditambahkan!'
                                 });
                             }
                         });
@@ -260,190 +246,18 @@
                 });
             });
 
-            // Event listener untuk tombol edit
-            $(document).on('click', '.btn-edit', function(event) {
-                event.preventDefault();
-                var id = $(this).data('id');
+            $(document).on('click', '.btn-view', function() {
+                var id_Kecamatan = $(this).data('id');
 
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('api.get.wilayah') }}",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        id: id
-                    },
-                    dataType: "json",
-                    success: function(response) {
-                        var id_wilayah = response.rows[0].id_wilayah;
-                        var nama_wilayah = response.rows[0].nama_wilayah;
-                        var alamat_wilayah = response.rows[0].alamat_wilayah;
-                        var kota_wilayah = response.rows[0].kota_wilayah;
-                        var email_wilayah = response.rows[0].email_wilayah;
-                        var telepon_wilayah = response.rows[0].telepon_wilayah;
+                var url = '{{ route('admin.pengaturan.referensi-daerah-kelurahan', ':id') }}';
+                url = url.replace(':id', id_Kecamatan);
 
-                        Swal.fire({
-                            title: 'Edit Wilayah',
-                            html: `
-                                <form id="editWilayahForm">
-                                    <div class="form-group">
-                                        <label for="id_wilayah">ID Wilayah *</label>
-                                        <input type="text" id="id_wilayah" class="form-control" placeholder="Masukkan ID Wilayah" value="${id_wilayah}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="nama_wilayah">Nama Wilayah *</label>
-                                        <input type="text" id="nama_wilayah" class="form-control" placeholder="Masukkan Nama Wilayah" value="${nama_wilayah}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="alamat_wilayah">Alamat Wilayah *</label>
-                                        <input type="text" id="alamat_wilayah" class="form-control" placeholder="Masukkan Alamat Wilayah" value="${alamat_wilayah}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kota_wilayah">Kota Wilayah *</label>
-                                        <input type="text" id="kota_wilayah" class="form-control" placeholder="Masukkan Kota Wilayah" value="${kota_wilayah}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email_wilayah">Email Wilayah *</label>
-                                        <input type="email" id="email_wilayah" class="form-control" placeholder="Masukkan Email Wilayah" value="${email_wilayah}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="telepon_wilayah">Nomor Telepon Wilayah *</label>
-                                        <input type="text" id="telepon_wilayah" class="form-control" placeholder="Masukkan Nomor Telepon Wilayah" value="${telepon_wilayah}" required>
-                                    </div>
-                                </form>
-                            `,
-                            showCancelButton: true,
-                            confirmButtonText: 'Save',
-                            cancelButtonText: 'Cancel',
-                            preConfirm: () => {
-                                const id_wilayah = $('#id_wilayah').val();
-                                const nama_wilayah = $('#nama_wilayah').val();
-                                const alamat_wilayah = $('#alamat_wilayah').val();
-                                const kota_wilayah = $('#kota_wilayah').val();
-                                const email_wilayah = $('#email_wilayah').val();
-                                const telepon_wilayah = $('#telepon_wilayah').val();
-
-                                // Validasi input
-                                if (!id_wilayah || !nama_wilayah || !
-                                    alamat_wilayah || !kota_wilayah ||
-                                    !email_wilayah || !telepon_wilayah) {
-                                    Swal.showValidationMessage(
-                                        'Terdapat bagian yang tidak valid atau belum diisi!'
-                                    );
-                                    return false;
-                                }
-
-                                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                                if (!emailRegex.test(email_wilayah)) {
-                                    Swal.showValidationMessage(
-                                        'Email tidak valid, silakan masukkan email yang benar!'
-                                    );
-                                    return false;
-                                }
-
-                                return new Promise((resolve, reject) => {
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "{{ route('api.get.wilayah') }}",
-                                        data: {
-                                            _token: '{{ csrf_token() }}',
-                                            id: id_wilayah
-                                        },
-                                        dataType: "json",
-                                        success: function(
-                                            response) {
-                                            if (response.total >
-                                                0) {
-                                                if (response
-                                                    .rows[0]
-                                                    .id_wilayah !==
-                                                    id) {
-                                                    reject(
-                                                        'ID wilayah sudah ada, silahkan gunakan ID wilayah lain!'
-                                                    );
-                                                } else {
-                                                    resolve({
-                                                        id_wilayah: id_wilayah,
-                                                        nama_wilayah: nama_wilayah,
-                                                        alamat_wilayah: alamat_wilayah,
-                                                        kota_wilayah: kota_wilayah,
-                                                        email_wilayah: email_wilayah,
-                                                        telepon_wilayah: telepon_wilayah
-                                                    });
-                                                }
-                                            } else {
-                                                resolve({
-                                                    id_wilayah: id_wilayah,
-                                                    nama_wilayah: nama_wilayah,
-                                                    alamat_wilayah: alamat_wilayah,
-                                                    kota_wilayah: kota_wilayah,
-                                                    email_wilayah: email_wilayah,
-                                                    telepon_wilayah: telepon_wilayah
-                                                });
-                                            }
-                                        },
-                                        error: function(xhr, status,
-                                            error) {
-                                            reject(
-                                                'Terjadi kesalahan saat memvalidasi ID wilayah.'
-                                            );
-                                        }
-                                    });
-                                }).catch(error => {
-                                    Swal.showValidationMessage(error);
-                                });
-                            }
-                        }).then((result) => {
-                            if (result.isConfirmed && result.value) {
-                                const {
-                                    id_wilayah,
-                                    nama_wilayah,
-                                    alamat_wilayah,
-                                    kota_wilayah,
-                                    email_wilayah,
-                                    telepon_wilayah
-                                } = result.value;
-
-                                $.ajax({
-                                    url: "{{ route('api.update.wilayah') }}",
-                                    type: 'POST',
-                                    data: {
-                                        _token: '{{ csrf_token() }}',
-                                        id: id,
-                                        id_wilayah: id_wilayah,
-                                        nama_wilayah: nama_wilayah,
-                                        alamat_wilayah: alamat_wilayah,
-                                        kota_wilayah: kota_wilayah,
-                                        email_wilayah: email_wilayah,
-                                        telepon_wilayah: telepon_wilayah
-                                    },
-                                    success: function(response) {
-                                        alert.fire({
-                                            icon: 'success',
-                                            title: 'Data wilayah berhasil dirubah!'
-                                        });
-                                        $table.bootstrapTable('refresh');
-                                    },
-                                    error: function(xhr, status, error) {
-                                        alert.fire({
-                                            icon: 'error',
-                                            title: 'Data wilayah gagal dirubah!'
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error: " + error);
-                        console.error("Status: " + status);
-                        console.dir(xhr);
-                    }
-                });
+                window.location.href = url;
             });
 
             $(document).on('click', '.btn-delete', function() {
                 event.preventDefault();
-                var id_wilayah = $(this).data('id');
+                var id_kecamatan = $(this).data('id');
 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -456,24 +270,24 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `{{ route('api.delete.wilayah') }}`,
+                            url: `{{ route('api.delete.kecamatan') }}`,
                             type: 'POST',
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                id: id_wilayah
+                                id_kecamatan: id_kecamatan
                             },
                             dataType: "json",
                             success: function(response) {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data wilayah berhasil dihapus!'
+                                    title: 'Data kecamatan berhasil dihapus!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function(xhr, status, error) {
                                 alert.fire({
                                     icon: 'error',
-                                    title: 'Data wilayah gagal dihapus!'
+                                    title: 'Data kecamatan gagal dihapus!'
                                 });
                             }
                         });
@@ -485,7 +299,7 @@
         function ApiGetReferensiDaerahKecamatan(params) {
             $.ajax({
                 type: "POST",
-                url: "{{ route('api.get.kabupaten') }}",
+                url: "{{ route('api.get.kecamatan') }}",
                 data: {
                     _token: '{{ csrf_token() }}',
                     id_kabupaten: `{{ $kabupaten->id_kabupaten }}`

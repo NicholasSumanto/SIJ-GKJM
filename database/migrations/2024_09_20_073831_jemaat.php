@@ -131,17 +131,21 @@ return new class extends Migration
         Schema::create('keluarga', function (Blueprint $table) {
             $table->id('id_keluarga');
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->bigInteger('id_gereja')->unsigned()->nullable();
+            $table->string('kepala_keluarga');
+            $table->bigInteger('id_wilayah')->unsigned()->nullable();
+            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
 
-        Schema::create('keluarga_detil', function (Blueprint $table) {
-            $table->id('id_keluarga_detil');
-            $table->unsignedInteger('id_jemaat')->nullable();
+        Schema::create('anggota_keluarga', function (Blueprint $table) {
+            $table->id('id_anggota_keluarga');
             $table->bigInteger('id_keluarga')->unsigned()->nullable();
+            $table->bigInteger('id_status')->unsigned()->nullable();
+            $table->unsignedInteger('id_jemaat')->nullable();
+            $table->string('nama_anggota');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_keluarga')->references('id_keluarga')->on('keluarga')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
