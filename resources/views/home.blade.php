@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <form id="form" method="GET" action="{{ route('home') }}">
+    <form id="form" method="GET" action="{{ route('admin.dashboard') }}">
         <label for="Kelamin">Pilih Gender:</label>
         <select id="Kelamin" name="Kelamin" onchange="this.form.submit()">
             <option value="">All</option>
@@ -49,7 +49,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Jemaat Keluar Masuk {{$tahun}}</h4>
                     <span>
-                        <form id="keluarMasuk" method="GET" action="{{ route('home') }}">
+                        <form id="keluarMasuk" method="GET" action="{{ route('admin.dashboard') }}">
                             <select id="InOut" name="InOut" class="form-select" onchange="this.form.submit()">
                                 <option value="">All</option>
                                 <option value="Masuk" {{ request('InOut') == 'Masuk' ? 'selected' : '' }}>Masuk</option>

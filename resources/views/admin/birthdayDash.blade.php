@@ -32,7 +32,8 @@
                     <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request('end_date') }}">
                 </div>
                 <div class="col-auto mt-2">
-                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                    <button type="reset" class="btn btn-danger" onclick="resetDate()">Reset</button>
                 </div>
             </div>
         </div>
@@ -44,7 +45,7 @@
                 <h4 class="mt-4">Ulangtahun Jemaat</h4>
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <button class="btn btn-primary" onclick="resetTable()">Show All Wilayah</button>
+                        <button class="btn btn-secondary" onclick="resetTable()">Show All Wilayah</button>
                         <canvas id="chartJemaatPerWilayah" style="width:100%; height:300px;"></canvas>
                     </div>
                 </div>
@@ -87,7 +88,7 @@
                 <h4 class="mt-4">Ulangtahun Pernikahan</h4>
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <button class="btn btn-primary" onclick="resetTable()">Show All Wilayah</button>
+                        <button class="btn btn-secondary" onclick="resetTable()">Show All Wilayah</button>
                         <canvas id="chartMarried" style="width:100%; height:300px;"></canvas>
                     </div>
                 </div>
@@ -160,8 +161,6 @@
             }
         });
     }
-
-
 
     function resetTable() {
         const jemaatRows = document.querySelectorAll('#jemaatTable tbody tr');
@@ -241,6 +240,11 @@
             }
         }
     });
+    function resetDate() {
+        document.getElementById('start_date').value = '';
+        document.getElementById('end_date').value = '';
+        document.getElementById('form').submit();  // Submit the form to apply the reset
+}
 
 </script>
 @endpush

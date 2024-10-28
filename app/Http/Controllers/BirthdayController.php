@@ -32,7 +32,6 @@ class BirthdayController extends Controller
             'users' => $users,
         ];
 
-        $tahun = date('Y');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $isiJemaat = Jemaat::select('jemaat.nama_jemaat', 'jemaat.tanggal_lahir', 'wilayah.nama_wilayah as wil')
@@ -51,6 +50,12 @@ class BirthdayController extends Controller
         $weddingsByWilayah = Pernikahan::select(DB::raw('count(*) as total_weddings, jemaat.id_wilayah, wilayah.nama_wilayah'))
             ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah') 
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [
+                    date('m-d', strtotime($startDate)),
+                    date('m-d', strtotime($endDate))
+                ]);
+            })
             ->groupBy('jemaat.id_wilayah', 'wilayah.nama_wilayah')
             ->get();
             
@@ -100,7 +105,9 @@ class BirthdayController extends Controller
         $dataCount = $isiJemaat->groupBy('wil')->map(function ($group) {
             return $group->count();
         })->values()->toArray();
-        $dataMarried = array_fill(0, 12, 0);
+        $dataMarried = $weddingsByWilayah->groupBy('wilayah.nama_wilayah')->map(function ($group) {
+            return $group->count();
+        })->values()->toArray();
 
         $data = [
             'widget' => $widget,
@@ -108,7 +115,7 @@ class BirthdayController extends Controller
         ];
 
 
-        return view('admin.birthdayDash',compact('monthNames','tahun','pagination','labelWilayah','isiJemaat','paginationMarried','dataCount','dataMarried', 'wilayahNames', 'weddingCounts'), $data);
+        return view('admin.birthdayDash',compact('monthNames','pagination','labelWilayah','isiJemaat','paginationMarried','dataCount','dataMarried', 'wilayahNames', 'weddingCounts'), $data);
     }
     
 
@@ -117,7 +124,11 @@ class BirthdayController extends Controller
     {
         return view('admin.pengaturan.wilayah');
     }
-
+    public function dashboardUsia()
+    {
+        return view('admin.dashboardUsia');
+    }
+    
     public function adminDashboard()
     {
         return view('admin.dashboard');
