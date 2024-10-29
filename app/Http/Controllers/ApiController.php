@@ -462,8 +462,12 @@ class ApiController extends Controller
     // GET JEMAAT
     public function ApiGetJemaat(Request $request)
     {
-        if ($request->has('id')) {
-            $data = Jemaat::where('id_jemaat', $request->id)->get();
+    if ($request->has('nama_jemaat') || $request->has('id')) {
+            if ($request->has('nama_jemaat')) {
+                $data = Jemaat::where('nama_jemaat', $request->nama_jemaat)->get();
+            } else {
+                $data = Jemaat::where('id_jemaat', $request->id)->get();
+            }
 
             $formattedData = [
                 'total' => $data->count(),
@@ -754,39 +758,23 @@ class ApiController extends Controller
 
     // API GET GEREJA
     public function ApiGetGereja(Request $request) {
-        if ($request->has('id')) {
-            $data = Gereja::where('id_gereja', $request->id)->get();
+        $gerejaFromAtestasiKeluar = AtestasiKeluar::select('nama_gereja')->distinct()->get();
+        $gerejaFromAtestasiMasuk = AtestasiMasuk::select('nama_gereja')->distinct()->get();
+        $gerejaFromKematian = Kematian::select('nama_gereja')->distinct()->get();
+        $gerejaFromMajelis = Majelis::select('nama_gereja')->distinct()->get();
+        $gerejaFromNonMajelis = NonMajelis::select('nama_gereja')->distinct()->get();
+        $gerejaFromPernikahan = Pernikahan::select('nama_gereja')->distinct()->get();
 
-            $formattedData = [
-                'total' => $data->count(),
-                'totalNotFiltered' => Gereja::count(),
-                'rows' => $data
-                    ->map(function ($item) {
-                        return [
-                            'id_gereja' => $item->id_gereja,
-                            'nama_gereja' => $item->nama_gereja,
-                        ];
-                    })->toArray(),
-                ];
+        $gereja = collect($gerejaFromAtestasiKeluar)
+            ->merge($gerejaFromAtestasiMasuk)
+            ->merge($gerejaFromKematian)
+            ->merge($gerejaFromMajelis)
+            ->merge($gerejaFromNonMajelis)
+            ->merge($gerejaFromPernikahan)
+            ->unique('nama_gereja')
+            ->values();
 
-                return response()->json($formattedData);
-        } else {
-            $data = Gereja::all();
-
-            $formattedData = [
-                'total' => $data->count(),
-                'totalNotFiltered' => Gereja::count(),
-                'rows' => $data
-                    ->map(function ($item) {
-                        return [
-                            'id_gereja' => $item->id_gereja,
-                            'nama_gereja' => $item->nama_gereja,
-                        ];
-                    })->toArray(),
-                ];
-
-            return response()->json($formattedData);
-        }
+        return response()->json($gereja);
     }
 
     // GET MAJELIS
@@ -804,7 +792,7 @@ class ApiController extends Controller
                             'id_majelis' => $item->id_majelis,
                             'id_jemaat' => $item->id_jemaat,
                             'nama_majelis' => $item->nama_majelis,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'tanggal_mulai' => $item->tanggal_mulai,
                             'tanggal_selesai' => $item->tanggal_selesai,
                             'id_jabatan' => $item->id_jabatan,
@@ -829,7 +817,7 @@ class ApiController extends Controller
                             'id_majelis' => $item->id_majelis,
                             'id_jemaat' => $item->id_jemaat,
                             'nama_majelis' => $item->nama_majelis,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'tanggal_mulai' => $item->tanggal_mulai,
                             'tanggal_selesai' => $item->tanggal_selesai,
                             'id_jabatan' => $item->id_jabatan,
@@ -862,7 +850,7 @@ class ApiController extends Controller
                             'id_nonmajelis' => $item->id_nonmajelis,
                             'id_jemaat' => $item->id_jemaat,
                             'nama_majelis_non' => $item->nama_majelis_non,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'tanggal_mulai' => $item->tanggal_mulai,
                             'tanggal_selesai' => $item->tanggal_selesai,
                             'id_jabatan_non' => $item->id_jabatan_non,
@@ -887,7 +875,7 @@ class ApiController extends Controller
                             'id_nonmajelis' => $item->id_nonmajelis,
                             'id_jemaat' => $item->id_jemaat,
                             'nama_majelis_non' => $item->nama_majelis_non,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'tanggal_mulai' => $item->tanggal_mulai,
                             'tanggal_selesai' => $item->tanggal_selesai,
                             'id_jabatan_non' => $item->id_jabatan_non,
@@ -919,7 +907,7 @@ class ApiController extends Controller
                         return [
                             'id_nikah' => $item->id_nikah,
                             'nomor' => $item->nomor,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'tanggal_nikah' => $item->tanggal_nikah,
                             'id_pendeta' => $item->id_pendeta,
                             'pendeta' => $pendeta->nama_pendeta,
@@ -953,7 +941,7 @@ class ApiController extends Controller
                         return [
                             'id_nikah' => $item->id_nikah,
                             'nomor' => $item->nomor,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'tanggal_nikah' => $item->tanggal_nikah,
                             'id_pendeta' => $item->id_pendeta,
                             'pendeta' => $pendeta->nama_pendeta,
@@ -994,7 +982,7 @@ class ApiController extends Controller
                         return [
                             'id_kematian' => $item->id_kematian,
                             'id_jemaat' => $item->id_jemaat,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'id_pendeta' => $item->id_pendeta,
                             'tanggal_meninggal' => $item->tanggal_meninggal,
                             'tanggal_pemakaman' => $item->tanggal_pemakaman,
@@ -1017,7 +1005,7 @@ class ApiController extends Controller
                         return [
                             'id_kematian' => $item->id_kematian,
                             'id_jemaat' => $item->id_jemaat,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'id_pendeta' => $item->id_pendeta,
                             'tanggal_meninggal' => $item->tanggal_meninggal,
                             'tanggal_pemakaman' => $item->tanggal_pemakaman,
@@ -1049,7 +1037,7 @@ class ApiController extends Controller
                             'id_keluar' => $item->id_keluar,
                             'id_jemaat' => $item->id_jemaat,
                             'id_pendeta' => $item->id_pendeta,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
                             'tanggal' => $item->tanggal,
                             'keterangan' => $item->keterangan,
@@ -1071,7 +1059,7 @@ class ApiController extends Controller
                             'id_keluar' => $item->id_keluar,
                             'id_jemaat' => $item->id_jemaat,
                             'id_pendeta' => $item->id_pendeta,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
                             'tanggal' => $item->tanggal,
                             'keterangan' => $item->keterangan,
@@ -1100,7 +1088,7 @@ class ApiController extends Controller
                         return [
                             'id_masuk' => $item->id_masuk,
                             'id_wilayah' => $item->id_wilayah,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
                             'tanggal' => $item->tanggal,
                             'surat' => $item->surat,
@@ -1121,7 +1109,7 @@ class ApiController extends Controller
                         return [
                             'id_masuk' => $item->id_masuk,
                             'id_wilayah' => $item->id_wilayah,
-                            'id_gereja' => $item->id_gereja,
+                            'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
                             'tanggal' => $item->tanggal,
                             'surat' => $item->surat,
@@ -1618,7 +1606,7 @@ class ApiController extends Controller
         $data = new Majelis();
         $data->id_jemaat = $request->id_jemaat;
         $data->nama_majelis = $request->nama_majelis;
-        $data->id_gereja = $request->id_gereja;
+        $data->nama_gereja = $request->nama_gereja;
         $data->tanggal_mulai = $request->tanggal_mulai;
         $data->tanggal_selesai = $request->tanggal_selesai;
         $data->id_jabatan = $request->id_jabatan;
@@ -1644,7 +1632,7 @@ class ApiController extends Controller
         $data->id_nonmajelis = $request->id_nonmajelis;
         $data->id_jemaat = $request->id_jemaat;
         $data->nama_majelis_non = $request->nama_majelis_non;
-        $data->id_gereja = $request->id_gereja;
+        $data->nama_gereja = $request->nama_gereja;
         $data->tanggal_mulai = $request->tanggal_mulai;
         $data->tanggal_selesai = $request->tanggal_selesai;
         $data->id_jabatan_non = $request->id_jabatan_non;
@@ -1668,7 +1656,7 @@ class ApiController extends Controller
 
         $data = new Pernikahan();
         $data->nomor = $request->nomor;
-        $data->id_gereja = $request->id_gereja;
+        $data->nama_gereja = $request->nama_gereja;
         $data->tanggal_nikah = $request->tanggal_nikah;
         $data->id_pendeta = $request->id_pendeta;
         $data->pengantin_pria = $request->pengantin_pria;
@@ -1701,7 +1689,7 @@ class ApiController extends Controller
 
         $data = new Kematian();
         $data->id_jemaat = $request->id_jemaat;
-        $data->id_gereja = $request->id_gereja;
+        $data->nama_gereja = $request->nama_gereja;
         $data->id_pendeta = $request->id_pendeta;
         $data->tanggal_meninggal = $request->tanggal_meninggal;
         $data->tanggal_pemakaman = $request->tanggal_pemakaman;
@@ -1725,7 +1713,7 @@ class ApiController extends Controller
         $data = new AtestasiKeluar();
         $data->id_jemaat = $request->id_jemaat;
         $data->id_pendeta = $request->id_pendeta;
-        $data->id_gereja = $request->id_gereja;
+        $data->nama_gereja = $request->nama_gereja;
         $data->no_surat = $request->no_surat;
         $data->tanggal = $request->tanggal;
         $data->keterangan = $request->keterangan;
@@ -1746,7 +1734,7 @@ class ApiController extends Controller
 
         $data = new AtestasiMasuk();
         $data->id_wilayah = $request->id_wilayah;
-        $data->id_gereja = $request->id_gereja;
+        $data->nama_gereja = $request->nama_gereja;
         $data->no_surat = $request->no_surat;
         $data->tanggal = $request->tanggal;
         $data->surat = $request->surat;
@@ -2076,7 +2064,7 @@ class ApiController extends Controller
 
         $data->id_jemaat = $request->id_jemaat;
         $data->nama_majelis = $request->nama_majelis;
-        $data->id_gereja = $request->id_gereja;
+        $data->nama_gereja = $request->nama_gereja;
         $data->tanggal_mulai = $request->tanggal_mulai;
         $data->tanggal_selesai = $request->tanggal_selesai;
         $data->id_jabatan = $request->id_jabatan;
@@ -2101,7 +2089,7 @@ class ApiController extends Controller
 
         $data->id_jemaat = $request->id_jemaat;
         $data->nama_majelis_non = $request->nama_majelis_non;
-        $data->id_gereja = $request->id_gereja;
+        $data->nama_gereja = $request->nama_gereja;
         $data->tanggal_mulai = $request->tanggal_mulai;
         $data->tanggal_selesai = $request->tanggal_selesai;
         $data->id_jabatan_non = $request->id_jabatan_non;

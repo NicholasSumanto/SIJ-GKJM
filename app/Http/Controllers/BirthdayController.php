@@ -47,7 +47,7 @@ class BirthdayController extends Controller
             ->get();
 
         $weddingsByWilayah = Pernikahan::select(DB::raw('count(*) as total_weddings, jemaat.id_wilayah, wilayah.nama_wilayah'))
-            ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah') 
+            ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                 return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [
@@ -57,7 +57,7 @@ class BirthdayController extends Controller
             })
             ->groupBy('jemaat.id_wilayah', 'wilayah.nama_wilayah')
             ->get();
-            
+
         $pagination = Jemaat::select('jemaat.nama_jemaat', 'jemaat.tanggal_lahir', 'wilayah.nama_wilayah as wil')
             ->leftJoin('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
@@ -99,7 +99,7 @@ class BirthdayController extends Controller
 
         $monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
         $labelWilayah = $isiJemaat->pluck('wil')->unique()->values()->toArray();
-        $wilayahNames = $weddingsByWilayah->pluck('nama_wilayah')->toArray(); 
+        $wilayahNames = $weddingsByWilayah->pluck('nama_wilayah')->toArray();
         $weddingCounts = $weddingsByWilayah->pluck('total_weddings')->toArray();
         $dataCount = $isiJemaat->groupBy('wil')->map(function ($group) {
             return $group->count();
@@ -116,7 +116,7 @@ class BirthdayController extends Controller
 
         return view('admin.birthdayDash',compact('monthNames','pagination','labelWilayah','isiJemaat','paginationMarried','dataCount','dataMarried', 'wilayahNames', 'weddingCounts'), $data);
     }
-    
+
 
     // admin pengaturan start
     public function adminPengaturanWilayah()
@@ -127,7 +127,7 @@ class BirthdayController extends Controller
     {
         return view('admin.dashboardUsia');
     }
-    
+
     public function adminDashboard()
     {
         return view('admin.dashboard');

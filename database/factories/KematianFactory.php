@@ -11,6 +11,12 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class KematianFactory extends Factory
 {
     protected $model = Kematian::class;
+    private $churches = [
+        'Gereja Kristus',
+        'Gereja Injil',
+        'Gereja Betlehem',
+        'Gereja Harapan',
+    ];
 
     public function definition()
     {
@@ -19,7 +25,7 @@ class KematianFactory extends Factory
 
         return [
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
-            'id_gereja' => Gereja::inRandomOrder()->first()->id_gereja,
+            'nama_gereja' => array_rand($this->churches),
             'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,
             'tanggal_meninggal' => $tanggal_meninggal->format('Y-m-d'),
             'tanggal_pemakaman' => $tanggal_pemakaman->format('Y-m-d'),

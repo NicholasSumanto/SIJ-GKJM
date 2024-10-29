@@ -14,7 +14,7 @@ class AtestasiMasuk extends Model
 
     protected $fillable = [
         'id_wilayah',
-        'id_gereja',
+        'nama_gereja',
         'id_jemaat',
         'no_surat',
         'tanggal',
@@ -24,11 +24,6 @@ class AtestasiMasuk extends Model
     public function wilayah()
     {
         return $this->belongsTo(Wilayah::class, 'id_wilayah');
-    }
-
-    public function gereja()
-    {
-        return $this->belongsTo(Gereja::class, 'id_gereja');
     }
     public function jemaat()
     {

@@ -16,11 +16,6 @@ return new class extends Migration
             $table->string("keterangan_status",100);
             $table->timestamps();
         });
-        Schema::create('gereja', function (Blueprint $table) {
-            $table->id('id_gereja');
-            $table->string("nama_gereja");
-            $table->timestamps();
-        });
         Schema::create('bidangilmu', function (Blueprint $table) {
             $table->id('id_ilmu');
             $table->string("bidangilmu",100);

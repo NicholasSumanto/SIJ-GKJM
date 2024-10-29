@@ -355,15 +355,18 @@
                             <input type="text" id="nama_jemaat" class="form-control" placeholder="Masukkan Nama Jemaat" required>
                         </div>
                         <div class="form-group">
-                            <label for="id_wilayah">Wilayah *</label>
-                            <input type="text" id="id_wilayah" class="form-control" placeholder="Masukkan ID Wilayah" required>
+                            <label for="id_wilayah">Nama Wilayah *</label>
+                            <select id="id_wilayah" class="form-control" required>
+                                <option value="">Pilih Wilayah</option>
+                                <!-- AJAX -->
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="kelamin">Kelamin *</label>
                             <select id="kelamin" class="form-control" required>
                                 <option value="" disabled selected>Pilih Kelamin</option>
-                                <option value="L">Laki-laki</option>
-                                <option value="P">Perempuan</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -407,8 +410,8 @@
                             <input type="date" id="tanggal_baptis" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="golongan_darah">Golongan Darah *</label>
-                            <select id="golongan_darah" class="form-control" required>
+                            <label for="golongan_darah">Golongan Darah</label>
+                            <select id="golongan_darah" class="form-control">
                                 <option value="" disabled selected>Pilih Golongan Darah</option>
                                 <option value="A">A</option>
                                 <option value="B">B</option>
@@ -421,8 +424,8 @@
                             <input type="text" id="instansi" class="form-control" placeholder="Masukkan Instansi">
                         </div>
                         <div class="form-group">
-                            <label for="penghasilan">Penghasilan *</label>
-                            <input type="number" id="penghasilan" class="form-control" placeholder="Masukkan Penghasilan" min="0" step="any" required>
+                            <label for="penghasilan">Penghasilan</label>
+                            <input type="number" id="penghasilan" class="form-control" placeholder="Masukkan Penghasilan" min="0" step="any">
                         </div>
                         <div class="form-group">
                             <label for="gereja_baptis">Gereja Baptis</label>
@@ -441,6 +444,22 @@
                     showCancelButton: true,
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
+                    didOpen: () => {
+                        $.ajax({
+                            url: "{{ route('api.get.wilayah') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function (response) {
+                                const $idWilayah = $('#id_wilayah');
+                                Object.entries(response).forEach(([key, value]) => {
+                                    $idWilayah.append(`<option value="${value.id_wilayah}">${value.nama_wilayah}</option>`);
+                                });
+                            }
+                        });
+                    },
                     preConfirm: () => {
                         const data = {
                             _token: '{{ csrf_token() }}',
@@ -470,19 +489,17 @@
                         }
 
                         // Validasi input
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         for (const key in data) {
-                            if (data[key] === '' && key !== 'photo') {
+                            if (data[key] === '' && key !== 'photo' && key !== 'telepon' && key !== 'hp' && key !== 'email' && key !== 'nik' && key !== 'no_kk' && key !== 'stamboek' && key !== 'tempat_lahir' && key !== 'tanggal_baptis' && key !== 'instansi' && key !== 'gereja_baptis' && key !== 'alat_transportasi') {
                                 Swal.showValidationMessage(
                                     `${key.replace(/_/g, ' ')} tidak boleh kosong!`);
                                 return false;
                             }
-                        }
-
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        if (!emailRegex.test(data.email)) {
-                            Swal.showValidationMessage(
-                                'Email tidak valid, silakan masukkan email yang benar!');
-                            return false;
+                            if (key === 'email' && data[key] !== '' && !emailRegex.test(data[key])) {
+                                Swal.showValidationMessage('Format email tidak valid!');
+                                return false;
+                            }
                         }
 
                         return new Promise((resolve, reject) => {
@@ -491,7 +508,7 @@
                                 url: "{{ route('api.get.jemaat') }}",
                                 data: {
                                     _token: '{{ csrf_token() }}',
-                                    nik: data.nik
+                                    nama_jemaat: data.nama_jemaat,
                                 },
                                 dataType: "json",
                                 success: function(response) {

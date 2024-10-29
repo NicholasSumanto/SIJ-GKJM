@@ -14,7 +14,7 @@ class Kematian extends Model
 
     protected $fillable = [
         'id_jemaat',
-        'id_gereja',
+        'nama_gereja',
         'id_pendeta',
         'tanggal_meninggal',
         'tanggal_pemakaman',
@@ -25,11 +25,6 @@ class Kematian extends Model
     public function jemaat()
     {
         return $this->belongsTo(Jemaat::class, 'id_jemaat', 'id_jemaat');
-    }
-
-    public function gereja()
-    {
-        return $this->belongsTo(Gereja::class, 'id_gereja', 'id_gereja');
     }
 
     public function pendeta()

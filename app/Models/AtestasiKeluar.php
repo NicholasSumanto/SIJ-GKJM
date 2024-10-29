@@ -16,7 +16,7 @@ class AtestasiKeluar extends Model
         'id_jemaat',
         'id_wilayah',
         'id_pendeta',
-        'id_gereja',
+        'nama_gereja',
         'no_surat',
         'tanggal',
         'keterangan',
@@ -35,10 +35,5 @@ class AtestasiKeluar extends Model
     public function pendeta()
     {
         return $this->belongsTo(Pendeta::class, 'id_pendeta', 'id_pendeta');
-    }
-
-    public function gereja()
-    {
-        return $this->belongsTo(Gereja::class, 'id_gereja', 'id_gereja');
     }
 }

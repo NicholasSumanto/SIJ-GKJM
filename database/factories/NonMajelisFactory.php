@@ -14,6 +14,12 @@ class NonMajelisFactory extends Factory
 {
     protected $model = NonMajelis::class;
 
+    private $churches = [
+        'Gereja Kristus',
+        'Gereja Injil',
+        'Gereja Betlehem',
+        'Gereja Harapan',
+    ];
 
     public function definition()
     {
@@ -22,7 +28,7 @@ class NonMajelisFactory extends Factory
 
         return [
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
-            'id_gereja' => Gereja::inRandomOrder()->first()->id_gereja,
+            'nama_gereja' => array_rand($this->churches),
             'nama_majelis_non' => $this->faker->name(),
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_selesai' => $tanggal_selesai,

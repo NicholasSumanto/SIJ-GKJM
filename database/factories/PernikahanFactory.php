@@ -13,11 +13,18 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class PernikahanFactory extends Factory
 {
     protected $model = Pernikahan::class;
+    private $churches = [
+        'Gereja Kristus',
+        'Gereja Injil',
+        'Gereja Betlehem',
+        'Gereja Harapan',
+    ];
+
     public function definition(): array
     {
         return [
             'nomor' => $this->faker->unique()->numerify('PNK###'),
-            'id_gereja' =>Gereja::inRandomOrder()->first()->id_gereja,
+            'nama_gereja' =>array_rand($this->churches),
             'tanggal_nikah' => $this->faker->date(),
             'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,
             'pengantin_pria' => $this->faker->name(),

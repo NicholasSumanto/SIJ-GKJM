@@ -4,8 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeders\{RoleSeeder, UsersSeeder};
-use Database\Seeders\ParentSeeders\{StatusSeeder, GerejaSeeder, BidangIlmuSeeder, PendidikanSeeder, PekerjaanSeeder, PendetaSeeder, PendetaDidikSeeder, WilayahSeeder, ProvinsiSeeder, JabatanMajelisSeeder, JabatanNonMajelisSeeder};
-use Database\Seeders\GeoSeeders\{KabupatenSeeder,KecamatanSeeder,KelurahanSeeder};
+use Database\Seeders\ParentSeeders\{StatusSeeder, BidangIlmuSeeder, PendidikanSeeder, PekerjaanSeeder, PendetaSeeder, PendetaDidikSeeder, WilayahSeeder, JabatanMajelisSeeder, JabatanNonMajelisSeeder};
 use Database\Seeders\BaptisSeeders\{BaptisAnakSeeder,BaptisDewasaSeeder,BaptisSidiSeeder};
 use Database\Seeders\JemaatSeeders\{PernikahanSeeder,jemaatSeeder,JemaatTitipanSeeder,KeluargaSeeder,AnggotaKeluargaSeeder,KematianSeeder,MajelisSeeder,NonMajelisSeeder};
 use Database\Seeders\AtestasiSeeders\{AtestasiKeluarSeeder,AtestasiKeluarDtlSeeder,AtestasiMasukSeeder};
@@ -22,19 +21,14 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UsersSeeder::class,
             StatusSeeder::class,
-            GerejaSeeder::class,
             BidangIlmuSeeder::class,
             PendidikanSeeder::class,
             PekerjaanSeeder::class,
             PendetaSeeder::class,
             PendetaDidikSeeder::class,
             WilayahSeeder::class,
-            ProvinsiSeeder::class,
             JabatanMajelisSeeder::class,
             JabatanNonMajelisSeeder::class,
-            KabupatenSeeder::class,
-            KecamatanSeeder::class,
-            KelurahanSeeder::class,
             BaptisAnakSeeder::class,
             BaptisDewasaSeeder::class,
             BaptisSidiSeeder::class,

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pernikahan', function (Blueprint $table) {
             $table->id('id_nikah');
             $table->string('nomor', 50);
-            $table->bigInteger('id_gereja')->unsigned()->nullable();
+            $table->string('nama_gereja');
             $table->date('tanggal_nikah');
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string('pengantin_pria', 100);
@@ -29,7 +29,6 @@ return new class extends Migration
             $table->string('tempat', 250);
             $table->string('ketua_majelis', 100);
             $table->string('sekretaris_majelis', 100);
-            $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
@@ -37,36 +36,36 @@ return new class extends Migration
             $table->increments('id_jemaat');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_status')->unsigned()->nullable();
-            $table->string('stamboek', 10);
+            $table->string('stamboek', 10)->nullable();
             $table->string('nama_jemaat', 200);
-            $table->string('tempat_lahir', 100);
-            $table->date('tanggal_lahir');
-            $table->string('kelamin', 10);
-            $table->string('alamat_jemaat');
+            $table->string('tempat_lahir', 100)->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->string('kelamin', 10)->nullable();
+            $table->string('alamat_jemaat')->nullable();
             $table->bigInteger('id_kelurahan')->unsigned()->nullable();
             $table->bigInteger('id_kecamatan')->unsigned()->nullable();
             $table->bigInteger('id_kabupaten')->unsigned()->nullable();
             $table->bigInteger('id_provinsi')->unsigned()->nullable();
-            $table->string('kodepos');
-            $table->string('telepon', 50);
-            $table->string('hp', 30);
-            $table->string('email', 100);
-            $table->string('nik', 16);
-            $table->string('no_kk', 20);
-            $table->string('photo', 255);
+            $table->string('kodepos')->nullable();
+            $table->string('telepon', 50)->nullable();
+            $table->string('hp', 30)->nullable();
+            $table->string('email', 100)->nullable();
+            $table->string('nik', 16)->nullable();
+            $table->string('no_kk', 20)->nullable();
+            $table->string('photo', 255)->nullable();
             $table->bigInteger('id_nikah')->unsigned()->nullable();
             $table->bigInteger('id_sidi')->unsigned()->nullable();
             $table->bigInteger('id_ba')->unsigned()->nullable();
             $table->bigInteger('id_bd')->unsigned()->nullable();
-            $table->date('tanggal_baptis');
+            $table->date('tanggal_baptis')->nullable();
             $table->string('golongan_darah', 3);
             $table->bigInteger('id_pendidikan')->unsigned()->nullable();
             $table->bigInteger('id_ilmu')->unsigned()->nullable();
             $table->bigInteger('id_pekerjaan')->unsigned()->nullable();
-            $table->string('instansi', 250);
-            $table->string('penghasilan', 50);
-            $table->string('gereja_baptis', 250);
-            $table->string('alat_transportasi', 100);
+            $table->string('instansi', 250)->nullable();
+            $table->string('penghasilan', 50)->nullable();
+            $table->string('gereja_baptis', 250)->nullable();
+            $table->string('alat_transportasi', 100)->nullable();
             $table->timestamps();
             $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_nikah')->references('id_nikah')->on('pernikahan')->onUpdate('cascade')->onDelete('set null');
@@ -152,14 +151,13 @@ return new class extends Migration
         Schema::create('kematian', function (Blueprint $table) {
             $table->id('id_kematian');
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->bigInteger('id_gereja')->unsigned()->nullable();
+            $table->string('nama_gereja');
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->date('tanggal_meninggal');
             $table->date('tanggal_pemakaman');
             $table->string('tempat_pemakaman');
             $table->string('keterangan');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
@@ -168,7 +166,7 @@ return new class extends Migration
             $table->id('id_majelis');
             $table->string('nama_majelis');
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->bigInteger('id_gereja')->unsigned()->nullable();
+            $table->string('nama_gereja');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->bigInteger('id_jabatan')->unsigned()->nullable();
@@ -176,7 +174,6 @@ return new class extends Migration
             $table->string('no_sk');
             $table->string('berkas');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_jabatan')->references('id_jabatan')->on('jabatan_majelis')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
@@ -186,7 +183,7 @@ return new class extends Migration
             $table->id('id_nonmajelis');
             $table->string('nama_majelis_non',);
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->bigInteger('id_gereja')->unsigned()->nullable();
+            $table->string('nama_gereja');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->bigInteger('id_jabatan_non')->unsigned()->nullable();
@@ -194,17 +191,11 @@ return new class extends Migration
             $table->string('no_sk');
             $table->string('berkas');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('id_gereja')->references('id_gereja')->on('gereja')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_jabatan_non')->references('id_jabatan_non')->on('jabatan_nonmajelis')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
     }
-
-
-
-
-
 
     /**
      * Reverse the migrations.

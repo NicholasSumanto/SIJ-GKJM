@@ -19,7 +19,7 @@
             {{ session('status') }}
         </div>
     @endif
-    
+
     <form id="form" method="GET" action="{{ route('admin.dashboard') }}" class="container mt-4">
         <div class="card p-3 shadow-sm">
             <div class="form-row align-items-center">
@@ -114,29 +114,29 @@
     });
     const chart2 = document.getElementById('chartPendidikan').getContext('2d');
     const status = new Chart(chart2, {
-        type: 'doughnut',  
+        type: 'doughnut',
         data: {
             labels: @json($labelStatus),
             datasets: [{
                 label: 'Jumlah',
-                data: @json($jumlahStatus),  
+                data: @json($jumlahStatus),
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',  
-                    'rgba(255, 198, 189, 0.2)', 
-                    'rgba(75, 192, 192, 0.2)', 
-                    'rgba(255, 99, 132, 0.2)',  
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 198, 189, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
                     'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)', 
-                    'rgba(201, 203, 207, 0.2)'  
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
                 ],
                 borderColor: [
-                    'rgba(54, 162, 235, 1)', 
-                    'rgba(255, 198, 189, 1)',   
-                    'rgba(75, 192, 192, 1)',   
-                    'rgba(255, 99, 132, 1)', 
-                    'rgba(153, 102, 255, 1)', 
-                    'rgba(255, 159, 64, 1)',  
-                    'rgba(201, 203, 207, 1)'    
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 198, 189, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(201, 203, 207, 1)'
                 ],
                 borderWidth: 1
             }]

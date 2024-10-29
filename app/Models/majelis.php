@@ -15,7 +15,7 @@ class Majelis extends Model
     protected $fillable = [
         'id_jemaat',
         'nama_majelis',
-        'id_gereja',
+        'nama_gereja',
         'tanggal_mulai',
         'tanggal_selesai',
         'id_jabatan',
@@ -27,11 +27,6 @@ class Majelis extends Model
     public function jemaat()
     {
         return $this->belongsTo(Jemaat::class, 'id_jemaat');
-    }
-
-    public function gereja()
-    {
-        return $this->belongsTo(Gereja::class, 'id_gereja');
     }
 
     public function jabatanMajelis()

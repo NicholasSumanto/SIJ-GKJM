@@ -66,8 +66,8 @@
                             <tbody>
                                 @foreach($pagination as $data)
                                     <tr>
-                                        <td>{{ $data->nama_jemaat ?? 'N/A' }}</td> 
-                                        <td>{{ $data->tanggal_lahir ?? 'N/A' }}</td> 
+                                        <td>{{ $data->nama_jemaat ?? 'N/A' }}</td>
+                                        <td>{{ $data->tanggal_lahir ?? 'N/A' }}</td>
                                         <td>{{ $data->wil ?? 'Tidak Ada Wilayah' }}</td>
                                     </tr>
                                 @endforeach
@@ -110,8 +110,8 @@
                             <tbody>
                                 @foreach($paginationMarried as $data)
                                     <tr>
-                                        <td>{{ $data->pengantin_pria ?? 'N/A' }}</td> 
-                                        <td>{{ $data->pengantin_wanita ?? 'N/A' }}</td> 
+                                        <td>{{ $data->pengantin_pria ?? 'N/A' }}</td>
+                                        <td>{{ $data->pengantin_wanita ?? 'N/A' }}</td>
                                         <td>{{ $data->tanggal_nikah ?? 'N/A' }}</td>
                                         <td class="wilayah">{{$data->nama_wilayah}}</td>
                                     </tr>
@@ -136,13 +136,13 @@
 <script>
     function filterTableByWilayah(wilayah) {
         const tableRows = document.querySelectorAll('#jemaatTable tbody tr');
-        
+
         tableRows.forEach(row => {
-            const wilayahCell = row.querySelector('td:nth-child(3)');  
+            const wilayahCell = row.querySelector('td:nth-child(3)');
             if (wilayahCell.textContent.trim() === wilayah) {
-                row.style.display = ''; 
+                row.style.display = '';
             } else {
-                row.style.display = 'none';  
+                row.style.display = 'none';
             }
         });
     }
@@ -150,13 +150,13 @@
         const rows = document.querySelectorAll('#marriedTable tbody tr');
 
         rows.forEach(row => {
-            const wilayahCell = row.querySelector('.wilayah'); 
+            const wilayahCell = row.querySelector('.wilayah');
             if (wilayahCell) {
-                const wilayah = wilayahCell.textContent; 
+                const wilayah = wilayahCell.textContent;
                 if (wilayah === selectedWilayah) {
                     row.style.display = '';
                 } else {
-                    row.style.display = 'none'; 
+                    row.style.display = 'none';
                 }
             }
         });
@@ -166,10 +166,10 @@
         const jemaatRows = document.querySelectorAll('#jemaatTable tbody tr');
         const marriedRows = document.querySelectorAll('#marriedTable tbody tr');
         jemaatRows.forEach(row => {
-            row.style.display = ''; 
+            row.style.display = '';
         });
         marriedRows.forEach(row => {
-            row.style.display = ''; 
+            row.style.display = '';
         });
     }
 
@@ -177,10 +177,10 @@
     const jemaatChart = new Chart(chart1, {
         type: 'bar',
         data: {
-            labels: @json($labelWilayah), 
+            labels: @json($labelWilayah),
             datasets: [{
                 label: 'Jumlah Jemaat',
-                data: @json($dataCount), 
+                data: @json($dataCount),
                 backgroundColor: 'rgba(0, 53, 220, 0.7)',
                 borderColor: 'rgba(0, 53, 220, 1)',
                 borderWidth: 1
@@ -204,9 +204,9 @@
             },
             onClick: (event, elements) => {
                 if (elements.length > 0) {
-                    const index = elements[0].index;  
-                    const wilayahClicked = jemaatChart.data.labels[index]; 
-                    filterTableByWilayah(wilayahClicked); 
+                    const index = elements[0].index;
+                    const wilayahClicked = jemaatChart.data.labels[index];
+                    filterTableByWilayah(wilayahClicked);
                 }
             }
         }
@@ -233,9 +233,9 @@
             onClick: function(evt, elements) {
                 if (elements.length > 0) {
                     const clickedIndex = elements[0].index;
-                    const selectedWilayah = @json($wilayahNames)[clickedIndex]; 
+                    const selectedWilayah = @json($wilayahNames)[clickedIndex];
                     console.log("Bar clicked: ", selectedWilayah);
-                    MarriedTableByWilayah(selectedWilayah);    
+                    MarriedTableByWilayah(selectedWilayah);
                 }
             }
         }

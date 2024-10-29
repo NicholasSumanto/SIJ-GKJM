@@ -12,11 +12,18 @@ class AtestasiMasukFactory extends Factory
 {
     protected $model = AtestasiMasuk::class;
 
+    private $churches = [
+        'Gereja Kristus',
+        'Gereja Injil',
+        'Gereja Betlehem',
+        'Gereja Harapan',
+    ];
+
     public function definition()
     {
         return [
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
-            'id_gereja' => Gereja::inRandomOrder()->first()->id_gereja,
+            'nama_gereja' => array_rand($this->churches),
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
             'no_surat' => $this->faker->unique()->numerify('SM-####'),
             'tanggal' => $this->faker->date(),

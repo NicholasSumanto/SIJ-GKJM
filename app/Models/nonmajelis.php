@@ -15,7 +15,7 @@ class NonMajelis extends Model
     protected $fillable = [
         'id_jemaat',
         'nama_majelis_non',
-        'id_gereja',
+        'nama_gereja',
         'tanggal_mulai',
         'tanggal_selesai',
         'id_jabatan_non',
@@ -27,11 +27,6 @@ class NonMajelis extends Model
     public function jemaat()
     {
         return $this->belongsTo(Jemaat::class, 'id_jemaat');
-    }
-
-    public function gereja()
-    {
-        return $this->belongsTo(Gereja::class, 'id_gereja');
     }
 
     public function jabatanNonMajelis()

@@ -14,7 +14,7 @@ class Pernikahan extends Model
 
     protected $fillable = [
         'nomor',
-        'id_gereja',
+        'nama_gereja',
         'tanggal_nikah',
         'id_pendeta',
         'pengantin_pria',
@@ -30,11 +30,6 @@ class Pernikahan extends Model
         'ketua_majelis',
         'sekretaris_majelis',
     ];
-
-    public function gereja()
-    {
-        return $this->belongsTo(Gereja::class, 'id_gereja');
-    }
 
     public function pendeta()
     {
