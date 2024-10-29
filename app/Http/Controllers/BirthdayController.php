@@ -46,7 +46,6 @@ class BirthdayController extends Controller
             ->orderBy('wilayah.nama_wilayah')
             ->get();
 
-            
         $weddingsByWilayah = Pernikahan::select(DB::raw('count(*) as total_weddings, jemaat.id_wilayah, wilayah.nama_wilayah'))
             ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah') 
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')

@@ -79,7 +79,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-s font-weight-bold text-success text-uppercase mb-1">Anak</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$jumlahAnak}}</div>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-s font-weight-bold text-success text-uppercase mb-1">Dewasa</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{$jumlahDewasa}}</div>
                         </div>
                     </div>
                 </div>
@@ -104,12 +104,12 @@
                 <div class="col-md-6">
                     <br>
                     <h4>Kategori Usia</h4>
-                    <canvas id="ageGroupChart" style="width:100%; height:300px;  max-width: 300px; max-height: 300px;"></canvas>
+                    <canvas id="ageGroupChart" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
                 </div>
                 <div class="col-md-6">
                     <br>
                     <h4>Usia dan Wilayah</h4>
-                    <canvas id="ageGeo" style="width:100%; height:300px;  max-width: 300px; max-height: 300px;"></canvas>
+                    <canvas id="ageGeo" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
                 </div>
             </div>
         </div>
@@ -143,7 +143,38 @@
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'left',  
+                    position: 'right',  
+                }
+            }
+        }
+    });
+    const chart2 = document.getElementById('ageGeo').getContext('2d');
+    const usiaChart = new Chart(chart2, {
+        type: 'bar',
+        data: {
+            labels: @json($wilayahLabels),
+            datasets: [
+                {
+                    label: 'Anak',
+                    data: @json($anakCounts),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Dewasa',
+                    data: @json($dewasaCounts),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
         }

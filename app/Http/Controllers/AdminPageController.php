@@ -33,8 +33,7 @@ class AdminPageController extends Controller
 
         // $tahun = Carbon::today()->year;
         $tahun = date('Y');
-        $bulan = date('M');
-
+        $totalJemaat = Jemaat::count();
         $gender = $request->input('Kelamin');
         $wilayah = $request->input('Wilayah');
         $jemaatMeninggal = Kematian::selectRaw('MONTH(tanggal_meninggal) as bulan, COUNT(*) as jumlah')
@@ -168,7 +167,7 @@ class AdminPageController extends Controller
             'pendidikan' => $pendidikan ->toArray(),
             'status' => $status ->toArray(),
         ];
-        return view('admin.dashboard',compact('tahun','dropWilayah','labelWilayah','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan','labelStatus','jumlahStatus'), $data);
+        return view('admin.dashboard',compact('tahun','totalJemaat','dropWilayah','labelWilayah','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan','labelStatus','jumlahStatus'), $data);
     }
 
     // admin pengaturan start

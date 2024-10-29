@@ -31,14 +31,14 @@ class UsiaController extends Controller
         $widget = [
             'users' => $users,
         ];
-
+        
+        $cutoffDate = Carbon::now()->subYears(17)->toDateString();
         $totalJemaat = Jemaat::count();
         $rataRataUsia = Jemaat::avg(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
         $termuda = Jemaat::min(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
         $tertua = Jemaat::max(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
-        $jumlahAnak = Jemaat::where(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'), '<', 19)->count();
-        $jumlahDewasa = Jemaat::where(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'), '>=', 19)->count();
-
+        $jumlahAnak = Jemaat::where('tanggal_lahir','<', $cutoffDate)->count();
+        $jumlahDewasa = Jemaat::where('tanggal_lahir', '>=', $cutoffDate)->count();
         $ageGroups = Jemaat::select(
             DB::raw('
                 CASE
@@ -55,12 +55,24 @@ class UsiaController extends Controller
             )
             ->groupBy('age_group')
             ->pluck('total', 'age_group')->toArray();
+        
+        $wilayahData = Jemaat::select(
+                'wilayah.nama_wilayah',
+                DB::raw('SUM(CASE WHEN jemaat.tanggal_lahir > "' . $cutoffDate . '" THEN 1 ELSE 0 END) AS anak_count'),
+                DB::raw('SUM(CASE WHEN jemaat.tanggal_lahir <= "' . $cutoffDate . '" THEN 1 ELSE 0 END) AS dewasa_count')
+            )
+            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
+            ->groupBy('wilayah.nama_wilayah')
+            ->orderBy('wilayah.nama_wilayah')
+            ->get();
 
         $labels = array_keys($ageGroups);
         $data = array_values($ageGroups);
+        $wilayahLabels = $wilayahData->pluck('nama_wilayah')->toArray();
+        $anakCounts = $wilayahData->pluck('anak_count')->toArray();
+        $dewasaCounts = $wilayahData->pluck('dewasa_count')->toArray();
             
-
-        return view('admin.dashboardUsia',compact('labels','data','totalJemaat', 'rataRataUsia', 'termuda', 'tertua', 'jumlahAnak', 'jumlahDewasa'));
+        return view('admin.dashboardUsia',compact('wilayahLabels', 'anakCounts', 'dewasaCounts','labels','data','totalJemaat', 'rataRataUsia', 'termuda', 'tertua', 'jumlahAnak', 'jumlahDewasa'));
     }
     
 

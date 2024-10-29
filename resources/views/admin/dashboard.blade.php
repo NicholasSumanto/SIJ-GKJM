@@ -40,6 +40,9 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="card shadow h-100 py-4 ml-3" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                    Total: {{ $totalJemaat }}
+                </div>
             </div>
         </div>
     </form>
@@ -48,13 +51,15 @@
         <div class="row">
             <div class="col-md-6">
                 <br>
-                <h4>Jemaat per Wilayah</h4>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Jemaat per Wilayah</h4>
+                </div>
                 <canvas id="chartJemaatPerWilayah" style="width:100%; height:300px;"></canvas>
             </div>
             <div class="col-md-4">
                 <br>
                 <h4>Status </h4>
-                <canvas id="chartPendidikan" style="width:100%; height:300px;  max-width: 300px; max-height: 300px;"></canvas>
+                <canvas id="chartPendidikan" style="width:100%; height:300px; max-width: 300px; max-height: 300px;"></canvas>
             </div>
         </div>
         <div class="row">
