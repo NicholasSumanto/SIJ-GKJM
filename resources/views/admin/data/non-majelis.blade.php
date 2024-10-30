@@ -1,6 +1,6 @@
 @extends('layouts.admin-main-data')
 
-@section('title', 'Anggota Non Majelis')
+@section('title', 'Non Majelis')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -26,7 +26,7 @@
         </div>
         <table id="table" data-show-export="true" data-pagination="true" data-click-to-select="true"
             data-toolbar="#toolbar" data-search="true" data-show-toggle="true" data-show-columns="true"
-            data-filter-control="true" data-ajax="ApiGetAnggotaNonMajelis">
+            data-filter-control="true" data-ajax="ApiGetNonMajelis">
         </table>
     </div>
 @endsection
@@ -49,21 +49,19 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id',
+                    field: 'no',
                     title: 'No',
-                    align: 'center'
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return index + 1;
+                    }
                 }, {
-                    field: 'nama',
+                    field: 'nama_majelis_non',
                     title: 'Nama',
                     align: 'center'
                 }, {
-                    field: 'jabatan',
+                    field: 'jabatan_non',
                     title: 'Jabatan',
-                    align: 'center'
-                }, {
-                    field: 'tahun',
-                    title: 'Tahun',
-                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'tanggal_mulai',
@@ -78,11 +76,11 @@
                     title: 'No. SK',
                     align: 'center'
                 }, {
-                    field: 'file_sk',
+                    field: 'berkas',
                     title: 'File SK',
                     align: 'center'
                 }, {
-                    field: 'status',
+                    field: 'keterangan_status',
                     title: 'Status',
                     filterControl: 'select',
                     align: 'center'
@@ -113,21 +111,19 @@
                     exportDataType: exportDataType,
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
-                        field: 'id',
+                        field: 'no',
                         title: 'No',
-                        align: 'center'
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return index + 1;
+                        }
                     }, {
-                        field: 'name',
+                        field: 'nama_majelis_non',
                         title: 'Nama',
                         align: 'center'
                     }, {
-                        field: 'jabatan',
+                        field: 'jabatan_non',
                         title: 'Jabatan',
-                        align: 'center'
-                    }, {
-                        field: 'tahun',
-                        title: 'Tahun',
-                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'tanggal_mulai',
@@ -142,15 +138,15 @@
                         title: 'No. SK',
                         align: 'center'
                     }, {
-                        field: 'file_sk',
+                        field: 'berkas',
                         title: 'File SK',
                         align: 'center'
                     }, {
-                        field: 'status',
+                        field: 'keterangan_status',
                         title: 'Status',
                         filterControl: 'select',
                         align: 'center'
-                    }, {
+                    },{
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
@@ -339,12 +335,12 @@
             });
         });
 
-        function ApiGetAnggotaNonMajelis(params) {
+        function ApiGetNonMajelis(params) {
             $.ajax({
-                type: "GET",
-                url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                type: "POST",
+                url: "{{ route('api.get.nonmajelis') }}",
                 data: {
-                    // _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}'
                 },
                 dataType: "json",
                 success: function(data) {

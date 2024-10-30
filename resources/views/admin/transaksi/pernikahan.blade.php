@@ -53,6 +53,10 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
+                    field: 'nomor',
+                    title: 'Nomor Pernikahan',
+                    align: 'center'
+                },{
                     field: 'tanggal_nikah',
                     title: 'Tgl Pernikahan',
                     align: 'center'
@@ -114,6 +118,10 @@
                     exportDataType: exportDataType,
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
+                        field: 'nomor',
+                        title: 'Nomor Pernikahan',
+                        align: 'center'
+                    },{
                         field: 'tanggal_nikah',
                         title: 'Tgl Pernikahan',
                         align: 'center'

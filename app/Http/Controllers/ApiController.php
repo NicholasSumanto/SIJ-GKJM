@@ -792,11 +792,12 @@ class ApiController extends Controller
                             'id_majelis' => $item->id_majelis,
                             'id_jemaat' => $item->id_jemaat,
                             'nama_majelis' => $item->nama_majelis,
-                            'nama_gereja' => $item->nama_gereja,
                             'tanggal_mulai' => $item->tanggal_mulai,
                             'tanggal_selesai' => $item->tanggal_selesai,
                             'id_jabatan' => $item->id_jabatan,
+                            'jabatan_majelis' => $item->jabatanMajelis ? $item->jabatanMajelis->jabatan_majelis : null,
                             'id_status' => $item->id_status,
+                            'keterangan_status' => $item->status ? $item->status->keterangan_status : null,
                             'no_sk' => $item->no_sk,
                             'berkas' => $item->berkas,
                         ];
@@ -817,11 +818,12 @@ class ApiController extends Controller
                             'id_majelis' => $item->id_majelis,
                             'id_jemaat' => $item->id_jemaat,
                             'nama_majelis' => $item->nama_majelis,
-                            'nama_gereja' => $item->nama_gereja,
                             'tanggal_mulai' => $item->tanggal_mulai,
                             'tanggal_selesai' => $item->tanggal_selesai,
                             'id_jabatan' => $item->id_jabatan,
+                            'jabatan_majelis' => $item->JabatanMajelis ? $item->JabatanMajelis->jabatan_majelis : null,
                             'id_status' => $item->id_status,
+                            'keterangan_status' => $item->status ? $item->status->keterangan_status : null,
                             'no_sk' => $item->no_sk,
                             'berkas' => $item->berkas,
                         ];
@@ -854,7 +856,9 @@ class ApiController extends Controller
                             'tanggal_mulai' => $item->tanggal_mulai,
                             'tanggal_selesai' => $item->tanggal_selesai,
                             'id_jabatan_non' => $item->id_jabatan_non,
+                            'jabatan_non' => $item->jabatanNonMajelis ? $item->jabatanNonMajelis->jabatan_nonmajelis : null,
                             'id_status' => $item->id_status,
+                            'keterangan_status' => $item->status ? $item->status->keterangan_status : null,
                             'no_sk' => $item->no_sk,
                             'berkas' => $item->berkas,
                         ];
@@ -879,7 +883,9 @@ class ApiController extends Controller
                             'tanggal_mulai' => $item->tanggal_mulai,
                             'tanggal_selesai' => $item->tanggal_selesai,
                             'id_jabatan_non' => $item->id_jabatan_non,
+                            'jabatan_non' => $item->jabatanNonMajelis ? $item->jabatanNonMajelis->jabatan_nonmajelis : null,
                             'id_status' => $item->id_status,
+                            'keterangan_status' => $item->status ? $item->status->keterangan_status : null,
                             'no_sk' => $item->no_sk,
                             'berkas' => $item->berkas,
                         ];
@@ -890,6 +896,7 @@ class ApiController extends Controller
             return response()->json($formattedData);
         }
     }
+
     // GET NON MAJELIS END
 
     // GET PERNIKAHAN

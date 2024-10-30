@@ -15,7 +15,6 @@ class Majelis extends Model
     protected $fillable = [
         'id_jemaat',
         'nama_majelis',
-        'nama_gereja',
         'tanggal_mulai',
         'tanggal_selesai',
         'id_jabatan',

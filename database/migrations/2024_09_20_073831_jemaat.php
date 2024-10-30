@@ -166,7 +166,6 @@ return new class extends Migration
             $table->id('id_majelis');
             $table->string('nama_majelis');
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->string('nama_gereja');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->bigInteger('id_jabatan')->unsigned()->nullable();
