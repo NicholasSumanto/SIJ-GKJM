@@ -55,7 +55,7 @@ class UsiaController extends Controller
             )
             ->groupBy('age_group')
             ->pluck('total', 'age_group')->toArray();
-
+// dd($ageGroups);
         $wilayahData = Jemaat::select(
                 'wilayah.nama_wilayah',
                 DB::raw('SUM(CASE WHEN jemaat.tanggal_lahir > "' . $cutoffDate . '" THEN 1 ELSE 0 END) AS anak_count'),
