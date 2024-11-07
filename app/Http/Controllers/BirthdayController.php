@@ -34,15 +34,26 @@ class BirthdayController extends Controller
 
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        
+        $showAllBirthdays = $request->input('showAllBirthdays') == 'true';
+        $showAllMarriages = $request->input('showAllMarriages') == 'true';
+    
+        $birthdayItemsPerPage = $showAllBirthdays ? 8 : 8;
+        $marriageItemsPerPage = $showAllMarriages ? 8 : 8;
         $isiJemaat = Jemaat::select('jemaat.nama_jemaat', 'jemaat.tanggal_lahir', 'wilayah.nama_wilayah as wil')
             ->leftJoin('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
-                return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), [
-                    date('m-d', strtotime($startDate)),
-                    date('m-d', strtotime($endDate))
-                ]);
+                $startMonthDay = date('m-d', strtotime($startDate));
+                $endMonthDay = date('m-d', strtotime($endDate));  
+                if ($startMonthDay > $endMonthDay) {
+                    return $query->where(function($query) use ($startMonthDay, $endMonthDay) {
+                        $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), [$startMonthDay, '12-31'])
+                              ->orWhereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), ['01-01', $endMonthDay]);
+                    });
+                } else {
+                    return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), [$startMonthDay, $endMonthDay]);
+                }
             })
-            ->orderByRaw('MONTH(tanggal_lahir), DAY(tanggal_lahir)')
             ->orderBy('wilayah.nama_wilayah')
             ->get();
 
@@ -50,38 +61,63 @@ class BirthdayController extends Controller
             ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
-                return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [
-                    date('m-d', strtotime($startDate)),
-                    date('m-d', strtotime($endDate))
-                ]);
+                $startMonthDay = date('m-d', strtotime($startDate));
+                $endMonthDay = date('m-d', strtotime($endDate));
+                
+                if ($startMonthDay > $endMonthDay) {
+                    return $query->where(function($query) use ($startMonthDay, $endMonthDay) {
+                        $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [$startMonthDay, '12-31'])
+                              ->orWhereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), ['01-01', $endMonthDay]);
+                    });
+                } else {
+                    return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [$startMonthDay, $endMonthDay]);
+                }
             })
             ->groupBy('jemaat.id_wilayah', 'wilayah.nama_wilayah')
+            ->orderBy('wilayah.nama_wilayah')
             ->get();
 
         $pagination = Jemaat::select('jemaat.nama_jemaat', 'jemaat.tanggal_lahir', 'wilayah.nama_wilayah as wil')
             ->leftJoin('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
-                return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), [
-                    date('m-d', strtotime($startDate)),
-                    date('m-d', strtotime($endDate))
-                ]);
+                $startMonthDay = date('m-d', strtotime($startDate));
+                $endMonthDay = date('m-d', strtotime($endDate));
+                
+                if ($startMonthDay > $endMonthDay) {
+                    return $query->where(function($query) use ($startMonthDay, $endMonthDay) {
+                        $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), [$startMonthDay, '12-31'])
+                              ->orWhereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), ['01-01', $endMonthDay]);
+                    });
+                } else {
+                    return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_lahir, "%m-%d")'), [$startMonthDay, $endMonthDay]);
+                }
             })
-            ->orderByRaw('MONTH(tanggal_lahir), DAY(tanggal_lahir)')
+                       
             ->orderBy('wilayah.nama_wilayah')
-            ->paginate(8);
-
+            ->paginate($birthdayItemsPerPage, ['*'], 'birthdaysPage')
+            ->withQueryString();
+        
         $paginationMarried = Pernikahan::select('pernikahan.tanggal_nikah', 'pernikahan.pengantin_pria', 'pernikahan.pengantin_wanita', 'wilayah.nama_wilayah')
-            ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah') // Adjust this according to your actual foreign key
+            ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
-                return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [
-                    date('m-d', strtotime($startDate)),
-                    date('m-d', strtotime($endDate))
-                ]);
+                $startMonthDay = date('m-d', strtotime($startDate));
+                $endMonthDay = date('m-d', strtotime($endDate));
+                
+                if ($startMonthDay > $endMonthDay) {
+                    return $query->where(function($query) use ($startMonthDay, $endMonthDay) {
+                        $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [$startMonthDay, '12-31'])
+                              ->orWhereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), ['01-01', $endMonthDay]);
+                    });
+                } else {
+                    return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [$startMonthDay, $endMonthDay]);
+                }
             })
-            ->orderByRaw('MONTH(tanggal_nikah), DAY(tanggal_nikah)')
-            ->paginate(8);
 
+
+            ->orderBy('wilayah.nama_wilayah')
+            ->paginate($marriageItemsPerPage, ['*'], 'marriagesPage')
+            ->withQueryString();      
 
         $isiJemaat->map(function($jemaat) {
             $jemaat->tanggal_lahir = Carbon::parse($jemaat->tanggal_lahir)->format('d-m-Y');

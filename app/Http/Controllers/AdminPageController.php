@@ -31,18 +31,23 @@ class AdminPageController extends Controller
             //...
         ];
 
-        // $tahun = Carbon::today()->year;
         $tahun = date('Y');
         $totalJemaat = Jemaat::count();
         $gender = $request->input('Kelamin');
-        $wilayah = $request->input('Wilayah');
+        $kecamatan = $request->input('Kecamatan');
+        $kabupaten = $request->input('kabupaten');
+        $totalJemaatWilayah = Jemaat::selectRaw('id_wilayah')
+        ->when($kabupaten, function ($query, $kabupaten) {
+            return $query->where('jemaat.id_kabupaten', $kabupaten);
+        })
+        ->when($kecamatan, function ($query, $kecamatan) {
+            return $query->where('jemaat.id_kecamatan', $kecamatan);
+        })
+        ->count('id_wilayah');
         $jemaatMeninggal = Kematian::selectRaw('MONTH(tanggal_meninggal) as bulan, COUNT(*) as jumlah')
             ->join('jemaat', 'kematian.id_jemaat', '=', 'jemaat.id_jemaat')
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
-            })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
             })
             ->groupBy('bulan')
             ->get();
@@ -51,9 +56,7 @@ class AdminPageController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
-            })
+
             ->groupBy('bulan')
             ->get();
         $baptisDewasa = Jemaat::select(DB::raw('MONTH(baptis_dewasa.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_bd) as total'))
@@ -61,9 +64,7 @@ class AdminPageController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
-            })
+
             ->groupBy('bulan')
             ->get();
         $baptisAnak = Jemaat::select(DB::raw('MONTH(baptis_anak.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_ba) as total'))
@@ -71,9 +72,7 @@ class AdminPageController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
-            })
+
             ->groupBy('bulan')
             ->get();
         $atestasiMasuk = AtestasiMasuk::selectRaw('MONTH(tanggal) as bulan, COUNT(*) as jumlah')
@@ -81,9 +80,7 @@ class AdminPageController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
-            })
+
             ->groupBy('bulan')
             ->get();
 
@@ -92,9 +89,7 @@ class AdminPageController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
-            })
+
             ->groupBy('bulan')
             ->get();
         $jumlahJemaat = Jemaat::selectRaw('wilayah.nama_wilayah as wil, COUNT(jemaat.id_wilayah) as jumlah')
@@ -102,18 +97,13 @@ class AdminPageController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
-            })
+
             ->groupBy('wil')
             ->get();
         $pendidikan = Jemaat::selectRaw('pendidikan.nama_pendidikan as tingkatan, COUNT(jemaat.id_pendidikan) as jumlah')
             ->join('pendidikan', 'jemaat.id_pendidikan','=','pendidikan.id_pendidikan' )
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
-            })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
             })
             ->groupBy('tingkatan')
             ->get();
@@ -132,12 +122,11 @@ class AdminPageController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
-            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
-                return $query->where('jemaat.id_wilayah', $wilayah);
-            })
+            // ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+            //     return $query->where('jemaat.id_wilayah', $wilayah);
+            // })
             ->groupBy('stat')
             ->get();
-
         $dropWilayah = Wilayah::pluck('nama_wilayah', 'id_wilayah');
         $dropKab = Kabupaten::pluck('kabupaten','id_kabupaten');
         $dropKec = Kecamatan::pluck('kecamatan','id_kecamatan');
@@ -145,6 +134,7 @@ class AdminPageController extends Controller
         $isiJemaat = $jumlahJemaat->pluck('jumlah');
         $labelBulan = $jemaatMeninggal->pluck('bulan');
         $isiKematian = $jemaatMeninggal->pluck('jumlah');
+        // $isiWilayah = $totalJemaatWilayah->pluck('jumlah');
         $isiBA = $baptisAnak->pluck('total');
         $isiBS = $baptisSidi->pluck('total');
         $isiBD = $baptisDewasa->pluck('total');
@@ -159,6 +149,7 @@ class AdminPageController extends Controller
             'widget' => $widget,
             'jumlahJemaat' => $jumlahJemaat ->toArray(),
             'jemaatMeninggal' => $jemaatMeninggal ->toArray(),
+            // 'isiWilayah' => $isiWilayah ->toArray(),
             'baptisAnak' => $baptisAnak->toArray(),
             'baptisSidi' => $baptisSidi->toArray(),
             'baptisDewasa' => $baptisDewasa->toArray(),
@@ -167,7 +158,7 @@ class AdminPageController extends Controller
             'pendidikan' => $pendidikan ->toArray(),
             'status' => $status ->toArray(),
         ];
-        return view('admin.dashboard',compact('tahun','totalJemaat','dropWilayah','labelWilayah','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan','labelStatus','jumlahStatus'), $data);
+        return view('admin.dashboard',compact('tahun','totalJemaat','dropKab','dropKec','totalJemaatWilayah','labelWilayah','isiJemaat','labelBulan','isiKematian','labelBaptis','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan','labelStatus','jumlahStatus'), $data);
     }
 
     // admin pengaturan start

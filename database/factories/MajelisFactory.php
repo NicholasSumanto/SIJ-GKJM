@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Majelis;
 use App\Models\Jemaat;
+use App\Models\Gereja;
 use App\Models\JabatanMajelis;
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;

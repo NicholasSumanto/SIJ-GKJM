@@ -19,25 +19,43 @@
             {{ session('status') }}
         </div>
     @endif
+    <form id="form" method="GET" action="{{ route('admin.dashboard') }}" class="container mt-4">
+        <div class="card p-3 shadow-sm text-white" style="background-color: #2f56c8">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label for="kabupaten" class="mr-2 font-weight-bold">Pilih Kabupaten:</label>
+                    <select id="kabupaten" name="kabupaten" class="custom-select" onchange="this.form.submit()">
+                        <option value="" {{ request('kabupaten') == '' ? 'selected' : '' }}>All</option>
+                        @foreach($dropKab as $id_kabupaten => $kabupatenName)
+                            <option value="{{ $id_kabupaten }}" {{ request('kabupaten') == $id_kabupaten ? 'selected' : '' }}>{{ $kabupatenName }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="kecamatan" class="mr-2 font-weight-bold">Pilih Kecamatan:</label>
+                    <select id="kecamatan" name="kecamatan" class="custom-select" onchange="this.form.submit()">
+                        <option value="" {{ request('kecamatan') == '' ? 'selected' : '' }}>All</option>
+                        @foreach($dropKab as $id_kecamatan => $kecamatanName)
+                            <option value="{{ $id_kecamatan }}" {{ request('kecamatan') == $id_kecamatan ? 'selected' : '' }}>{{ $kecamatanName }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="card shadow h-100 py-4 ml-3" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                    Total Jemaat : {{ $totalJemaatWilayah }}
+                </div>
+            </div>
+        </div>
+    </form>
 
     <form id="form" method="GET" action="{{ route('admin.dashboard') }}" class="container mt-4">
         <div class="card p-3 shadow-sm">
             <div class="form-row align-items-center">
-                {{-- <div class="col-auto">
+                <div class="col-auto">
                     <label for="Kelamin" class="mr-2 font-weight-bold">Pilih Gender:</label>
                     <select id="Kelamin" name="Kelamin" class="custom-select" onchange="this.form.submit()">
                         <option value="">All</option>
                         <option value="Laki-laki" {{ request('Kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                         <option value="Perempuan" {{ request('Kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                    </select>
-                </div> --}}
-                <div class="col-auto">
-                    <label for="Wilayah" class="mr-2 font-weight-bold">Pilih Wilayah:</label>
-                    <select id="Wilayah" name="Wilayah" class="custom-select" onchange="this.form.submit()">
-                        <option value="" {{ request('Wilayah') == '' ? 'selected' : '' }}>All</option>
-                        @foreach($dropWilayah as $id_wilayah => $wilayahName)
-                            <option value="{{ $id_wilayah }}" {{ request('Wilayah') == $id_wilayah ? 'selected' : '' }}>{{ $wilayahName }}</option>
-                        @endforeach
                     </select>
                 </div>
                 <div class="card shadow h-100 py-4 ml-3" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
@@ -46,42 +64,45 @@
             </div>
         </div>
     </form>
-
+        
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <br>
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Jemaat per Wilayah</h4>
+        <br>
+        <div class="card p-3 shadow-sm">
+            <div class="row">
+                <div class="col-md-6">
+                    <br>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Jemaat per Wilayah</h4>
+                    </div>
+                    <canvas id="chartJemaatPerWilayah" style="width:100%; height:300px;"></canvas>
                 </div>
-                <canvas id="chartJemaatPerWilayah" style="width:100%; height:300px;"></canvas>
-            </div>
-            <div class="col-md-4">
-                <br>
-                <h4>Status </h4>
-                <canvas id="chartPendidikan" style="width:100%; height:300px; max-width: 300px; max-height: 300px;"></canvas>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <br>
-                <h4>Baptis {{$tahun}}</h4>
-                <canvas id="chartBaptis" style="width:100%; height:200px;"></canvas>
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Jemaat Keluar Masuk {{$tahun}}</h4>
-                    <span>
-                        <form id="keluarMasuk" method="GET" action="{{ route('admin.dashboard') }}">
-                            <select id="InOut" name="InOut" class="form-select" onchange="this.form.submit()">
-                                <option value="">All</option>
-                                <option value="Masuk" {{ request('InOut') == 'Masuk' ? 'selected' : '' }}>Masuk</option>
-                                <option value="Keluar" {{ request('InOut') == 'Keluar' ? 'selected' : '' }}>Keluar</option>
-                            </select>
-                        </form>
-                    </span>
+                <div class="col-md-4">
+                    <br>
+                    <h4>Status </h4>
+                    <canvas id="chartPendidikan" style="width:100%; height:300px; max-width: 300px; max-height: 300px;"></canvas>
                 </div>
-             <canvas id="chartKeluarMasuk" style="width:100%; height:250px;"></canvas>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <br>
+                    <h4>Baptis {{$tahun}}</h4>
+                    <canvas id="chartBaptis" style="width:100%; height:200px;"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Jemaat Keluar Masuk {{$tahun}}</h4>
+                        <span>
+                            <form id="keluarMasuk" method="GET" action="{{ route('admin.dashboard') }}">
+                                <select id="InOut" name="InOut" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All</option>
+                                    <option value="Masuk" {{ request('InOut') == 'Masuk' ? 'selected' : '' }}>Masuk</option>
+                                    <option value="Keluar" {{ request('InOut') == 'Keluar' ? 'selected' : '' }}>Keluar</option>
+                                </select>
+                            </form>
+                        </span>
+                    </div>
+                <canvas id="chartKeluarMasuk" style="width:100%; height:250px;"></canvas>
+                </div>
             </div>
         </div>
     </div>

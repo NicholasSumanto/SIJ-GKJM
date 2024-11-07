@@ -119,7 +119,7 @@
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-center">
-                            {{ $pagination->links('admin.custom-pagination') }}
+                            {{ $paginationMarried->links('admin.custom-pagination') }}
                         </div>
                         @else
                             <p class="text-danger">Data tidak ditemukan untuk rentang tanggal tersebut.</p>
@@ -205,8 +205,10 @@
             onClick: (event, elements) => {
                 if (elements.length > 0) {
                     const index = elements[0].index;
-                    const wilayahClicked = jemaatChart.data.labels[index];
-                    filterTableByWilayah(wilayahClicked);
+                    const selectedWilayah = jemaatChart.data.labels[index];
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('wilayah', selectedWilayah);
+                    window.location.href = url.toString();
                 }
             }
         }
@@ -232,10 +234,11 @@
             },
             onClick: function(evt, elements) {
                 if (elements.length > 0) {
-                    const clickedIndex = elements[0].index;
-                    const selectedWilayah = @json($wilayahNames)[clickedIndex];
-                    console.log("Bar clicked: ", selectedWilayah);
-                    MarriedTableByWilayah(selectedWilayah);
+                    const index = elements[0].index;
+                    const selectedWilayah = chartMarried.data.labels[index];
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('wilayah', selectedWilayah);
+                    window.location.href = url.toString();
                 }
             }
         }
