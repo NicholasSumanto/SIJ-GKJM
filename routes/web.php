@@ -53,6 +53,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/data/anggota-jemaat', AdminPageController::class . '@adminDataAnggotaJemaat')->name('admin.data.anggota-jemaat');
     Route::get('/admin/data/anggota-jemaat/{id}', AdminPageController::class . '@adminDataAnggotaJemaatDetail')->name('admin.data.anggota-jemaat-keluarga-detail');
     Route::get('/admin/data/anggota-jemaat-keluarga', AdminPageController::class . '@adminDataAnggotaJemaatKeluarga')->name('admin.data.anggota-jemaat-keluarga');
+    Route::get('/admin/data/jemaat-titipan', AdminPageController::class . '@adminDataJemaatTitipan')->name('admin.data.jemaat-titipan');
     Route::get('/admin/data/jemaat-baru', AdminPageController::class . '@adminDataJemaatBaru')->name('admin.data.jemaat-baru');
     Route::get('/admin/data/penddeta', AdminPageController::class . '@adminDataPendeta')->name('admin.data.pendeta');
     Route::get('/admin/data/majelis', AdminPageController::class . '@adminDataMajelis')->name('admin.data.majelis');

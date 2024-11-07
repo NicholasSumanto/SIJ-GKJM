@@ -62,6 +62,7 @@
                 }, {
                     field: 'jabatan_majelis',
                     title: 'Jabatan',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'tanggal_mulai',
@@ -124,6 +125,7 @@
                     }, {
                         field: 'jabatan_majelis',
                         title: 'Jabatan',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'tanggal_mulai',

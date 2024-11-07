@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Majelis;
 use App\Models\Jemaat;
-use App\Models\Gereja;
 use App\Models\JabatanMajelis;
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -37,7 +36,7 @@ class MajelisFactory extends Factory
 
         return [
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
-            'nama_gereja' => array_rand($this->churches),
+            'nama_gereja' => $this->churches[array_rand($this->churches)],
             'nama_majelis' => $this->faker->name(),
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_selesai' => $tanggal_selesai,

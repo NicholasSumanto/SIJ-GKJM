@@ -49,20 +49,38 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id',
+                    field: 'no',
                     title: 'No',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return index + 1;
+                    }
+                }, {
+                    field: 'nama_jemaat',
+                    title: 'Nama',
                     align: 'center'
                 }, {
-                    field: 'id',
-                    title: 'Id Jemaat',
+                    field: 'kelamin',
+                    title: 'Kelamin',
                     align: 'center'
-                }, {
-                    field: 'name',
-                    title: 'nama',
-                    align: 'center'
-                }, {
-                    field: 'gereja_asal',
+                },{
+                    field: 'nama_gereja',
                     title: 'Gereja Asal',
+                    align: 'center'
+                }, {
+                    field: 'alamat_jemaat',
+                    title: 'Alamat',
+                    align: 'center'
+                }, {
+                    field: 'titipan',
+                    title: 'Titipan',
+                    align: 'center'
+                }, {
+                    field: 'surat',
+                    title: 'Surat',
+                    formatter: function(value, row, index) {
+                        return `<button class="btn btn-primary btn-surat" data-id="${row.id}">Surat</button>`;
+                    },
                     align: 'center'
                 }, {
                     field: 'edit',
@@ -91,29 +109,47 @@
                     exportDataType: exportDataType,
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
-                        field: 'id',
-                        title: 'No',
-                        align: 'center'
+                    field: 'no',
+                    title: 'No',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return index + 1;
+                    }
                     }, {
-                        field: 'id',
-                        title: 'Id Jemaat',
-                        align: 'center'
-                    }, {
-                        field: 'name',
+                        field: 'nama_jemaat',
                         title: 'nama',
                         align: 'center'
                     }, {
-                        field: 'gereja_asal',
+                        field: 'kelamin',
+                        title: 'Kelamin',
+                        align: 'center'
+                    },{
+                        field: 'nama_gereja',
                         title: 'Gereja Asal',
                         align: 'center'
                     }, {
-                        field: 'edit',
-                        title: 'Edit',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
-                        },
+                        field: 'alamat_jemaat',
+                        title: 'Alamat',
                         align: 'center'
                     }, {
+                        field: 'titipan',
+                        title: 'Titipan',
+                        align: 'center'
+                    }, {
+                    field: 'surat',
+                    title: 'Surat',
+                    formatter: function(value, row, index) {
+                        return `<button class="btn btn-primary btn-surat" data-id="${row.id}">Surat</button>`;
+                    },
+                    align: 'center'
+                    },{
+                    field: 'edit',
+                    title: 'Edit',
+                    formatter: function(value, row, index) {
+                        return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
+                    },
+                    align: 'center'
+                    },{
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
@@ -194,6 +230,16 @@
                     }
                 });
             });
+
+            $(document).on('click', '.btn-surat', function() {
+            var suratUrl = $(this).data('url');
+
+            if (suratUrl) {
+                window.open(suratUrl, '_blank'); 
+            } else {
+                alert('Surat tidak tersedia.');
+            }
+        });
 
             // Event listener untuk tombol edit
             $(document).on('click', '.btn-edit', function() {
@@ -297,10 +343,10 @@
 
         function ApiGetJemaatTitipan(params) {
             $.ajax({
-                type: "GET",
-                url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                type: "POST",
+                url: "{{ route('api.get.jemaattitipan') }}",
                 data: {
-                    // _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}'
                 },
                 dataType: "json",
                 success: function(data) {

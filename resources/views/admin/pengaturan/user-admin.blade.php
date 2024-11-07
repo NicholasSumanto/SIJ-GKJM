@@ -296,6 +296,7 @@
 
             // Event listener untuk tombol edit
             $(document).on('click', '.btn-edit', function() {
+                event.preventDefault();
                 var old_username = $(this).data('username'); // Fix typo
 
                 $.ajax({

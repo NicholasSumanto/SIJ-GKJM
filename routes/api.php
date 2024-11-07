@@ -39,10 +39,11 @@ Route::post('/get/kelurahan', [ApiController::class, 'ApiGetDaerahKelurahan'])->
 Route::post('/get/jemaat', [ApiController::class, 'ApiGetJemaat'])-> name('api.get.jemaat');
 Route::post('/get/keluarga', [ApiController::class, 'ApiGetKeluarga'])-> name('api.get.keluarga');
 Route::post('/get/anggotakeluarga', [ApiController::class, 'ApiGetAnggotaKeluarga'])-> name('api.get.anggotakeluarga');
+Route::post('/get/jemaattitipan', [ApiController::class, 'ApiGetJemaatTitipan'])-> name('api.get.jemaattitipan');
 Route::post('/get/majelis', [ApiController::class, 'ApiGetMajelis'])-> name('api.get.majelis');
 Route::post('/get/nonmajelis', [ApiController::class, 'ApiGetNonMajelis'])-> name('api.get.nonmajelis');
 Route::post('/get/pendeta' , [ApiController::class, 'ApiGetPendeta'])-> name('api.get.pendeta');
-Route::post('/get/geeja', [ApiController::class, 'ApiGetGereja'])-> name('api.get.gereja');
+Route::post('/get/gereja', [ApiController::class, 'ApiGetGereja'])-> name('api.get.gereja');
     // Transaksi
 Route::post('/get/pernikahan', [ApiController::class, 'ApiGetPernikahan'])-> name('api.get.pernikahan');
 Route::post('/get/kematian', [ApiController::class, 'ApiGetKematian'])-> name('api.get.kematian');

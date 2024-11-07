@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\NonMajelis;
 use App\Models\Jemaat;
-use App\Models\Gereja;
 use App\Models\JabatanNonMajelis;
 use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -28,7 +27,7 @@ class NonMajelisFactory extends Factory
 
         return [
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
-            'nama_gereja' => array_rand($this->churches),
+            'nama_gereja' => $this->churches[array_rand($this->churches)],
             'nama_majelis_non' => $this->faker->name(),
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_selesai' => $tanggal_selesai,

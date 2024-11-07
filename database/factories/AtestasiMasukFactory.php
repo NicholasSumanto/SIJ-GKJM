@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\AtestasiMasuk;
 use App\Models\Wilayah;
-use App\Models\Gereja;
 use App\Models\Jemaat;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +22,7 @@ class AtestasiMasukFactory extends Factory
     {
         return [
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
-            'nama_gereja' => array_rand($this->churches),
+            'nama_gereja' => $this->churches[array_rand($this->churches)],
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
             'no_surat' => $this->faker->unique()->numerify('SM-####'),
             'tanggal' => $this->faker->date(),

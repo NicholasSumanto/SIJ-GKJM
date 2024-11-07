@@ -15,35 +15,10 @@ class JemaatTitipan extends Model
     protected $fillable = [
         'id_wilayah',
         'nama_jemaat',
-        'tempat_lahir',
-        'tanggal_lahir',
-        'agama',
+        'nama_gereja',
         'kelamin',
         'alamat_jemaat',
-        'alamat_domisili',
-        'id_kelurahan',
-        'id_kecamatan',
-        'id_kabupaten',
-        'id_provinsi',
-        'kodepos',
-        'telepon',
-        'hp',
-        'email',
-        'nik',
-        'no_kk',
-        'nama_ortu',
-        'telepon_ortu',
-        'photo',
-        'tanggal_baptis',
-        'golongan_darah',
-        'id_pendidikan',
-        'id_ilmu',
-        'id_pekerjaan',
-        'instansi',
-        'penghasilan',
-        'gereja_ibadah',
-        'alat_transportasi',
-        'nomorsurat',
+        'titipan',
         'surat',
     ];
 
@@ -51,40 +26,5 @@ class JemaatTitipan extends Model
     public function wilayah()
     {
         return $this->belongsTo(Wilayah::class, 'id_wilayah');
-    }
-
-    public function kelurahan()
-    {
-        return $this->belongsTo(Kelurahan::class, 'id_kelurahan');
-    }
-
-    public function kecamatan()
-    {
-        return $this->belongsTo(Kecamatan::class, 'id_kecamatan');
-    }
-
-    public function kabupaten()
-    {
-        return $this->belongsTo(Kabupaten::class, 'id_kabupaten');
-    }
-
-    public function provinsi()
-    {
-        return $this->belongsTo(Provinsi::class, 'id_provinsi');
-    }
-
-    public function pendidikan()
-    {
-        return $this->belongsTo(Pendidikan::class, 'id_pendidikan');
-    }
-
-    public function ilmu()
-    {
-        return $this->belongsTo(BidangIlmu::class, 'id_ilmu');
-    }
-
-    public function pekerjaan()
-    {
-        return $this->belongsTo(Pekerjaan::class, 'id_pekerjaan');
     }
 }

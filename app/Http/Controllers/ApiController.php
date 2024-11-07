@@ -25,6 +25,7 @@ use App\Models\Kelurahan as Kelurahan;
 use App\Models\Jemaat as Jemaat;
 use App\Models\Keluarga as Keluarga;
 use App\Models\AnggotaKeluarga as AnggotaKeluarga;
+use App\Models\JemaatTitipan as JemaatTitipan;
 //jemaat baru
 use App\Models\Majelis as Majelis;
 use App\Models\NonMajelis as NonMajelis;
@@ -645,7 +646,6 @@ class ApiController extends Controller
     public function ApiGetKeluarga(Request $request)
     {
         if ($request->has('id')) {
-            // Mengambil data berdasarkan ID keluarga
             $data = Keluarga::where('id_keluarga', $request->id)->get();
 
             $formattedData = [
@@ -705,6 +705,60 @@ class ApiController extends Controller
         }
     }
     // GET ANGGOTA KELUARGA END
+
+    // GET JEMAAT TITIPAN
+    public function ApiGetJemaatTitipan(Request $request)
+    {
+        if ($request->has('id')) {
+            $data = JemaatTitipan::where('id_titipan', $request->id)->get();
+
+            $formattedData = [
+                'total' => $data->count(),
+                'totalNotFiltered' => JemaatTitipan::count(),
+                'rows' => $data
+                    ->map(function ($item) {
+                        return [
+                            'id_titipan' => $item->id_titipan,
+                            'id_wilayah' => $item->id_wilayah,
+                            'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
+                            'nama_gereja' => $item->nama_gereja,
+                            'nama_jemaat' => $item->nama_jemaat,
+                            'kelamin' => $item->kelamin,
+                            'alamat_jemaat' => $item->alamat_jemaat,
+                            'titipan' => $item->titipan,
+                            'surat' => $item->surat,
+                        ];
+                    })
+                    ->toArray(),
+            ];
+
+            return response()->json($formattedData);
+        } else {
+            $data = JemaatTitipan::all();
+            $formattedData = [
+                'total' => $data->count(),
+                'totalNotFiltered' => Pekerjaan::count(),
+                'rows' => $data
+                    ->map(function ($item) {
+                        return [
+                            'id_titipan' => $item->id_titipan,
+                            'id_wilayah' => $item->id_wilayah,
+                            'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
+                            'nama_gereja' => $item->nama_gereja,
+                            'nama_jemaat' => $item->nama_jemaat,
+                            'kelamin' => $item->kelamin,
+                            'alamat_jemaat' => $item->alamat_jemaat,
+                            'titipan' => $item->titipan,
+                            'surat' => $item->surat,
+                        ];
+                    })
+                    ->toArray(),
+            ];
+
+            return response()->json($formattedData);
+        }
+    }
+    // GET JEMAAT TITTIPAN END
 
     // GET PENDETA START
     public function ApiGetPendeta(Request $request) {
@@ -902,8 +956,8 @@ class ApiController extends Controller
     // GET PERNIKAHAN
     public function ApiGetPernikahan(Request $request)
     {
-        if ($request->has('id')) {
-            $data = Pernikahan::where('id_nikah', $request->id)->get();
+        if ($request->has('nomor')) {
+            $data = Pernikahan::where('nomor', $request->nomor)->get();
 
             $formattedData = [
                 'total' => $data->count(),
@@ -1661,9 +1715,17 @@ class ApiController extends Controller
             ]);
         }
 
+        $namaGereja = '';
+
+        if ($request->nama_gereja == null) {
+            $namaGereja = $request->new_gereja;
+        } else {
+            $namaGereja = $request->nama_gereja;
+        }
+
         $data = new Pernikahan();
         $data->nomor = $request->nomor;
-        $data->nama_gereja = $request->nama_gereja;
+        $data->nama_gereja = $namaGereja;
         $data->tanggal_nikah = $request->tanggal_nikah;
         $data->id_pendeta = $request->id_pendeta;
         $data->pengantin_pria = $request->pengantin_pria;
@@ -2112,18 +2174,37 @@ class ApiController extends Controller
     // UPDATE PERNIKAHAN
     public function ApiUpdatePernikahan(Request $request)
     {
-        $data = Pernikahan::find($request->id_nikah);
-
-        if ($request->id != $request->id_nikah && Pernikahan::where('id_nikah', $request->id_nikah)->first() != null) {
+        if($request->old_nomor != $request->nomor && Pernikahan::where('nomor', $request->nomor)->first() != null){
             return response()->json([
-                'message' => 'Data already exists',
+                'message' => 'Nomor Pernikahan already used',
             ]);
         }
 
-        $data->id_jemaat_pria = $request->id_jemaat_pria;
-        $data->id_jemaat_wanita = $request->id_jemaat_wanita;
+        $data = Pernikahan::where('nomor', $request->old_nomor)->first();
+        $namaGereja = '';
+
+        if ($request->nama_gereja == null) {
+            $namaGereja = $request->new_gereja;
+        } else {
+            $namaGereja = $request->nama_gereja;
+        }
+
+        $data->nomor = $request->nomor;
+        $data->nama_gereja = $namaGereja;
         $data->tanggal_nikah = $request->tanggal_nikah;
-        $data->tempat_nikah = $request->tempat_nikah;
+        $data->id_pendeta = $request->id_pendeta;
+        $data->pengantin_pria = $request->pengantin_pria;
+        $data->pengantin_wanita = $request->pengantin_wanita;
+        $data->ayah_pria = $request->ayah_pria;
+        $data->ibu_pria = $request->ibu_pria;
+        $data->ayah_wanita = $request->ayah_wanita;
+        $data->ibu_wanita = $request->ibu_wanita;
+        $data->saksi1 = $request->saksi1;
+        $data->saksi2 = $request->saksi2;
+        $data->warga = $request->warga;
+        $data->tempat = $request->tempat;
+        $data->ketua_majelis = $request->ketua_majelis;
+        $data->sekretaris_majelis = $request->sekretaris_majelis;
         $data->save();
 
         return response()->json($data);
@@ -2431,7 +2512,7 @@ class ApiController extends Controller
 
     public function ApiDeletePernikahan(Request $request)
     {
-        $data = Pernikahan::find($request->id_nikah);
+        $data = Pernikahan::where('nomor', $request->nomor)->first();
         if ($data) {
             $data->delete();
             return response()->json([

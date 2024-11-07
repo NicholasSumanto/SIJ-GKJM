@@ -191,15 +191,17 @@
                 });
             }).trigger('change');
 
-            $(document).on('click', '.btn-view', function() {
-                event.preventDefault();
-                var id_jemaat = $(this).data('id_jemaat');
+            $(document).on('click', '.btn-view', function(event) {
+            event.preventDefault();
+            var id_jemaat = $(this).data('id_jemaat');
 
-                var url = '{{ route('admin.data.anggota-jemaat-keluarga-detail', ':id') }}';
-                url = url.replace(':id', id_jemaat);
+            var url = '{{ route('admin.data.anggota-jemaat-keluarga-detail', ':id') }}';
+            url = url.replace(':id', id_jemaat);
 
-                window.open(url, '_blank');
-            });
+            window.location.href = url;
+        });
+
+
 
             // $(document).on('click', '.btn-view', function() {
             //     var id_jemaat = $(this).data('id_jemaat');

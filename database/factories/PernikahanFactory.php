@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Pernikahan;
 use App\Models\Pendeta;
-use App\Models\Gereja;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,7 +23,7 @@ class PernikahanFactory extends Factory
     {
         return [
             'nomor' => $this->faker->unique()->numerify('PNK###'),
-            'nama_gereja' =>array_rand($this->churches),
+            'nama_gereja' =>$this->churches[array_rand($this->churches)],
             'tanggal_nikah' => $this->faker->date(),
             'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,
             'pengantin_pria' => $this->faker->name(),

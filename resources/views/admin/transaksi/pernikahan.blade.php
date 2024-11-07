@@ -56,7 +56,7 @@
                     field: 'nomor',
                     title: 'Nomor Pernikahan',
                     align: 'center'
-                },{
+                }, {
                     field: 'tanggal_nikah',
                     title: 'Tgl Pernikahan',
                     align: 'center'
@@ -88,21 +88,21 @@
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
+                        return `<button class="btn btn-warning btn-edit" data-nomor="${row.nomor}">Edit</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Hapus</button>`;
+                        return `<button class="btn btn-danger btn-delete" data-nomor="${row.nomor}">Hapus</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'cetak',
                     title: 'Cetak',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-view" data-id="${row.id}">Cetak</button>`;
+                        return `<button class="btn btn-primary btn-view" data-nomor="${row.nomor}">Cetak</button>`;
                     },
                     align: 'center'
                 }],
@@ -121,7 +121,7 @@
                         field: 'nomor',
                         title: 'Nomor Pernikahan',
                         align: 'center'
-                    },{
+                    }, {
                         field: 'tanggal_nikah',
                         title: 'Tgl Pernikahan',
                         align: 'center'
@@ -159,21 +159,21 @@
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}">Edit</button>`;
+                            return `<button class="btn btn-warning btn-edit" data-nomor="${row.nomor}">Edit</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Hapus</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-nomor="${row.nomor}">Hapus</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'cetak',
                         title: 'Cetak',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-primary btn-view" data-id="${row.id}">Cetak</button>`;
+                            return `<button class="btn btn-primary btn-view" data-nomor="${row.nomor}">Cetak</button>`;
                         },
                         align: 'center'
                     }],
@@ -182,70 +182,6 @@
                     }
                 });
             }).trigger('change');
-
-            // Event listener untuk tombol edit
-            $(document).on('click', '.btn-edit', function() {
-                event.preventDefault();
-                var id = $(this).data('id');
-                var name = $(this).data('name');
-
-                Swal.fire({
-                    title: 'Edit Wilayah',
-                    html: `
-                        <form id="editForm">
-                            <div class="form-group">
-                                <label for="idWilayah">ID Wilayah</label>
-                                <input type="text" id="idWilayah" class="form-control" value="${id}" disabled>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="nameItem">Nama Wilayah</label>
-                                <input type="text" id="nameItem" class="form-control" value="${name}">
-                            </div>
-                        </form>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Save',
-                    cancelButtonText: 'Cancel',
-                    preConfirm: () => {
-                        const newName = $('#nameItem').val();
-                        if (!newName) {
-                            Swal.showValidationMessage('Nama item tidak boleh kosong!');
-                            return false;
-                        }
-                        return {
-                            newName: newName
-                        };
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const newName = result.value.newName;
-
-                        // Contoh: Update menggunakan AJAX
-                        $.ajax({
-                            url: `/edit/${id}`,
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                id: id,
-                                name: newName
-                            },
-                            success: function(response) {
-                                alert.fire({
-                                    icon: 'success',
-                                    title: 'Data wilayah berhasil diubah!'
-                                });
-                                $table.bootstrapTable('refresh');
-                            },
-                            error: function(xhr, status, error) {
-                                alert.fire({
-                                    icon: 'danger',
-                                    title: 'Data wilayah gagal diupdate!'
-                                });
-                            }
-                        });
-                    }
-                });
-            });
         });
 
         // Event listener untuk tombol tambah Pernikahan
@@ -265,6 +201,9 @@
                                 <option value="">Pilih Nama Gereja</option>
                                 <!-- AJAX -->
                             </select>
+                            <div id="new-gereja-container" style="margin-top: 10px; display: none;">
+                                <input type="text" id="new_gereja" class="form-control" placeholder="Masukkan Gereja Baru">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="tanggal_nikah">Tanggal Menikah *</label>
@@ -344,9 +283,9 @@
                         dataType: "json",
                         success: function(response) {
                             const $gerejaSelect = $('#nama_gereja');
-                            Object.entries(response.rows).forEach(function([key, value]) {
+                            Object.entries(response).forEach(function([key, value]) {
                                 $gerejaSelect.append(
-                                    `<option value="${value.id_gereja}">${value.nama_gereja}</option>`
+                                    `<option value="${value.nama_gereja}">${value.nama_gereja}</option>`
                                 );
                             });
 
@@ -376,36 +315,73 @@
                                 'error');
                         }
                     });
+
+                    $('#nama_gereja').change(function() {
+                        const selectedValue = $(this).val();
+                        if (selectedValue === 'add-new-gereja') {
+                            $('#new-gereja-container').show();
+                            $('#new_gereja').val('');
+                        } else {
+                            $('#new-gereja-container').hide();
+                            $('#new_gereja').val('');
+                        }
+                    });
                 },
                 preConfirm: () => {
-
-
-                    // Validasi input
-                    if (!id_jabatan || !jabatan_majelis || !periode) {
-                        Swal.showValidationMessage(
-                            'Terdapat bagian yang tidak valid atau belum diisi!');
-                        return false;
-                    }
+                    const nomor = $('#nomor').val();
+                    const nama_gereja = $('#nama_gereja').val();
+                    const new_gereja = $('#new_gereja').val();
+                    const tanggal_nikah = $('#tanggal_nikah').val();
+                    const nama_pendeta = $('#nama_pendeta').val();
+                    const pengantin_pria = $('#pengantin_pria').val();
+                    const pengantin_wanita = $('#pengantin_wanita').val();
+                    const ayah_pria = $('#ayah_pria').val();
+                    const ibu_pria = $('#ibu_pria').val();
+                    const ayah_wanita = $('#ayah_wanita').val();
+                    const ibu_wanita = $('#ibu_wanita').val();
+                    const saksi1 = $('#saksi1').val();
+                    const saksi2 = $('#saksi2').val();
+                    const warga = $('#warga').val();
+                    const tempat = $('#tempat').val();
+                    const ketua_majelis = $('#ketua_majelis').val();
+                    const sekretaris_majelis = $('#sekretaris_majelis').val();
 
                     return new Promise((resolve, reject) => {
                         $.ajax({
                             type: "POST",
-                            url: "{{ route('api.get.jabatan-majelis') }}",
+                            url: "{{ route('api.get.pernikahan') }}",
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                id: id_jabatan
+                                nomor: nomor
                             },
                             dataType: "json",
                             success: function(response) {
                                 if (response.total > 0) {
                                     reject(
-                                        'ID jabatan majelis sudah ada, silahkan gunakan ID jabatan majelis lain!'
+                                        'Nomor pernikahan sudah ada, silahkan gunakan nomor pernikahan lain!'
                                     );
                                 } else {
                                     resolve({
-                                        id_jabatan: id_jabatan,
-                                        jabatan_majelis: jabatan_majelis,
-                                        periode: periode
+                                        nomor: nomor,
+                                        nama_gereja: nama_gereja ===
+                                            'add-new-gereja' ? '' :
+                                            nama_gereja,
+                                        new_gereja: new_gereja === '' ? '' :
+                                            new_gereja,
+                                        tanggal_nikah: tanggal_nikah,
+                                        nama_pendeta: nama_pendeta,
+                                        pengantin_pria: pengantin_pria,
+                                        pengantin_wanita: pengantin_wanita,
+                                        ayah_pria: ayah_pria,
+                                        ibu_pria: ibu_pria,
+                                        ayah_wanita: ayah_wanita,
+                                        ibu_wanita: ibu_wanita,
+                                        saksi1: saksi1,
+                                        saksi2: saksi2,
+                                        warga: warga,
+                                        tempat: tempat,
+                                        ketua_majelis: ketua_majelis,
+                                        sekretaris_majelis: sekretaris_majelis
                                     });
                                 }
                             },
@@ -422,31 +398,59 @@
             }).then((result) => {
                 if (result.isConfirmed && result.value) {
                     const {
-                        id_jabatan,
-                        jabatan_majelis,
-                        periode
+                        nomor,
+                        nama_gereja,
+                        new_gereja,
+                        tanggal_nikah,
+                        nama_pendeta,
+                        pengantin_pria,
+                        pengantin_wanita,
+                        ayah_pria,
+                        ibu_pria,
+                        ayah_wanita,
+                        ibu_wanita,
+                        saksi1,
+                        saksi2,
+                        warga,
+                        tempat,
+                        ketua_majelis,
+                        sekretaris_majelis
                     } = result.value;
 
                     $.ajax({
-                        url: "{{ route('api.post.jabatan-majelis') }}",
+                        url: "{{ route('api.post.pernikahan') }}",
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            id: id_jabatan,
-                            jabatan_majelis: jabatan_majelis,
-                            periode: periode
+                            nomor: nomor,
+                            nama_gereja: nama_gereja,
+                            new_gereja: new_gereja,
+                            tanggal_nikah: tanggal_nikah,
+                            id_pendeta: nama_pendeta,
+                            pengantin_pria: pengantin_pria,
+                            pengantin_wanita: pengantin_wanita,
+                            ayah_pria: ayah_pria,
+                            ibu_pria: ibu_pria,
+                            ayah_wanita: ayah_wanita,
+                            ibu_wanita: ibu_wanita,
+                            saksi1: saksi1,
+                            saksi2: saksi2,
+                            warga: warga,
+                            tempat: tempat,
+                            ketua_majelis: ketua_majelis,
+                            sekretaris_majelis: sekretaris_majelis
                         },
                         success: function(response) {
                             alert.fire({
                                 icon: 'success',
-                                title: 'Data jabatan majelis berhasil ditambahkan!'
+                                title: 'Data pernikahan berhasil ditambahkan!'
                             });
                             $table.bootstrapTable('refresh');
                         },
                         error: function(xhr, status, error) {
                             alert.fire({
                                 icon: 'error',
-                                title: 'Data jabatan majelis gagal ditambahkan!'
+                                title: 'Data pernikahan gagal ditambahkan!'
                             });
                         }
                     });
@@ -454,14 +458,347 @@
             });
         });
 
+        // Event listener untuk tombol edit
+        $(document).on('click', '.btn-edit', function() {
+            event.preventDefault();
+            var old_nomor = $(this).data('nomor');
+            console.log('nomr : ' + old_nomor);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('api.get.pernikahan') }}",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    nomor: old_nomor
+                },
+                dataType: "json",
+                success: function(response) {
+                    var nomor = response.rows[0].nomor;
+                    var nama_gereja = response.rows[0].nama_gereja;
+                    var tanggal_nikah = response.rows[0].tanggal_nikah;
+                    var id_pendeta = response.rows[0].id_pendeta;
+                    var pengantin_pria = response.rows[0].pengantin_pria;
+                    var pengantin_wanita = response.rows[0].pengantin_wanita;
+                    var ayah_pria = response.rows[0].ayah_pria;
+                    var ibu_pria = response.rows[0].ibu_pria;
+                    var ayah_wanita = response.rows[0].ayah_wanita;
+                    var ibu_wanita = response.rows[0].ibu_wanita;
+                    var saksi1 = response.rows[0].saksi1;
+                    var saksi2 = response.rows[0].saksi2;
+                    var warga = response.rows[0].warga;
+                    var tempat = response.rows[0].tempat;
+                    var ketua_majelis = response.rows[0].ketua_majelis;
+                    var sekretaris_majelis = response.rows[0].sekretaris_majelis;
+
+                    Swal.fire({
+                        title: 'Tambah Pernikahan Baru',
+                        html: `
+                        <form id="addJabatanMajelisForm">
+                            <div class="form-group">
+                                <label for="nomor">Nomor Pernikahan *</label>
+                                <input type="text" id="nomor" class="form-control" placeholder="Masukkan Nomor Pernikahan" value="${nomor}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama_gereja">Nama Gereja *</label>
+                                <select id="nama_gereja" class="form-control" required>
+                                    <option value="">Pilih Nama Gereja</option>
+                                    <!-- AJAX -->
+                                </select>
+                                <div id="new-gereja-container" style="margin-top: 10px; display: none;">
+                                    <input type="text" id="new_gereja" class="form-control" placeholder="Masukkan Gereja Baru">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="tanggal_nikah">Tanggal Menikah *</label>
+                                <input type="date" id="tanggal_nikah" class="form-control" value="${tanggal_nikah}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama_pendeta">Nama Pendeta *</label>
+                                <select id="nama_pendeta" class="form-control" required>
+                                    <option value="">Pilih Nama Pendeta</option>
+                                    <!-- AJAX -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pengantin_pria">Nama Pengantin Pria *</label>
+                                <input type="text" id="pengantin_pria" class="form-control" placeholder="Masukkan Nama Pengantin Pria" value="${pengantin_pria}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pengantin_wanita">Nama Pengantin Wanita *</label>
+                                <input type="text" id="pengantin_wanita" class="form-control" placeholder="Masukkan Nama Pengantin Wanita" value="${pengantin_wanita}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ayah_pria">Nama Ayah Pengantin Pria *</label>
+                                <input type="text" id="ayah_pria" class="form-control" placeholder="MasukkanNama Ayah Pengantin Pria" value="${ayah_pria}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ibu_pria">Nama Ibu Pengantin Pria *</label>
+                                <input type="text" id="ibu_pria" class="form-control" placeholder="Masukkan Nama Ibu Pengantin Pria" value="${ibu_pria}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ayah_wanita">Nama Ayah Pengantin Wanita *</label>
+                                <input type="text" id="ayah_wanita" class="form-control" placeholder="Masukkan Nama Ayah Pengantin Wanita" value="${ayah_wanita}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ibu_wanita">Nama Ibu Pengantin Wanita *</label>
+                                <input type="text" id="ibu_wanita" class="form-control" placeholder="Masukkan Nama Ibu Pengantin Wanita" value="${ibu_wanita}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="saksi1">Nama Saksi 1 *</label>
+                                <input type="text" id="saksi1" class="form-control" placeholder="Masukkan Nama Saksi 1" value="${saksi1}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="saksi2">Nama Saksi 2 *</label>
+                                <input type="text" id="saksi2" class="form-control" placeholder="Masukkan Nama Saksi 2" value="${saksi2}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="warga">Jenis Warga *</label>
+                                <select id="warga" class="form-control" required>
+                                    <option value="">Pilih Jenis Warga</option>
+                                    <option value="Warga Jemaat">Warga Jemaat</option>
+                                    <option value="Bukan Warga">Bukan Warga</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tempat">Nama Lokasi *</label>
+                                <input type="text" id="tempat" class="form-control" placeholder="Masukkan Nama Lokasi" value="${tempat}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ketua_majelis">Nama Ketua Majelis *</label>
+                                <input type="text" id="ketua_majelis" class="form-control" placeholder="Masukkan Nama Ketua Majelis" value="${ketua_majelis}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sekretaris_majelis">Nama Sekretaris Majelis *</label>
+                                <input type="text" id="sekretaris_majelis" class="form-control" placeholder="Masukkan Nama Sekretaris Majelis" value="${sekretaris_majelis}" required>
+                            </div>
+                        </form>
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Simpan',
+                        cancelButtonText: 'Batal',
+                        didOpen: () => {
+                            $.ajax({
+                                url: "{{ route('api.get.gereja') }}",
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    const $gerejaSelect = $(
+                                        '#nama_gereja');
+                                    Object.entries(response)
+                                        .forEach(function([
+                                            key, value
+                                        ]) {
+                                            $gerejaSelect
+                                                .append(
+                                                    `<option value="${value.nama_gereja}">${value.nama_gereja}</option>`
+                                                );
+                                        });
+
+                                    $gerejaSelect.append(
+                                        '<option value="add-new-gereja">+ Tambah Gereja Baru</option>'
+                                    );
+
+                                    $gerejaSelect.val(nama_gereja);
+                                }
+                            });
+
+                            $.ajax({
+                                url: "{{ route('api.get.pendeta') }}",
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    const $pendetaSelect = $(
+                                        '#nama_pendeta');
+                                    Object.entries(response.rows)
+                                        .forEach(
+                                            function([key, value]) {
+                                                $pendetaSelect
+                                                    .append(
+                                                        `<option value="${value.id_pendeta}">${value.nama_pendeta}</option>`
+                                                    );
+                                            });
+
+                                    $pendetaSelect.val(id_pendeta);
+                                },
+                                error: function(xhr, status, error) {
+                                    Swal.fire('Error',
+                                        'Gagal memuat data pendeta',
+                                        'error');
+                                }
+                            });
+
+                            $('#nama_gereja').change(function() {
+                                const selectedValue = $(this).val();
+                                if (selectedValue ===
+                                    'add-new-gereja') {
+                                    $('#new-gereja-container').show();
+                                    $('#new_gereja').val('');
+                                } else {
+                                    $('#new-gereja-container').hide();
+                                    $('#new_gereja').val('');
+                                }
+                            });
+
+                            $('#warga').val(warga);
+                        },
+                        preConfirm: () => {
+                            const nomor = $('#nomor').val();
+                            const nama_gereja = $('#nama_gereja').val();
+                            const new_gereja = $('#new_gereja').val();
+                            const tanggal_nikah = $('#tanggal_nikah').val();
+                            const nama_pendeta = $('#nama_pendeta').val();
+                            const pengantin_pria = $('#pengantin_pria').val();
+                            const pengantin_wanita = $('#pengantin_wanita')
+                                .val();
+                            const ayah_pria = $('#ayah_pria').val();
+                            const ibu_pria = $('#ibu_pria').val();
+                            const ayah_wanita = $('#ayah_wanita').val();
+                            const ibu_wanita = $('#ibu_wanita').val();
+                            const saksi1 = $('#saksi1').val();
+                            const saksi2 = $('#saksi2').val();
+                            const warga = $('#warga').val();
+                            const tempat = $('#tempat').val();
+                            const ketua_majelis = $('#ketua_majelis').val();
+                            const sekretaris_majelis = $('#sekretaris_majelis')
+                                .val();
+
+                            return new Promise((resolve, reject) => {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "{{ route('api.get.pernikahan') }}",
+                                    data: {
+                                        _token: '{{ csrf_token() }}',
+                                        nomor: nomor
+                                    },
+                                    dataType: "json",
+                                    success: function(
+                                        response) {
+                                        if (old_nomor != nomor && response.total >
+                                            0) {
+                                            reject(
+                                                'Nomor pernikahan sudah ada, silahkan gunakan nomor pernikahan lain!'
+                                            );
+                                        } else {
+                                            resolve({
+                                                nomor: nomor,
+                                                nama_gereja: nama_gereja ===
+                                                    'add-new-gereja' ?
+                                                    new_gereja :
+                                                    nama_gereja,
+                                                new_gereja: new_gereja ===
+                                                    '' ?
+                                                    '' :
+                                                    new_gereja,
+                                                tanggal_nikah: tanggal_nikah,
+                                                nama_pendeta: nama_pendeta,
+                                                pengantin_pria: pengantin_pria,
+                                                pengantin_wanita: pengantin_wanita,
+                                                ayah_pria: ayah_pria,
+                                                ibu_pria: ibu_pria,
+                                                ayah_wanita: ayah_wanita,
+                                                ibu_wanita: ibu_wanita,
+                                                saksi1: saksi1,
+                                                saksi2: saksi2,
+                                                warga: warga,
+                                                tempat: tempat,
+                                                ketua_majelis: ketua_majelis,
+                                                sekretaris_majelis: sekretaris_majelis
+                                            });
+                                        }
+                                    },
+                                    error: function(xhr, status,
+                                        error) {
+                                        reject(
+                                            'Terjadi kesalahan saat memvalidasi ID jabatan majelis.'
+                                        );
+                                    }
+                                });
+                            }).catch(error => {
+                                Swal.showValidationMessage(error);
+                            });
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value) {
+                            const {
+                                nomor,
+                                nama_gereja,
+                                new_gereja,
+                                tanggal_nikah,
+                                nama_pendeta,
+                                pengantin_pria,
+                                pengantin_wanita,
+                                ayah_pria,
+                                ibu_pria,
+                                ayah_wanita,
+                                ibu_wanita,
+                                saksi1,
+                                saksi2,
+                                warga,
+                                tempat,
+                                ketua_majelis,
+                                sekretaris_majelis
+                            } = result.value;
+
+                            $.ajax({
+                                url: "{{ route('api.update.pernikahan') }}",
+                                type: 'POST',
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    nomor: nomor,
+                                    old_nomor: old_nomor,
+                                    nama_gereja: nama_gereja,
+                                    new_gereja: new_gereja,
+                                    tanggal_nikah: tanggal_nikah,
+                                    id_pendeta: nama_pendeta,
+                                    pengantin_pria: pengantin_pria,
+                                    pengantin_wanita: pengantin_wanita,
+                                    ayah_pria: ayah_pria,
+                                    ibu_pria: ibu_pria,
+                                    ayah_wanita: ayah_wanita,
+                                    ibu_wanita: ibu_wanita,
+                                    saksi1: saksi1,
+                                    saksi2: saksi2,
+                                    warga: warga,
+                                    tempat: tempat,
+                                    ketua_majelis: ketua_majelis,
+                                    sekretaris_majelis: sekretaris_majelis
+                                },
+                                success: function(response) {
+                                    alert.fire({
+                                        icon: 'success',
+                                        title: 'Data pernikahan berhasil diubah!'
+                                    });
+                                    $table.bootstrapTable('refresh');
+                                },
+                                error: function(xhr, status, error) {
+                                    alert.fire({
+                                        icon: 'error',
+                                        title: 'Data pernikahan gagal diubah!'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    reject('Terjadi kesalahan saat memuat data pernikahan.');
+                }
+            });
+        });
 
         $(document).on('click', '.btn-delete', function() {
             event.preventDefault();
-            var id = $(this).data('id');
+            var nomor = $(this).data('nomor');
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                html: `<div class="text-delete">You won't be able to revert this!</div>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -470,19 +807,23 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/delete/${id}`,
-                        type: 'DELETE',
+                        url: `{{ route('api.delete.pernikahan') }}`,
+                        type: 'POST',
+                        data: {
+                                _token: '{{ csrf_token() }}',
+                                nomor: nomor
+                            },
                         success: function(response) {
                             alert.fire({
                                 icon: 'success',
-                                title: 'Data wilayah berhasil dihapus!'
+                                title: 'Data pernikahan berhasil dihapus!'
                             });
                             $table.bootstrapTable('refresh');
                         },
                         error: function(xhr, status, error) {
                             alert.fire({
                                 icon: 'error',
-                                title: 'Data wilayah gagal dihapus!'
+                                title: 'Data pernikahan gagal dihapus!'
                             });
                         }
                     });

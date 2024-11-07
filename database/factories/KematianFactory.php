@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Jemaat;
-use App\Models\Gereja;
 use App\Models\Pendeta;
 use App\Models\Kematian;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -25,7 +24,7 @@ class KematianFactory extends Factory
 
         return [
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
-            'nama_gereja' => array_rand($this->churches),
+            'nama_gereja' =>$this->churches[array_rand($this->churches)],
             'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,
             'tanggal_meninggal' => $tanggal_meninggal->format('Y-m-d'),
             'tanggal_pemakaman' => $tanggal_pemakaman->format('Y-m-d'),

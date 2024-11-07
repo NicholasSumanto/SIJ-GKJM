@@ -9,7 +9,7 @@ class JemaatTitipanSeeder extends Seeder
 {
     public function run()
     {
-        JemaatTitipan::factory()->count(50)->create();
+        JemaatTitipan::factory()->count(20)->create();
     }
 }
 
