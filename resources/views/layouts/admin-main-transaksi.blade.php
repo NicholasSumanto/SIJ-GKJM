@@ -16,7 +16,7 @@
                 </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.transaksi.atestasi-keluar') }}" aria-current="true" href="{{ route('admin.transaksi.atestasi-keluar') }}">ATESTASI KELUAR</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.transaksi.atestasi-keluar*') }}" aria-current="true" href="{{ route('admin.transaksi.atestasi-keluar') }}">ATESTASI KELUAR</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ Nav::isRoute('admin.transaksi.atestasi-masuk') }}" aria-current="true" href="{{ route('admin.transaksi.atestasi-masuk') }}">ATESTASI MASUK</a>

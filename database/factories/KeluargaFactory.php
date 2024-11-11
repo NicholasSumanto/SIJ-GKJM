@@ -15,7 +15,7 @@ class KeluargaFactory extends Factory
     {
         return [
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
-            'kepala_keluarga' => Jemaat::inRandomOrder()->first()->nama_jemaat,
+            'keterangan_hubungan' => $this->faker->randomElement(['Suami', 'Istri']),
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
         ];
     }

@@ -82,6 +82,57 @@ return new class extends Migration
             $table->foreign('id_pekerjaan')->references('id_pekerjaan')->on('pekerjaan')->onUpdate('cascade')->onDelete('set null');
         });
 
+        Schema::create('jemaat_baru', function (Blueprint $table) {
+            $table->increments('id_jemaat');
+            $table->bigInteger('id_wilayah')->unsigned()->nullable();
+            $table->bigInteger('id_status')->unsigned()->nullable();
+            $table->string('stamboek', 10)->nullable();
+            $table->string('nama_jemaat', 200);
+            $table->string('tempat_lahir', 100)->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->string('kelamin', 10)->nullable();
+            $table->string('alamat_jemaat')->nullable();
+            $table->bigInteger('id_kelurahan')->unsigned()->nullable();
+            $table->bigInteger('id_kecamatan')->unsigned()->nullable();
+            $table->bigInteger('id_kabupaten')->unsigned()->nullable();
+            $table->bigInteger('id_provinsi')->unsigned()->nullable();
+            $table->string('kodepos')->nullable();
+            $table->string('telepon', 50)->nullable();
+            $table->string('hp', 30)->nullable();
+            $table->string('email', 100)->nullable();
+            $table->string('nik', 16)->nullable();
+            $table->string('no_kk', 20)->nullable();
+            $table->string('photo', 255)->nullable();
+            $table->string('validasi')->nullable();
+            $table->bigInteger('id_nikah')->unsigned()->nullable();
+            $table->bigInteger('id_sidi')->unsigned()->nullable();
+            $table->bigInteger('id_ba')->unsigned()->nullable();
+            $table->bigInteger('id_bd')->unsigned()->nullable();
+            $table->date('tanggal_baptis')->nullable();
+            $table->string('golongan_darah', 3);
+            $table->bigInteger('id_pendidikan')->unsigned()->nullable();
+            $table->bigInteger('id_ilmu')->unsigned()->nullable();
+            $table->bigInteger('id_pekerjaan')->unsigned()->nullable();
+            $table->string('instansi', 250)->nullable();
+            $table->string('penghasilan', 50)->nullable();
+            $table->string('gereja_baptis', 250)->nullable();
+            $table->string('alat_transportasi', 100)->nullable();
+            $table->timestamps();
+            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_nikah')->references('id_nikah')->on('pernikahan')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_sidi')->references('id_sidi')->on('baptis_sidi')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_ba')->references('id_ba')->on('baptis_anak')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_bd')->references('id_bd')->on('baptis_dewasa')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_kelurahan')->references('id_kelurahan')->on('kelurahan')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_kecamatan')->references('id_kecamatan')->on('kecamatan')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_kabupaten')->references('id_kabupaten')->on('kabupaten')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_provinsi')->references('id_provinsi')->on('provinsi')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_pendidikan')->references('id_pendidikan')->on('pendidikan')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_ilmu')->references('id_ilmu')->on('bidangilmu')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_pekerjaan')->references('id_pekerjaan')->on('pekerjaan')->onUpdate('cascade')->onDelete('set null');
+        });
+
         Schema::create('jemaat_titipan', function (Blueprint $table) {
             $table->id('id_titipan');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
@@ -98,7 +149,7 @@ return new class extends Migration
         Schema::create('keluarga', function (Blueprint $table) {
             $table->id('id_keluarga');
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->string('kepala_keluarga');
+            $table->string('keterangan_hubungan');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
@@ -108,11 +159,10 @@ return new class extends Migration
         Schema::create('anggota_keluarga', function (Blueprint $table) {
             $table->id('id_anggota_keluarga');
             $table->bigInteger('id_keluarga')->unsigned()->nullable();
-            $table->bigInteger('id_status')->unsigned()->nullable();
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->string('nama_anggota');
+            $table->string('keterangan_hubungan');
+            $table->string('nama_anggota')->nullable();
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_keluarga')->references('id_keluarga')->on('keluarga')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
@@ -133,7 +183,6 @@ return new class extends Migration
         Schema::create('majelis', function (Blueprint $table) {
             $table->id('id_majelis');
             $table->string('nama_majelis');
-            $table->string('nama_gereja');
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');

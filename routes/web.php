@@ -55,7 +55,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/data/anggota-jemaat-keluarga', AdminPageController::class . '@adminDataAnggotaJemaatKeluarga')->name('admin.data.anggota-jemaat-keluarga');
     Route::get('/admin/data/jemaat-titipan', AdminPageController::class . '@adminDataJemaatTitipan')->name('admin.data.jemaat-titipan');
     Route::get('/admin/data/jemaat-baru', AdminPageController::class . '@adminDataJemaatBaru')->name('admin.data.jemaat-baru');
-    Route::get('/admin/data/penddeta', AdminPageController::class . '@adminDataPendeta')->name('admin.data.pendeta');
+    Route::get('/admin/data/pendeta', AdminPageController::class . '@adminDataPendeta')->name('admin.data.pendeta');
     Route::get('/admin/data/majelis', AdminPageController::class . '@adminDataMajelis')->name('admin.data.majelis');
     Route::get('/admin/data/non-majelis', AdminPageController::class . '@adminDataNonMajelis')->name('admin.data.non-majelis');
     Route::get('/admin/data/jemaat-titipan', AdminPageController::class . '@adminDataJemaatTitipan')->name('admin.data.jemaat-titipan');
@@ -65,6 +65,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/transaksi/pernikahan', AdminPageController::class . '@adminTransaksiPernikahan')->name('admin.transaksi.pernikahan');
     Route::get('/admin/transaksi/kematian', AdminPageController::class . '@adminTransaksiKematian')->name('admin.transaksi.kematian');
     Route::get('/admin/transaksi/atestasi-keluar', AdminPageController::class . '@adminTransaksiAtestasiKeluar')->name('admin.transaksi.atestasi-keluar');
+    Route::get('/admin/transaksi/atestasi-keluar/{id}', AdminPageController::class . '@adminTransaksiAtestasiKeluarDetail')->name('admin.transaksi.atestasi-keluar-detail');
     Route::get('/admin/transaksi/atestasi-masuk', AdminPageController::class . '@adminTransaksiAtestasiMasuk')->name('admin.transaksi.atestasi-masuk');
     Route::get('/admin/transaksi/baptis-anak', AdminPageController::class . '@adminTransaksiBaptisAnak')->name('admin.transaksi.baptis-anak');
     Route::get('/admin/transaksi/baptis-dewasa', AdminPageController::class . '@adminTransaksiBaptisDewasa')->name('admin.transaksi.baptis-dewasa');
@@ -80,7 +81,7 @@ Route::middleware('auth:adminWilayah')->group(function () {
 
 // Route::middleware(['auth:admin', 'auth:adminWilayah'])->group(function () {
     Route::post('/logout', AuthController::class.'@logout')->name('logout');
-    Route::get('/logout', AuthController::class.'@logout')->name('logout');
+    // Route::get('/logout', AuthController::class.'@logout')->name('logout');
 // });
 
 // Route::middleware('guest')->group(function () {

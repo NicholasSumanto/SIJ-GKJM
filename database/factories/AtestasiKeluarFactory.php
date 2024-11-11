@@ -22,7 +22,6 @@ class AtestasiKeluarFactory extends Factory
     public function definition()
     {
         return [
-            'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
             'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,
             'nama_gereja' => $this->churches[array_rand($this->churches)],

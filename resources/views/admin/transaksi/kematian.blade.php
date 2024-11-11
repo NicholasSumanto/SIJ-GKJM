@@ -4,6 +4,7 @@
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/bootstrap-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-table-filter-control.css') }}">
@@ -20,7 +21,7 @@
 
 @section('content')
     <div class="card-body">
-        <a href="" class="btn btn-success tambah-wilayah">Tambah Data Kematian</a>
+        <a href="" class="btn btn-success tambah-kematian">Tambah Data Kematian</a>
         <div id="toolbar" class="select">
             <select class="form-control">
                 <option value="">Export (Hanya yang Ditampilkan)</option>
@@ -37,6 +38,7 @@
 
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('js/bootstrap-table.js') }}"></script>
     <script src="{{ asset('js/table-export/jsPDF/polyfills.umd.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-table-export.js') }}"></script>
@@ -53,11 +55,11 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id',
+                    field: 'id_jemaat',
                     title: 'ID Jemaat',
                     align: 'center'
                 }, {
-                    field: 'name',
+                    field: 'nama_jemaat',
                     title: 'Nama',
                     align: 'center'
                 }, {
@@ -80,19 +82,19 @@
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Hapus</button>`;
+                        return `<button class="btn btn-danger btn-delete" data-id="${row.id_kematian}">Hapus</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'cetak',
                     title: 'Cetak',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-view" data-id="${row.id}">Cetak</button>`;
+                        return `<button class="btn btn-primary btn-view" data-id="${row.id_kematian}">Cetak</button>`;
                     },
                     align: 'center'
                 }],
                 exportOptions: {
-                    columns: [0, 1]
+                    ignoreColumn: [6, 7]
                 }
             });
 
@@ -103,11 +105,11 @@
                     exportDataType: exportDataType,
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
-                        field: 'id',
+                        field: 'id_jemaat',
                         title: 'ID Jemaat',
                         align: 'center'
                     }, {
-                        field: 'name',
+                        field: 'nama_jemaat',
                         title: 'Nama',
                         align: 'center'
                     }, {
@@ -130,92 +132,242 @@
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Hapus</button>`;
+                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_kematian}">Hapus</button>`;
                         },
                         align: 'center'
                     }, {
                         field: 'cetak',
                         title: 'Cetak',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-primary btn-view" data-id="${row.id}">Cetak</button>`;
+                            return `<button class="btn btn-primary btn-view" data-id="${row.id_kematian}">Cetak</button>`;
                         },
                         align: 'center'
-                    }]
+                    }],
+                    exportOptions: {
+                        ignoreColumn: [6, 7]
+                    }
                 });
             }).trigger('change');
+        });
 
-            // Event listener untuk tombol edit
-            $(document).on('click', '.btn-edit', function() {
-                event.preventDefault();
-                var id = $(this).data('id');
-                var name = $(this).data('name');
+        $(document).on('click', '.tambah-kematian', function(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Tambah Kematian',
+                html: `
+                    <form id="addKematianForm">
+                        <div class="form-group">
+                            <label for="nama_jemaat">Nama Jemaat *</label>
+                            <select id="nama_jemaat" class="form-control" required style="width: 100%;">
+                                <option value="">Pilih Nama Jemaat</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="nama_gereja">Nama Gereja *</label>
+                            <select id="nama_gereja" class="form-control" required style="width: 100%;">
+                                <option value="">Pilih Nama Gereja</option>
+                            </select>
+                            <div id="new-gereja-container" style="margin-top: 10px; display: none;">
+                                <input type="text" id="new_gereja" class="form-control" placeholder="Masukkan Gereja Baru">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nama_pendeta">Nama Pendeta *</label>
+                            <select id="nama_pendeta" class="form-control" required style="width: 100%;">
+                                <option value="">Pilih Nama Pendeta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggal_meninggal">Tanggal Meninggal *</label>
+                            <input type="date" id="tanggal_meninggal" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggal_pemakaman">Tanggal Pemakaman *</label>
+                            <input type="date" id="tanggal_pemakaman" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tempat_pemakaman">Tempat Pemakaman *</label>
+                            <input type="text" id="tempat" class="form-control" placeholder="Masukkan Nama Lokasi" required>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label for="keterangan">Keterangan</label>
+                            <textarea id="keterangan" name="keterangan" cols="50" style="width: 100%;"></textarea>
+                        </div>
+                    </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                cancelButtonText: 'Batal',
+                didOpen: () => {
+                    $('#nama_jemaat, #nama_gereja, #nama_pendeta').select2({
+                        placeholder: "Pilih atau cari",
+                        allowClear: true,
+                        dropdownParent: $(
+                            '.swal2-container')
+                    });
 
-                Swal.fire({
-                    title: 'Edit Wilayah',
-                    html: `
-                        <form id="editForm">
-                            <div class="form-group">
-                                <label for="idWilayah">ID Wilayah</label>
-                                <input type="text" id="idWilayah" class="form-control" value="${id}" disabled>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="nameItem">Nama Wilayah</label>
-                                <input type="text" id="nameItem" class="form-control" value="${name}">
-                            </div>
-                        </form>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Save',
-                    cancelButtonText: 'Cancel',
-                    preConfirm: () => {
-                        const newName = $('#nameItem').val();
-                        if (!newName) {
-                            Swal.showValidationMessage('Nama item tidak boleh kosong!');
-                            return false;
+                    // Load Nama Gereja
+                    $.ajax({
+                        url: "{{ route('api.get.gereja') }}",
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            const $gerejaSelect = $('#nama_gereja');
+                            $gerejaSelect.empty().append(
+                                '<option value="">Pilih Nama Gereja</option>');
+                            $.each(response, function(key, value) {
+                                $gerejaSelect.append(new Option(value.nama_gereja,
+                                    value.nama_gereja));
+                            });
+                            $gerejaSelect.append(new Option('+ Tambah Gereja Baru',
+                                'add-new-gereja'));
                         }
-                        return {
-                            newName: newName
-                        };
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const newName = result.value.newName;
+                    });
 
-                        // Contoh: Update menggunakan AJAX
+                    // Load Nama Pendeta
+                    $.ajax({
+                        url: "{{ route('api.get.pendeta') }}",
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            onlyName: true
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            const $pendetaSelect = $('#nama_pendeta');
+                            $pendetaSelect.empty().append(
+                                '<option value="">Pilih Nama Pendeta</option>');
+                            $.each(response.rows, function(key, value) {
+                                $pendetaSelect.append(new Option(value.nama_pendeta,
+                                    value.id_pendeta));
+                            });
+                        }
+                    });
+
+                    // Load Nama Jemaat
+                    $.ajax({
+                        url: "{{ route('api.get.jemaat') }}",
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            onlyName: true
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            const $jemaatSelect = $('#nama_jemaat');
+                            $jemaatSelect.empty().append(
+                                '<option value="">Pilih Nama Jemaat</option>');
+                            $.each(response.rows, function(key, value) {
+                                $jemaatSelect.append(new Option(value.nama_jemaat,
+                                    value.id_jemaat));
+                            });
+                        }
+                    });
+
+                    // Tampilkan input untuk menambahkan Gereja baru jika opsi dipilih
+                    $('#nama_gereja').change(function() {
+                        const selectedValue = $(this).val();
+                        if (selectedValue === 'add-new-gereja') {
+                            $('#new-gereja-container').show();
+                            $('#new_gereja').val('');
+                        } else {
+                            $('#new-gereja-container').hide();
+                        }
+                    });
+                },
+                preConfirm: () => {
+                    const data = {
+                        id_jemaat: $('#nama_jemaat').val(),
+                        id_pendeta: $('#nama_pendeta').val(),
+                        nama_gereja: $('#nama_gereja').val(),
+                        new_gereja: $('#new_gereja').val(),
+                        tanggal_meninggal: $('#tanggal_meninggal').val(),
+                        tanggal_pemakaman: $('#tanggal_pemakaman').val(),
+                        tempat_pemakaman: $('#tempat').val(),
+                        keterangan: $('#keterangan').val()
+                    };
+                    if (data.nama_gereja === 'add-new-gereja') {
+                        data.nama_gereja = data.new_gereja;
+                    } else {
+                        data.nama_gereja = '';
+                    }
+
+                    if (data.new_gereja === '') {
+                        '';
+                    } else {
+                        data.new_gereja = data.new_gereja;
+                    }
+
+                    if (!data.id_jemaat || !data.id_pendeta || !data.nama_gereja || !data
+                        .tanggal_meninggal || !data.tanggal_pemakaman || !data.tempat_pemakaman) {
+                        Swal.showValidationMessage('Data tidak boleh kosong!');
+                        return false;
+                    }
+
+                    return new Promise((resolve, reject) => {
                         $.ajax({
-                            url: `/edit/${id}`,
-                            type: 'POST',
+                            url: "{{ route('api.get.kematian') }}",
+                            type: "POST",
                             data: {
                                 _token: '{{ csrf_token() }}',
-                                id: id,
-                                name: newName
+                                id_jemaat: data.id_jemaat
                             },
+                            dataType: "json",
                             success: function(response) {
-                                alert.fire({
-                                    icon: 'success',
-                                    title: 'Data wilayah berhasil diubah!'
-                                });
-                                $table.bootstrapTable('refresh');
+                                if (response.total > 0) {
+                                    reject('Nama jemaat sudah terdaftar');
+                                } else {
+                                    resolve(data);
+                                }
                             },
-                            error: function(xhr, status, error) {
-                                alert.fire({
-                                    icon: 'danger',
-                                    title: 'Data wilayah gagal diupdate!'
-                                });
+                            error: function() {
+                                reject('Gagal memeriksa nama jemaat');
                             }
                         });
-                    }
-                });
+                    }).catch((error) => {
+                        Swal.showValidationMessage(error);
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('api.post.kematian') }}",
+                        type: "POST",
+                        data: {
+                            ...result.value,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function() {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Data kematian berhasil ditambahkan!'
+                            });
+                            $table.bootstrapTable('refresh');
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data kematian gagal ditambahkan!'
+                            });
+                        }
+                    });
+                }
             });
         });
 
+
+
+        // Event listener untuk tombol delete
         $(document).on('click', '.btn-delete', function() {
             event.preventDefault();
-            var id = $(this).data('id');
+            var id_kematian = $(this).data('id');
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                html: `<div class="text-delete">You won't be able to revert this!</div>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -224,19 +376,23 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/delete/${id}`,
-                        type: 'DELETE',
+                        url: `{{ route('api.delete.kematian') }}`,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            id_kematian: id_kematian
+                        },
                         success: function(response) {
                             alert.fire({
                                 icon: 'success',
-                                title: 'Data wilayah berhasil dihapus!'
+                                title: 'Data kematian berhasil dihapus!'
                             });
                             $table.bootstrapTable('refresh');
                         },
                         error: function(xhr, status, error) {
                             alert.fire({
                                 icon: 'error',
-                                title: 'Data wilayah gagal dihapus!'
+                                title: 'Data kematian gagal dihapus!'
                             });
                         }
                     });
@@ -246,10 +402,10 @@
 
         function ApiGetJemaatBaru(params) {
             $.ajax({
-                type: "GET",
-                url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                type: "POST",
+                url: "{{ route('api.get.kematian') }}",
                 data: {
-                    // _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}'
                 },
                 dataType: "json",
                 success: function(data) {

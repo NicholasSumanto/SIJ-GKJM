@@ -17,6 +17,7 @@ class AnggotaKeluarga extends Model
         'id_keluarga',
         'nama_anggota',
         'id_status',
+        'keterangan_hubungan',
     ];
 
 

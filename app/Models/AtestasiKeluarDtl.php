@@ -10,9 +10,10 @@ class AtestasiKeluarDtl extends Model
     use HasFactory;
 
     protected $table = 'atestasi_keluar_dtl';
-    protected $primaryKey = 'id_keluar';
+    protected $primaryKey = 'id_keluar_dtl';
 
     protected $fillable = [
+        'id_keluar',
         'id_jemaat',
         'keterangan',
     ];

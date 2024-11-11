@@ -15,7 +15,6 @@ class NonMajelis extends Model
     protected $fillable = [
         'id_jemaat',
         'nama_majelis_non',
-        'nama_gereja',
         'tanggal_mulai',
         'tanggal_selesai',
         'id_jabatan_non',

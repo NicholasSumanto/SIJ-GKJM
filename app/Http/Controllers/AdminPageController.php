@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AtestasiKeluarDtl;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Kematian;
@@ -282,6 +283,10 @@ class AdminPageController extends Controller
 
     public function adminTransaksiAtestasiKeluar() {
         return view('admin.transaksi.atestasi-keluar');
+    }
+    public function adminTransaksiAtestasiKeluarDetail($id) {
+        $atestasiKeluarDetail = AtestasiKeluarDtl::find($id);
+        return view('admin.transaksi.atestasi-keluar-detail', compact('atestasiKeluarDetail'));
     }
 
     public function adminTransaksiAtestasiMasuk() {

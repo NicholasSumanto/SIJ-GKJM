@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeders\{RoleSeeder, UsersSeeder};
 use Database\Seeders\ParentSeeders\{StatusSeeder, BidangIlmuSeeder, PendidikanSeeder, PekerjaanSeeder, PendetaSeeder, PendetaDidikSeeder, WilayahSeeder, JabatanMajelisSeeder, JabatanNonMajelisSeeder};
 use Database\Seeders\BaptisSeeders\{BaptisAnakSeeder,BaptisDewasaSeeder,BaptisSidiSeeder};
-use Database\Seeders\JemaatSeeders\{PernikahanSeeder,jemaatSeeder,JemaatTitipanSeeder,KeluargaSeeder,AnggotaKeluargaSeeder,KematianSeeder,MajelisSeeder,NonMajelisSeeder};
+use Database\Seeders\JemaatSeeders\{PernikahanSeeder,jemaatSeeder,JemaatBaruSeeder,JemaatTitipanSeeder,KeluargaSeeder,AnggotaKeluargaSeeder,KematianSeeder,MajelisSeeder,NonMajelisSeeder};
 use Database\Seeders\AtestasiSeeders\{AtestasiKeluarSeeder,AtestasiKeluarDtlSeeder,AtestasiMasukSeeder};
 class DatabaseSeeder extends Seeder
 {
@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             BaptisSidiSeeder::class,
             PernikahanSeeder::class,
             JemaatSeeder::class,
+            JemaatBaruSeeder::class,
             JemaatTitipanSeeder::class,
             KeluargaSeeder::class,
             AnggotaKeluargaSeeder::class,

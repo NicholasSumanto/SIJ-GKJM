@@ -34,7 +34,7 @@ Route::post('/get/provinsi', [ApiController::class, 'ApiGetDaerahProvinsi'])-> n
 Route::post('/get/kabupaten', [ApiController::class, 'ApiGetDaerahKabupaten'])-> name('api.get.kabupaten');
 Route::post('/get/kecamatan', [ApiController::class, 'ApiGetDaerahKecamatan'])-> name('api.get.kecamatan');
 Route::post('/get/kelurahan', [ApiController::class, 'ApiGetDaerahKelurahan'])-> name('api.get.kelurahan');
-//daerah
+Route::post('/get/status', [ApiController::class, 'ApiGetStatus'])-> name('api.get.status');
     //Data
 Route::post('/get/jemaat', [ApiController::class, 'ApiGetJemaat'])-> name('api.get.jemaat');
 Route::post('/get/keluarga', [ApiController::class, 'ApiGetKeluarga'])-> name('api.get.keluarga');
@@ -54,6 +54,7 @@ Route::post('/get/baptisdewasa', [ApiController::class, 'ApiGetbaptisDewasa'])->
 Route::post('/get/baptissidi', [ApiController::class, 'ApiGetbaptisSidi'])-> name('api.get.baptissidi');
     // Detail
 Route::post('/get/jemaat/{id_jemaat}', [ApiController::class, 'ApiGetJemaatById'])->name('api.get.jemaat.by.id');
+Route::post('/get/atestasikeluar/detail', [ApiController::class, 'ApiGetAtestasiKeluarDetail'])-> name('api.get.atestasikeluardetail');
 
 // POST
     //Pengaturan
@@ -69,6 +70,7 @@ Route::post('/post/kelurahan', [ApiController::class, 'ApiPostKelurahan'])-> nam
     //Data
 Route::post('/post/jemaat', [ApiController::class, 'ApiPostJemaat'])-> name('api.post.jemaat');
 Route::post('/post/keluarga', [ApiController::class, 'ApiPostKeluarga'])-> name('api.post.keluarga');
+Route::post('/post/anggotakeluarga', [ApiController::class, 'ApiPostAnggotaKeluarga'])-> name('api.post.anggotakeluarga');
 Route::post('/post/majelis', [ApiController::class, 'ApiPostMajelis'])-> name('api.post.majelis');
 Route::post('/post/nonmajelis', [ApiController::class, 'ApiPostNonMajelis'])-> name('api.post.nonmajelis');
 Route::post('/post/pendeta', [ApiController::class, 'ApiPostPendeta'])-> name('api.post.pendeta');
@@ -76,6 +78,7 @@ Route::post('/post/pendeta', [ApiController::class, 'ApiPostPendeta'])-> name('a
 Route::post('/post/pernikahan', [ApiController::class, 'ApiPostPernikahan'])-> name('api.post.pernikahan');
 Route::post('/post/kematian', [ApiController::class, 'ApiPostKematian'])-> name('api.post.kematian');
 Route::post('/post/atestasikeluar', [ApiController::class, 'ApiPostAtestasiKeluar'])-> name('api.post.atestasikeluar');
+Route::post('/post/atestasikeluardetail', [ApiController::class, 'ApiPostAtestasiKeluarDetail'])-> name('api.post.atestasikeluardetail');
 Route::post('/post/atestasimasuk', [ApiController::class, 'ApiPostAtestasiMasuk'])-> name('api.post.atestasimasuk');
 Route::post('/post/baptisanak', [ApiController::class, 'ApiPostbaptisAnak'])-> name('api.post.baptisanak');
 Route::post('/post/baptisdewasa', [ApiController::class, 'ApiPostbaptisDewasa'])-> name('api.post.baptisdewasa');
@@ -92,6 +95,7 @@ Route::post('/update/pekerjaan', [ApiController::class, 'ApiUpdatePekerjaan'])->
     //Data
 Route::post('/update/jemaat', [ApiController::class, 'ApiUpdateJemaat'])-> name('api.update.jemaat');
 Route::post('/update/keluarga', [ApiController::class, 'ApiUpdateKeluarga'])-> name('api.update.keluarga');
+Route::post('/update/anggotakeluarga', [ApiController::class, 'ApiUpdateAnggotaKeluarga'])-> name('api.update.anggotakeluarga');
 Route::post('/update/majelis', [ApiController::class, 'ApiUpdateMajelis'])-> name('api.update.majelis');
 Route::post('/update/nonmajelis', [ApiController::class, 'ApiUpdateNonMajelis'])-> name('api.update.nonmajelis');
 Route::post('/update/pendeta', [ApiController::class, 'ApiUpdatePendeta'])-> name('api.update.pendeta');
@@ -119,6 +123,7 @@ Route::post('/delete/kelurahan', [ApiController::class, 'ApiDeleteKelurahan'])->
     //Data
 Route::post('/delete/jemaat', [ApiController::class, 'ApiDeleteJemaat'])-> name('api.delete.jemaat');
 Route::post('/delete/keluarga', [ApiController::class, 'ApiDeleteKeluarga'])-> name('api.delete.keluarga');
+Route::post('/delete/anggotakeluarga', [ApiController::class, 'ApiDeleteAnggotaKeluarga'])-> name('api.delete.anggotakeluarga');
 Route::post('/delete/majelis', [ApiController::class, 'ApiDeleteMajelis'])-> name('api.delete.majelis');
 Route::post('/delete/nonmajelis', [ApiController::class, 'ApiDeleteNonMajelis'])-> name('api.delete.nonmajelis');
 Route::post('/delete/pendeta', [ApiController::class, 'ApiDeletePendeta'])-> name('api.delete.pendeta');
@@ -126,6 +131,7 @@ Route::post('/delete/pendeta', [ApiController::class, 'ApiDeletePendeta'])-> nam
 Route::post('/delete/pernikahan', [ApiController::class, 'ApiDeletePernikahan'])-> name('api.delete.pernikahan');
 Route::post('/delete/kematian', [ApiController::class, 'ApiDeleteKematian'])-> name('api.delete.kematian');
 Route::post('/delete/atestasikeluar', [ApiController::class, 'ApiDeleteAtestasiKeluar'])-> name('api.delete.atestasikeluar');
+Route::post('/delete/atestasikeluardetail', [ApiController::class, 'ApiDeleteAtestasiKeluarDetail'])-> name('api.delete.atestasikeluardetail');
 Route::post('/delete/atestasimasuk', [ApiController::class, 'ApiDeleteAtestasiMasuk'])-> name('api.delete.atestasimasuk');
 Route::post('/delete/baptisanak', [ApiController::class, 'ApiDeletebaptisAnak'])-> name('api.delete.baptisanak');
 Route::post('/delete/baptisdewasa', [ApiController::class, 'ApiDeletebaptisDewasa'])-> name('api.delete.baptisdewasa');

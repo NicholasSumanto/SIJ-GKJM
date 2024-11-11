@@ -15,6 +15,7 @@ class Keluarga extends Model
     protected $fillable = [
         'id_jemaat',
         'kepala_keluarga',
+        'keterangan_hubungan',
         'id_wilayah',
     ];
     public function jemaat()

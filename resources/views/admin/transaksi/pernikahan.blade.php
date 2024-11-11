@@ -346,6 +346,14 @@
                     const ketua_majelis = $('#ketua_majelis').val();
                     const sekretaris_majelis = $('#sekretaris_majelis').val();
 
+                    if (nomor === '' || nama_gereja === '' || tanggal_nikah === '' || nama_pendeta ===
+                        '' || pengantin_pria === '' || pengantin_wanita === '' || ayah_pria === '' ||
+                        ibu_pria === '' || ayah_wanita === '' || ibu_wanita === '' || saksi1 === '' ||
+                        saksi2 === '' || warga === '' || tempat === '' || ketua_majelis === '' ||
+                        sekretaris_majelis === '') {
+                        Swal.showValidationMessage('Data tidak boleh kosong!');
+                    }
+
                     return new Promise((resolve, reject) => {
                         $.ajax({
                             type: "POST",
@@ -462,7 +470,6 @@
         $(document).on('click', '.btn-edit', function() {
             event.preventDefault();
             var old_nomor = $(this).data('nomor');
-            console.log('nomr : ' + old_nomor);
 
             $.ajax({
                 type: "POST",
@@ -668,6 +675,15 @@
                             const sekretaris_majelis = $('#sekretaris_majelis')
                                 .val();
 
+                            if (nomor === '' || nama_gereja === '' || tanggal_nikah ===
+                                '' || nama_pendeta === '' || pengantin_pria === '' ||
+                                pengantin_wanita === '' || ayah_pria === '' || ibu_pria ===
+                                '' || ayah_wanita === '' || ibu_wanita === '' || saksi1 ===
+                                '' || saksi2 === '' || warga === '' || tempat === '' ||
+                                ketua_majelis === '' || sekretaris_majelis === '') {
+                                Swal.showValidationMessage('Data tidak boleh kosong!');
+                            }
+
                             return new Promise((resolve, reject) => {
                                 $.ajax({
                                     type: "POST",
@@ -679,7 +695,8 @@
                                     dataType: "json",
                                     success: function(
                                         response) {
-                                        if (old_nomor != nomor && response.total >
+                                        if (old_nomor != nomor &&
+                                            response.total >
                                             0) {
                                             reject(
                                                 'Nomor pernikahan sudah ada, silahkan gunakan nomor pernikahan lain!'
@@ -810,9 +827,9 @@
                         url: `{{ route('api.delete.pernikahan') }}`,
                         type: 'POST',
                         data: {
-                                _token: '{{ csrf_token() }}',
-                                nomor: nomor
-                            },
+                            _token: '{{ csrf_token() }}',
+                            nomor: nomor
+                        },
                         success: function(response) {
                             alert.fire({
                                 icon: 'success',

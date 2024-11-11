@@ -12,26 +12,47 @@ class AnggotaKeluargaFactory extends Factory
 {
     protected $model = AnggotaKeluarga::class;
 
+
+    protected static $familyMembers = [];
+
     public function definition()
     {
         $isFromJemaat = $this->faker->boolean(70);
-
         $idKeluarga = random_int(1, 20);
+
+
+        $kepalaKeluarga = Keluarga::where('id_keluarga', $idKeluarga)->first();
+
+
+        if (!isset(self::$familyMembers[$idKeluarga])) {
+            self::$familyMembers[$idKeluarga] = [
+                'Suami' => ($kepalaKeluarga && $kepalaKeluarga->keterangan_hubungan === 'Suami'),
+                'Istri' => ($kepalaKeluarga && $kepalaKeluarga->keterangan_hubungan === 'Istri')
+            ];
+        }
+
+        if (!self::$familyMembers[$idKeluarga]['Suami']) {
+            $keteranganHubungan = 'Suami';
+            self::$familyMembers[$idKeluarga]['Suami'] = true;
+        } elseif (!self::$familyMembers[$idKeluarga]['Istri']) {
+            $keteranganHubungan = 'Istri';
+            self::$familyMembers[$idKeluarga]['Istri'] = true;
+        } else {
+            $keteranganHubungan = 'Anak';
+        }
 
         if ($isFromJemaat) {
             $jemaat = Jemaat::inRandomOrder()->first();
             return [
                 'id_jemaat' => $jemaat ? $jemaat->id_jemaat : null,
                 'id_keluarga' => $idKeluarga,
-                'nama_anggota' => $jemaat ? $jemaat->nama_jemaat : $this->faker->name(),
-                'id_status' => Status::where('keterangan_status', 'Aktif')->first()->id_status,
+                'keterangan_hubungan' => $keteranganHubungan,
             ];
         } else {
             return [
                 'id_jemaat' => null,
                 'id_keluarga' => $idKeluarga,
-                'nama_anggota' => $this->faker->name(),
-                'id_status' => Status::where('keterangan_status', 'Bukan Jemaat')->first()->id_status,
+                'keterangan_hubungan' => $keteranganHubungan,
             ];
         }
     }

@@ -9,26 +9,33 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.anggota-jemaat*') }}" aria-current="true" href="{{ route('admin.data.anggota-jemaat') }}">DATA JEMAAT</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.data.anggota-jemaat') && !Nav::isRoute('admin.data.anggota-jemaat-keluarga*') ? 'active' : '' }}"
+                        href="{{ route('admin.data.anggota-jemaat') }}">DATA JEMAAT</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.anggota-jemaat-keluarga') }}" aria-current="true" href="{{ route('admin.data.anggota-jemaat-keluarga') }}">KELUARGA JEMAAT</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.data.anggota-jemaat-keluarga') }}" aria-current="true"
+                        href="{{ route('admin.data.anggota-jemaat-keluarga') }}">KELUARGA JEMAAT</a>
                 </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.jemaat-baru') }}" aria-current="true" href="{{ route('admin.data.jemaat-baru') }}">JEMAAT BARU</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.data.jemaat-baru') }}" aria-current="true"
+                        href="{{ route('admin.data.jemaat-baru') }}">JEMAAT BARU</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.pendeta') }}" aria-current="true" href="{{ route('admin.data.pendeta') }}">PENDETA</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.data.pendeta') }}" aria-current="true"
+                        href="{{ route('admin.data.pendeta') }}">PENDETA</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.majelis') }}" aria-current="true" href="{{ route('admin.data.majelis') }}">MAJELIS</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.data.majelis') }}" aria-current="true"
+                        href="{{ route('admin.data.majelis') }}">MAJELIS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.non-majelis') }}" aria-current="true" href="{{ route('admin.data.non-majelis') }}">NON MAJELIS</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.data.non-majelis') }}" aria-current="true"
+                        href="{{ route('admin.data.non-majelis') }}">NON MAJELIS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.jemaat-titipan') }}" aria-current="true" href="{{ route('admin.data.jemaat-titipan') }}">JEMAAT TITIPAN</a>
+                    <a class="nav-link {{ Nav::isRoute('admin.data.jemaat-titipan') }}" aria-current="true"
+                        href="{{ route('admin.data.jemaat-titipan') }}">JEMAAT TITIPAN</a>
                 </li>
             </ul>
         </div>

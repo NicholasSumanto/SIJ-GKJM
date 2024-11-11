@@ -37,7 +37,6 @@ class MajelisFactory extends Factory
 
         return [
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
-            'nama_gereja' => $this->churches[array_rand($this->churches)],
             'nama_majelis' => $this->faker->name(),
             'tanggal_mulai' => $tanggal_mulai,
             'tanggal_selesai' => $tanggal_selesai,
