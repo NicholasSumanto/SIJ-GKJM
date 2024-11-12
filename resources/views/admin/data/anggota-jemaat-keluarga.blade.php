@@ -503,8 +503,7 @@
                                                     new Option(value.nama_jemaat,value.id_jemaat));
                                         });
 
-                                        $jemaatSelect.val(data
-                                            .id_jemaat);
+                                        $jemaatSelect.val(data.id_jemaat);
                                     }
                                 });
 

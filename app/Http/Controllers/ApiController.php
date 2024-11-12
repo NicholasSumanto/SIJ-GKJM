@@ -791,60 +791,6 @@ class ApiController extends Controller
     }
     // GET ANGGOTA KELUARGA END
 
-    // GET JEMAAT TITIPAN
-    public function ApiGetJemaatTitipan(Request $request)
-    {
-        if ($request->has('id')) {
-            $data = JemaatTitipan::where('id_titipan', $request->id)->get();
-
-            $formattedData = [
-                'total' => $data->count(),
-                'totalNotFiltered' => JemaatTitipan::count(),
-                'rows' => $data
-                    ->map(function ($item) {
-                        return [
-                            'id_titipan' => $item->id_titipan,
-                            'id_wilayah' => $item->id_wilayah,
-                            'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
-                            'nama_gereja' => $item->nama_gereja,
-                            'nama_jemaat' => $item->nama_jemaat,
-                            'kelamin' => $item->kelamin,
-                            'alamat_jemaat' => $item->alamat_jemaat,
-                            'titipan' => $item->titipan,
-                            'surat' => $item->surat,
-                        ];
-                    })
-                    ->toArray(),
-            ];
-
-            return response()->json($formattedData);
-        } else {
-            $data = JemaatTitipan::all();
-            $formattedData = [
-                'total' => $data->count(),
-                'totalNotFiltered' => Pekerjaan::count(),
-                'rows' => $data
-                    ->map(function ($item) {
-                        return [
-                            'id_titipan' => $item->id_titipan,
-                            'id_wilayah' => $item->id_wilayah,
-                            'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
-                            'nama_gereja' => $item->nama_gereja,
-                            'nama_jemaat' => $item->nama_jemaat,
-                            'kelamin' => $item->kelamin,
-                            'alamat_jemaat' => $item->alamat_jemaat,
-                            'titipan' => $item->titipan,
-                            'surat' => $item->surat,
-                        ];
-                    })
-                    ->toArray(),
-            ];
-
-            return response()->json($formattedData);
-        }
-    }
-    // GET JEMAAT TITTIPAN END
-
     // GET PENDETA START
     public function ApiGetPendeta(Request $request)
     {
@@ -1030,6 +976,59 @@ class ApiController extends Controller
     }
 
     // GET NON MAJELIS END
+
+    // GET JEMAAT TITIPAN
+    public function ApiGetJemaatTitipan(Request $request)
+    {
+        if ($request->has('id')) {
+            $data = JemaatTitipan::where('id_titipan', $request->id)->get();
+
+            $formattedData = [
+                'total' => $data->count(),
+                'totalNotFiltered' => JemaatTitipan::count(),
+                'rows' => $data
+                    ->map(function ($item) {
+                        return [
+                            'id_titipan' => $item->id_titipan,
+                            'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
+                            'nama_gereja' => $item->nama_gereja,
+                            'nama_jemaat' => $item->nama_jemaat,
+                            'kelamin' => $item->kelamin,
+                            'alamat_jemaat' => $item->alamat_jemaat,
+                            'titipan' => $item->titipan,
+                            'surat' => $item->surat,
+                        ];
+                    })
+                    ->toArray(),
+            ];
+
+            return response()->json($formattedData);
+        } else {
+            $data = JemaatTitipan::all();
+            $formattedData = [
+                'total' => $data->count(),
+                'totalNotFiltered' => Pekerjaan::count(),
+                'rows' => $data
+                    ->map(function ($item) {
+                        return [
+                            'id_titipan' => $item->id_titipan,
+                            'id_wilayah' => $item->id_wilayah,
+                            'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
+                            'nama_gereja' => $item->nama_gereja,
+                            'nama_jemaat' => $item->nama_jemaat,
+                            'kelamin' => $item->kelamin,
+                            'alamat_jemaat' => $item->alamat_jemaat,
+                            'titipan' => $item->titipan,
+                            'surat' => $item->surat,
+                        ];
+                    })
+                    ->toArray(),
+            ];
+
+            return response()->json($formattedData);
+        }
+    }
+    // GET JEMAAT TITTIPAN END
 
     // GET PERNIKAHAN
     public function ApiGetPernikahan(Request $request)
@@ -1900,6 +1899,38 @@ class ApiController extends Controller
     }
     // POST NON MAJELIS END
 
+    // POST JEMAAT TITIPAN
+    public function ApiPostJemaatTitipan(Request $request)
+    {
+        // Cek apakah id_titipan sudah ada dalam database
+        if (JemaatTitipan::where('id_titipan', $request->id_titipan)->first() != null) {
+            return response()->json([
+                'message' => 'Data already exists',
+            ]);
+        }
+
+        $namaGereja = '';
+        if ($request->nama_gereja == null) {
+            $namaGereja = $request->new_gereja;
+        } else {
+            $namaGereja = $request->nama_gereja;
+        }
+
+        $data = new JemaatTitipan();
+        $data->id_titipan = $request->id_titipan;
+        $data->nama_jemaat = $request->nama_jemaat;
+        $data->nama_gereja = $namaGereja;
+        $data->kelamin = $request->kelamin;
+        $data->alamat_jemaat = $request->alamat_jemaat;
+        $data->titipan = $request->titipan;
+        $data->surat = $request->surat;
+        $data->save();
+
+        return response()->json($data);
+    }
+    // POST JEMAAT TITIPAN END
+
+
     // POST PERNIKAHAN
     public function ApiPostPernikahan(Request $request)
     {
@@ -2397,6 +2428,37 @@ class ApiController extends Controller
     }
     // UPDATE NON MAJELIS END
 
+    // UPDATE JEMAAT TITIPAN
+    public function ApiUpdateJemaatTitipan(Request $request)
+    {
+        $data = JemaatTitipan::find($request->id_titipan);
+
+        if ($request->id_titipan != $data->id_titipan && JemaatTitipan::where('id_titipan', $request->id_titipan)->first() != null) {
+            return response()->json([
+                'message' => 'Data already exists',
+            ]);
+        }
+
+        $namaGereja = '';
+
+        if ($request->nama_gereja == null) {
+            $namaGereja = $request->new_gereja;
+        } else {
+            $namaGereja = $request->nama_gereja;
+        }
+
+        $data->nama_jemaat = $request->nama_jemaat;
+        $data->nama_gereja = $namaGereja;
+        $data->kelamin = $request->kelamin;
+        $data->alamat_jemaat = $request->alamat_jemaat;
+        $data->titipan = $request->titipan;
+        $data->surat = $request->surat;
+        $data->save();
+
+        return response()->json($data);
+    }
+    // UPDATE JEMAAT TITIPAN END
+
     // UPDATE PERNIKAHAN
     public function ApiUpdatePernikahan(Request $request)
     {
@@ -2865,6 +2927,20 @@ class ApiController extends Controller
         }
 
         return response()->json(['message' => 'Non Majelis not found'], 404);
+    }
+
+    public function ApiDeleteJemaatTitipan(Request $request)
+    {
+        $data = JemaatTitipan::find($request->id_titipan);
+        if ($data) {
+            $data->delete();
+            return response()->json([
+                'message' => 'Jemaat Titipan deleted successfully',
+                'data' => $data,
+            ]);
+        }
+
+        return response()->json(['message' => 'Jemaat Titipan not found'], 404);
     }
 
     public function ApiDeletePernikahan(Request $request)

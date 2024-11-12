@@ -59,6 +59,10 @@
                     title: 'ID Baptis',
                     align: 'center'
                 }, {
+                    field: 'nama',
+                    title: 'Nama',
+                    align: 'center'
+                },{
                     field: 'nama_wilayah',
                     title: 'Nama Wilayah',
                     align: 'center'
@@ -70,11 +74,7 @@
                     field: 'nomor',
                     title: 'Nomor',
                     align: 'center'
-                }, {
-                    field: 'nama',
-                    title: 'Nama Anak',
-                    align: 'center'
-                }, {
+                },  {
                     field: 'tempat_lahir',
                     title: 'Tempat Lahir',
                     align: 'center'
@@ -140,6 +140,10 @@
                         title: 'ID Baptis',
                         align: 'center'
                     }, {
+                        field: 'nama',
+                        title: 'Nama ',
+                        align: 'center'
+                    },{
                         field: 'nama_wilayah',
                         title: 'Nama Wilayah',
                         align: 'center'
@@ -150,10 +154,6 @@
                     }, {
                         field: 'nomor',
                         title: 'Nomor',
-                        align: 'center'
-                    }, {
-                        field: 'nama',
-                        title: 'Nama Anak',
                         align: 'center'
                     }, {
                         field: 'tempat_lahir',

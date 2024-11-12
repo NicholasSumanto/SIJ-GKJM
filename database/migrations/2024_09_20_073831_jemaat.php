@@ -135,7 +135,6 @@ return new class extends Migration
 
         Schema::create('jemaat_titipan', function (Blueprint $table) {
             $table->id('id_titipan');
-            $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->string('nama_jemaat');
             $table->string('nama_gereja');
             $table->string('kelamin');
@@ -143,7 +142,6 @@ return new class extends Migration
             $table->string('titipan');
             $table->string('surat');
             $table->timestamps();
-            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
         });
 
         Schema::create('keluarga', function (Blueprint $table) {

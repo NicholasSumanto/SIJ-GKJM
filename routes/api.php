@@ -74,7 +74,8 @@ Route::post('/post/anggotakeluarga', [ApiController::class, 'ApiPostAnggotaKelua
 Route::post('/post/majelis', [ApiController::class, 'ApiPostMajelis'])-> name('api.post.majelis');
 Route::post('/post/nonmajelis', [ApiController::class, 'ApiPostNonMajelis'])-> name('api.post.nonmajelis');
 Route::post('/post/pendeta', [ApiController::class, 'ApiPostPendeta'])-> name('api.post.pendeta');
-    // Transaksi
+Route::post('/post/jemaattitipan', [ApiController::class, 'ApiPostJemaatTitipan'])-> name('api.post.jemaattitipan');
+// Transaksi
 Route::post('/post/pernikahan', [ApiController::class, 'ApiPostPernikahan'])-> name('api.post.pernikahan');
 Route::post('/post/kematian', [ApiController::class, 'ApiPostKematian'])-> name('api.post.kematian');
 Route::post('/post/atestasikeluar', [ApiController::class, 'ApiPostAtestasiKeluar'])-> name('api.post.atestasikeluar');
@@ -99,6 +100,7 @@ Route::post('/update/anggotakeluarga', [ApiController::class, 'ApiUpdateAnggotaK
 Route::post('/update/majelis', [ApiController::class, 'ApiUpdateMajelis'])-> name('api.update.majelis');
 Route::post('/update/nonmajelis', [ApiController::class, 'ApiUpdateNonMajelis'])-> name('api.update.nonmajelis');
 Route::post('/update/pendeta', [ApiController::class, 'ApiUpdatePendeta'])-> name('api.update.pendeta');
+Route::post('/update/jemaattitipan', [ApiController::class, 'ApiUpdateJemaatTitipan'])-> name('api.update.jemaattitipan');
     // Transaksi
 Route::post('/update/pernikahan', [ApiController::class, 'ApiUpdatePernikahan'])-> name('api.update.pernikahan');
 Route::post('/update/kematian', [ApiController::class, 'ApiUpdateKematian'])-> name('api.update.kematian');
@@ -127,6 +129,7 @@ Route::post('/delete/anggotakeluarga', [ApiController::class, 'ApiDeleteAnggotaK
 Route::post('/delete/majelis', [ApiController::class, 'ApiDeleteMajelis'])-> name('api.delete.majelis');
 Route::post('/delete/nonmajelis', [ApiController::class, 'ApiDeleteNonMajelis'])-> name('api.delete.nonmajelis');
 Route::post('/delete/pendeta', [ApiController::class, 'ApiDeletePendeta'])-> name('api.delete.pendeta');
+Route::post('/delete/jemaattitipan', [ApiController::class, 'ApiDeleteJemaatTitipan'])-> name('api.delete.jemaattitipan');
     // Transaksi
 Route::post('/delete/pernikahan', [ApiController::class, 'ApiDeletePernikahan'])-> name('api.delete.pernikahan');
 Route::post('/delete/kematian', [ApiController::class, 'ApiDeleteKematian'])-> name('api.delete.kematian');

@@ -214,9 +214,7 @@
                                     '<option value="">Pilih Nama Gereja</option>'
                                 );
                                 $.each(response, function(key, value) {
-                                    $gerejaSelect.append(new Option(value
-                                        .nama_gereja,
-                                        value.nama_gereja));
+                                    $gerejaSelect.append(new Option(value.nama_gereja,value.nama_gereja));
                                 });
                                 $gerejaSelect.append(new Option(
                                     '+ Tambah Gereja Baru',
@@ -250,9 +248,7 @@
                                     '<option value="">Pilih Nama Pendeta</option>'
                                 );
                                 $.each(response.rows, function(key, value) {
-                                    $pendetaSelect.append(new Option(value
-                                        .nama_pendeta,
-                                        value.id_pendeta));
+                                    $pendetaSelect.append(new Option(value.nama_pendeta,value.id_pendeta));
                                 });
                             }
                         });

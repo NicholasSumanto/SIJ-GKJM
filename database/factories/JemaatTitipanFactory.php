@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class JemaatTitipanFactory extends Factory
 {
     protected $model = JemaatTitipan::class;
-    
+
     private $churches = [
         'Gereja Kristus',
         'Gereja Injil',
@@ -20,7 +20,6 @@ class JemaatTitipanFactory extends Factory
     public function definition()
     {
         return [
-            'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
             'nama_jemaat' => $this->faker->name,
             'nama_gereja' => $this->churches[array_rand($this->churches)],
             'kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),

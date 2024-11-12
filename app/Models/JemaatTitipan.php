@@ -13,7 +13,6 @@ class JemaatTitipan extends Model
     protected $primaryKey = 'id_titipan';
 
     protected $fillable = [
-        'id_wilayah',
         'nama_jemaat',
         'nama_gereja',
         'kelamin',
@@ -22,9 +21,4 @@ class JemaatTitipan extends Model
         'surat',
     ];
 
-
-    public function wilayah()
-    {
-        return $this->belongsTo(Wilayah::class, 'id_wilayah');
-    }
 }
