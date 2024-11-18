@@ -145,6 +145,13 @@
                     <canvas id="ageGeo" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
                 </div>
             </div>
+            <div class="row justify-content-center mt-4" >
+                <div  class="col-md-4 d-flex flex-column align-items-center me-4">
+                    <br>
+                    <h4>Rata-Rata Usia</h4>
+                    <canvas id="chartAverageAgePerWilayah" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
+                </div>
+            </div>
         </div>
 @endsection
 
@@ -159,7 +166,7 @@
             ],
             datasets: [{
                 label: 'Jumlah Jemaat',
-                data: @json($data),
+                data: @json($isiData),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.7)',
                     'rgba(54, 162, 235, 0.7)',
@@ -213,5 +220,31 @@
             }
         }
     });
+
+    const chart3 = document.getElementById('chartAverageAgePerWilayah').getContext('2d');
+    const avgChart = new Chart(chart3, {
+        type: 'bar',
+        data: {
+            labels: @json($avgLabel),
+            datasets: [
+                {
+                    label: 'Wilayah',
+                    data: @json($avgData),
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
 </script>
 @endpush

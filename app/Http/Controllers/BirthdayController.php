@@ -93,7 +93,7 @@ class BirthdayController extends Controller
                 }
             })
                        
-            ->orderBy('wilayah.nama_wilayah')
+            ->orderBy('jemaat.tanggal_lahir')
             ->paginate($birthdayItemsPerPage, ['*'], 'birthdaysPage')
             ->withQueryString();
         
@@ -113,9 +113,7 @@ class BirthdayController extends Controller
                     return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [$startMonthDay, $endMonthDay]);
                 }
             })
-
-
-            ->orderBy('wilayah.nama_wilayah')
+            ->orderBy('pernikahan.tanggal_nikah')
             ->paginate($marriageItemsPerPage, ['*'], 'marriagesPage')
             ->withQueryString();      
 
