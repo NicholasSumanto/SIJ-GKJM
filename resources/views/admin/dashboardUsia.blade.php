@@ -145,11 +145,16 @@
                     <canvas id="ageGeo" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
                 </div>
             </div>
-            <div class="row justify-content-center mt-4" >
-                <div  class="col-md-4 d-flex flex-column align-items-center me-4">
+            <div class="row" >
+                <div  class="col-md-6">
                     <br>
                     <h4>Rata-Rata Usia</h4>
                     <canvas id="chartAverageAgePerWilayah" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
+                </div>
+                <div  class="col-md-6">
+                    <br>
+                    <h4>Baptis</h4>
+                    <canvas id="chartBaptis" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
                 </div>
             </div>
         </div>
@@ -245,6 +250,51 @@
             }
         }
     });
+    const chart4 = document.getElementById('chartBaptis').getContext('2d');
+    const baptisChart = new Chart(chart4, {
+        type: 'line',
+        data: {
+            labels: @json($isiBaptis), 
+            datasets: @json($baptisChartData).map(dataset => ({
+                label: dataset.label, 
+                data: dataset.data, 
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderColor: getRandomColor(),
+                borderWidth: 2, 
+                tension: 0.4,
+            }))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah',
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tahun',
+                    }
+                }
+            }
+        }
+    });
     
+    function getRandomColor() {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+    return `rgba(${r}, ${g}, ${b}, 1)`;
+    }
 </script>
 @endpush

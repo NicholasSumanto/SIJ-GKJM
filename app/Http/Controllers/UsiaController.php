@@ -68,14 +68,16 @@ class UsiaController extends Controller
             CASE 
                 WHEN ($year - YEAR(tanggal_lahir)) >= 17 AND id_bd IS NOT NULL THEN 'Dewasa Baptis'
                 WHEN ($year - YEAR(tanggal_lahir)) >= 17 AND id_bd IS NULL THEN 'Dewasa Belum Baptis'
-                WHEN ($year - YEAR(tanggal_lahir)) < 17  AND id_ba IS NOT NULL THEN 'Anak Baptis'
+                WHEN ($year - YEAR(tanggal_lahir)) < 17 AND id_ba IS NOT NULL THEN 'Anak Baptis'
                 WHEN ($year - YEAR(tanggal_lahir)) < 17 AND id_ba IS NULL THEN 'Anak Belum Baptis'
             END as kategori,
+            YEAR(created_at) as tahun,
             COUNT(*) as jumlah")
-            ->groupBy('kategori')
-            ->get()
-            ->pluck('jumlah', 'kategori')
-            ->toArray();
+            ->groupBy('kategori', 'tahun')
+            ->orderBy('tahun')
+            ->get();
+
+
         $avgUsia = Jemaat::selectRaw('wilayah.nama_wilayah, AVG(? - YEAR(jemaat.tanggal_lahir)) as rata_rata_usia', [$year])
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
             ->groupBy('wilayah.nama_wilayah')
@@ -86,11 +88,27 @@ class UsiaController extends Controller
         $isiData = array_values($ageGroups);
         $avgData = array_values($avgUsia);
         $avgLabel = array_keys($avgUsia);
+        $baptisLabel = ['Dewasa Baptis', 'Dewasa Belum Baptis', 'Anak Baptis', 'Anak Belum Baptis'];
+        $isiBaptis = $baptisData->pluck('tahun')->unique()->values()->toArray();
         $wilayahLabels = $wilayahData->pluck('nama_wilayah')->toArray();
         $anakCounts = $wilayahData->pluck('anak_count')->toArray();
         $dewasaCounts = $wilayahData->pluck('dewasa_count')->toArray();
 
-        return view('admin.dashboardUsia',compact('wilayahLabels','avgData', 'avgLabel', 'baptisData', 'anakCounts', 'dewasaCounts','labels','isiData','totalJemaat', 'rataRataUsia', 'termuda', 'tertua', 'jumlahAnak', 'jumlahDewasa'));
+        $baptisChartData = [];
+            foreach ($baptisLabel as $label) {
+                $data = [];
+                foreach ($isiBaptis as $year) {
+                    $count = $baptisData->first(function ($item) use ($label, $year) {
+                        return $item->kategori === $label && $item->tahun == $year;
+                    })?->jumlah ?? 0;
+                    $data[] = $count;
+                }
+                $baptisChartData[] = [
+                    'label' => $label,
+                    'data' => $data,
+                ];
+            }
+        return view('admin.dashboardUsia',compact('baptisChartData', 'wilayahLabels','avgData', 'avgLabel', 'baptisLabel', 'isiBaptis', 'anakCounts', 'dewasaCounts','labels','isiData','totalJemaat', 'rataRataUsia', 'termuda', 'tertua', 'jumlahAnak', 'jumlahDewasa'));
     }
 
 
