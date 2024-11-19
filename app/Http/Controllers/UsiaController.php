@@ -71,10 +71,10 @@ class UsiaController extends Controller
                 WHEN ($year - YEAR(tanggal_lahir)) < 17 AND id_ba IS NOT NULL THEN 'Anak Baptis'
                 WHEN ($year - YEAR(tanggal_lahir)) < 17 AND id_ba IS NULL THEN 'Anak Belum Baptis'
             END as kategori,
-            YEAR(created_at) as tahun,
+            MONTH(created_at) as bulan,
             COUNT(*) as jumlah")
-            ->groupBy('kategori', 'tahun')
-            ->orderBy('tahun')
+            ->groupBy('kategori', 'bulan')
+            ->orderBy('bulan')
             ->get();
 
 
@@ -83,13 +83,18 @@ class UsiaController extends Controller
             ->groupBy('wilayah.nama_wilayah')
             ->pluck('rata_rata_usia', 'wilayah.nama_wilayah')
             ->toArray();
+        $monthNames = [1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ags', 9 => 'Sept', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'];
 
+        $jemaatMeninggal = $baptisData->map(function($item) use ($monthNames) {
+            $item->bulan = $monthNames[$item->bulan];
+            return $item;
+        });
         $labels = array_keys($ageGroups);
         $isiData = array_values($ageGroups);
         $avgData = array_values($avgUsia);
         $avgLabel = array_keys($avgUsia);
         $baptisLabel = ['Dewasa Baptis', 'Dewasa Belum Baptis', 'Anak Baptis', 'Anak Belum Baptis'];
-        $isiBaptis = $baptisData->pluck('tahun')->unique()->values()->toArray();
+        $isiBaptis = $baptisData->pluck('bulan')->unique()->values()->toArray();
         $wilayahLabels = $wilayahData->pluck('nama_wilayah')->toArray();
         $anakCounts = $wilayahData->pluck('anak_count')->toArray();
         $dewasaCounts = $wilayahData->pluck('dewasa_count')->toArray();
@@ -99,7 +104,7 @@ class UsiaController extends Controller
                 $data = [];
                 foreach ($isiBaptis as $year) {
                     $count = $baptisData->first(function ($item) use ($label, $year) {
-                        return $item->kategori === $label && $item->tahun == $year;
+                        return $item->kategori === $label && $item->bulan == $year;
                     })?->jumlah ?? 0;
                     $data[] = $count;
                 }
