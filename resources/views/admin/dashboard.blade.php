@@ -35,7 +35,7 @@
                     <label for="kecamatan" class="mr-2 font-weight-bold">Pilih Kecamatan:</label>
                     <select id="kecamatan" name="kecamatan" class="custom-select" onchange="this.form.submit()">
                         <option value="" {{ request('kecamatan') == '' ? 'selected' : '' }}>All</option>
-                        @foreach($dropKab as $id_kecamatan => $kecamatanName)
+                        @foreach($dropKec as $id_kecamatan => $kecamatanName)
                             <option value="{{ $id_kecamatan }}" {{ request('kecamatan') == $id_kecamatan ? 'selected' : '' }}>{{ $kecamatanName }}</option>
                         @endforeach
                     </select>
@@ -69,17 +69,24 @@
         <br>
         <div class="card p-3 shadow-sm">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <br>
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="mb-0">Jemaat per Wilayah</h4>
                     </div>
-                    <canvas id="chartJemaatPerWilayah" style="width:100%; height:300px;"></canvas>
+                    <canvas id="chartJemaatPerWilayah" style="width:100%; height:200px;"></canvas>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
+                    <br>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Pertumbuhan Jemaat</h4>
+                    </div>
+                    <canvas id="chartPertumbuhanJemaat" style="width:100%; height:200px;"></canvas>
+                </div>
+                <div class="col-md-3">
                     <br>
                     <h4>Status </h4>
-                    <canvas id="chartPendidikan" style="width:100%; height:300px; max-width: 300px; max-height: 300px;"></canvas>
+                    <canvas id="chartPendidikan" style="width:100%; height:200px; max-width: 300px; max-height: 300px;"></canvas>
                 </div>
             </div>
             <div class="row">
@@ -321,6 +328,44 @@
                 },
                 y: {
                     beginAtZero: true
+                }
+            }
+        }
+    });
+    const chart5 = document.getElementById('chartPertumbuhanJemaat').getContext('2d');
+    const pertumbuhan = new Chart(chart5, {
+        type: 'line',
+        data: {
+            labels: @json($labelPertumbuhan),
+            datasets: [{
+                label: 'All',
+                data: @json($pertumbuhan),
+                backgroundColor: 'rgba(1, 1, 1, 1)',
+                borderColor: 'rgba(1, 1, 1, 1)',
+                borderWidth: 3
+            },{
+                label: 'Perempuan',
+                data: @json($isiGirl),
+                backgroundColor: 'rgba(245, 108, 181, 1)',
+                borderColor: 'rgba(245, 108, 181, 1)',
+                borderWidth: 2
+            },{
+                label: 'Laki-laki',
+                data: @json($isiBoy),
+                backgroundColor: 'rgba(0, 53, 220, 0.7)',
+                borderColor: 'rgba(0, 53, 220, 0.7)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    grid: {
+                        drawOnChartArea: false,
+                    }
                 }
             }
         }

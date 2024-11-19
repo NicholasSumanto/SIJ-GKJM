@@ -118,7 +118,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center">                       
                             {{ $paginationMarried->links('admin.custom-pagination') }}
                         </div>
                         @else
@@ -206,9 +206,7 @@
                 if (elements.length > 0) {
                     const index = elements[0].index;
                     const selectedWilayah = jemaatChart.data.labels[index];
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('wilayah', selectedWilayah);
-                    window.location.href = url.toString();
+                    filterTableByWilayah(selectedWilayah);
                 }
             }
         }
@@ -236,9 +234,7 @@
                 if (elements.length > 0) {
                     const index = elements[0].index;
                     const selectedWilayah = chartMarried.data.labels[index];
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('wilayah', selectedWilayah);
-                    window.location.href = url.toString();
+                    MarriedTableByWilayah(selectedWilayah);
                 }
             }
         }

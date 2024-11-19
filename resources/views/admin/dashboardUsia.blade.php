@@ -145,6 +145,18 @@
                     <canvas id="ageGeo" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
                 </div>
             </div>
+            <div class="row" >
+                <div  class="col-md-6">
+                    <br>
+                    <h4>Rata-Rata Usia</h4>
+                    <canvas id="chartAverageAgePerWilayah" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
+                </div>
+                <div  class="col-md-6">
+                    <br>
+                    <h4>Baptis</h4>
+                    <canvas id="chartBaptis" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
+                </div>
+            </div>
         </div>
 @endsection
 
@@ -159,7 +171,7 @@
             ],
             datasets: [{
                 label: 'Jumlah Jemaat',
-                data: @json($data),
+                data: @json($isiData),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.7)',
                     'rgba(54, 162, 235, 0.7)',
@@ -213,5 +225,76 @@
             }
         }
     });
+
+    const chart3 = document.getElementById('chartAverageAgePerWilayah').getContext('2d');
+    const avgChart = new Chart(chart3, {
+        type: 'bar',
+        data: {
+            labels: @json($avgLabel),
+            datasets: [
+                {
+                    label: 'Wilayah',
+                    data: @json($avgData),
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    const chart4 = document.getElementById('chartBaptis').getContext('2d');
+    const baptisChart = new Chart(chart4, {
+        type: 'line',
+        data: {
+            labels: @json($isiBaptis), 
+            datasets: @json($baptisChartData).map(dataset => ({
+                label: dataset.label, 
+                data: dataset.data, 
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderColor: getRandomColor(),
+                borderWidth: 2, 
+                tension: 0.4,
+            }))
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah',
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tahun',
+                    }
+                }
+            }
+        }
+    });
+    
+    function getRandomColor() {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+    return `rgba(${r}, ${g}, ${b}, 1)`;
+    }
 </script>
 @endpush
