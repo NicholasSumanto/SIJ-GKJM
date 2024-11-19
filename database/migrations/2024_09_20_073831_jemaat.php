@@ -135,12 +135,14 @@ return new class extends Migration
 
         Schema::create('jemaat_titipan', function (Blueprint $table) {
             $table->id('id_titipan');
-            $table->string('nama_jemaat');
+            $table->unsignedInteger('id_jemaat')->nullable();
+            $table->string('nama_jemaat')->nullable();
             $table->string('nama_gereja');
             $table->string('kelamin');
             $table->text('alamat_jemaat');
             $table->string('titipan');
             $table->string('surat');
+            $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
 
@@ -198,7 +200,6 @@ return new class extends Migration
             $table->id('id_nonmajelis');
             $table->string('nama_majelis_non',);
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->string('nama_gereja');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->bigInteger('id_jabatan_non')->unsigned()->nullable();

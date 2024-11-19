@@ -97,13 +97,6 @@
                     },
                     align: 'center'
                 }, {
-                    field: 'edit',
-                    title: 'Edit',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id_jemaat="${row.id_jemaat}" data-name="${row.name}">Edit</button>`;
-                    },
-                    align: 'center'
-                }, {
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
@@ -171,13 +164,6 @@
                         align: 'center'
 
                     }, {
-                        field: 'edit',
-                        title: 'Edit',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-primary btn-edit" data-id_jemaat="${row.id_jemaat}">Edit</button>`;
-                        },
-                        align: 'center'
-                    }, {
                         field: 'delete',
                         title: 'Delete',
                         formatter: function(value, row, index) {
@@ -200,148 +186,6 @@
 
                 window.location.href = url;
             });
-
-            // $(document).on('click', '.btn-view', function() {
-            //     var id_jemaat = $(this).data('id_jemaat');
-
-            //     ApiGetJemaatById(id_jemaat, {
-            //         success: function(data) {
-            //             // Membuat form untuk menampilkan detail jemaat
-            //             var formHtml = `
-        //     <form id="jemaatDetailForm">
-        //         <div class="form-group">
-        //             <label for="id_jemaat">ID Jemaat:</label>
-        //             <input type="text" id="id_jemaat" class="form-control" value="${data.id_jemaat}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="nama_jemaat">Nama Jemaat:</label>
-        //             <input type="text" id="nama_jemaat" class="form-control" value="${data.nama_jemaat}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="nama_wilayah">Wilayah:</label>
-        //             <input type="text" id="nama_wilayah" class="form-control" value="${data.nama_wilayah || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="keterangan_status">Status:</label>
-        //             <input type="text" id="keterangan_status" class="form-control" value="${data.keterangan_status || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="nomor">Nomor Nikah:</label>
-        //             <input type="text" id="nomor" class="form-control" value="${data.nomor || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="stamboek">Stamboek:</label>
-        //             <input type="text" id="stamboek" class="form-control" value="${data.stamboek}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="tanggal_baptis">Tanggal Baptis:</label>
-        //             <input type="text" id="tanggal_baptis" class="form-control" value="${data.tanggal_baptis}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="tempat_lahir">Tempat Lahir:</label>
-        //             <input type="text" id="tempat_lahir" class="form-control" value="${data.tempat_lahir}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="tanggal_lahir">Tanggal Lahir:</label>
-        //             <input type="text" id="tanggal_lahir" class="form-control" value="${data.tanggal_lahir}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="kelamin">Kelamin:</label>
-        //             <input type="text" id="kelamin" class="form-control" value="${data.kelamin}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="alamat">Alamat:</label>
-        //             <input type="text" id="alamat" class="form-control" value="${data.alamat_jemaat}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="nama_kelurahan">Kelurahan:</label>
-        //             <input type="text" id="nama_kelurahan" class="form-control" value="${data.nama_kelurahan || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="nama_kecamatan">Kecamatan:</label>
-        //             <input type="text" id="nama_kecamatan" class="form-control" value="${data.nama_kecamatan || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="nama_kabupaten">Kabupaten:</label>
-        //             <input type="text" id="nama_kabupaten" class="form-control" value="${data.nama_kabupaten || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="nama_provinsi">Provinsi:</label>
-        //             <input type="text" id="nama_provinsi" class="form-control" value="${data.nama_provinsi || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="kode_pos">Kode Pos:</label>
-        //             <input type="text" id="kode_pos" class="form-control" value="${data.kodepos || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="telepon">Telepon:</label>
-        //             <input type="text" id="telepon" class="form-control" value="${data.telepon}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="hp">HP:</label>
-        //             <input type="text" id="hp" class="form-control" value="${data.hp}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="email">Email:</label>
-        //             <input type="email" id="email" class="form-control" value="${data.email}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="nik">NIK:</label>
-        //             <input type="text" id="nik" class="form-control" value="${data.nik}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="no_kk">No KK:</label>
-        //             <input type="text" id="no_kk" class="form-control" value="${data.no_kk}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="golongan_darah">Golongan Darah:</label>
-        //             <input type="text" id="golongan_darah" class="form-control" value="${data.golongan_darah}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="pendidikan">Pendidikan:</label>
-        //             <input type="text" id="nama_pendidikan" class="form-control" value="${data.nama_pendidikan}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="bidangilmu">Bidang Ilmu:</label>
-        //             <input type="text" id="ilmu" class="form-control" value="${data.bidang_ilmu || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="pekerjaan">Pekerjaan:</label>
-        //             <input type="text" id="pekerjaan" class="form-control" value="${data.pekerjaan || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="instansi">Instansi:</label>
-        //             <input type="text" id="instansi" class="form-control" value="${data.instansi}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="penghasilan">Penghasilan:</label>
-        //             <input type="text" id="penghasilan" class="form-control" value="${data.penghasilan}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="gereja_baptis">Gereja Baptis:</label>
-        //             <input type="text" id="gereja_baptis" class="form-control" value="${data.gereja_baptis || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="alat_transportasi">Alat Transportasi:</label>
-        //             <input type="text" id="alat_transportasi" class="form-control" value="${data.alat_transportasi || 'N/A'}" readonly>
-        //         </div>
-        //         <div class="form-group">
-        //             <label for="photo">Foto:</label>
-        //             <br>
-        //             <img src="${data.photo}" alt="Jemaat Photo" style="width: 300px; margin-top: 10px;">
-        //         </div>
-        //     </form>
-        //     `;
-
-            //             Swal.fire({
-            //                 title: `${data.nama_jemaat}`,
-            //                 html: formHtml,
-            //                 showCloseButton: true,
-            //                 confirmButtonText: 'Tutup'
-            //             });
-            //         }
-            //     });
-            // });
 
             // Event listener untuk tombol tambah jemaat
             $('.tambah-jemaat').on('click', function(event) {
@@ -378,6 +222,34 @@
                             <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" required>
                         </div>
                         <div class="form-group">
+                            <label for="id_provinsi">Provinsi</label>
+                            <select id="id_provinsi" class="form-control">
+                                 <option value="">Pilih Nama Provinsi</option>
+                                        <!-- AJAX -->
+                            </select>
+                        </div>
+                        <div class="form-group kabupaten_container" style="display: none;">
+                            <label for="id_kabupaten">Kabupaten</label>
+                            <select id="id_kabupaten" class="form-control">
+                                 <option value="">Pilih Nama Kabupaten</option>
+                                        <!-- AJAX -->
+                            </select>
+                        </div>
+                        <div class="form-group kecamatan_container" style="display: none;">
+                            <label for="id_kecamatan">Kecamatan</label>
+                            <select id="id_kecamatan" class="form-control">
+                                 <option value="">Pilih Nama Kecamatan</option>
+                                        <!-- AJAX -->
+                            </select>
+                        </div>
+                        <div class="form-group kelurahan_container" style="display: none;">
+                            <label for="id_kelurahan">Kelurahan</label>
+                            <select id="id_kelurahan" class="form-control">
+                                 <option value="">Pilih Nama Kelurahan</option>
+                                        <!-- AJAX -->
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="telepon">Telepon</label>
                             <input type="tel" id="telepon" class="form-control" placeholder="Masukkan Nomor Telepon">
                         </div>
@@ -412,7 +284,7 @@
                         <div class="form-group">
                             <label for="golongan_darah">Golongan Darah</label>
                             <select id="golongan_darah" class="form-control">
-                                <option value="" disabled selected>Pilih Golongan Darah</option>
+                                <option value="-"selected>Pilih Golongan Darah</option>
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="AB">AB</option>
@@ -452,12 +324,145 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             dataType: "json",
-                            success: function (response) {
+                            success: function(response) {
                                 const $idWilayah = $('#id_wilayah');
                                 Object.entries(response).forEach(([key, value]) => {
-                                    $idWilayah.append(`<option value="${value.id_wilayah}">${value.nama_wilayah}</option>`);
+                                    $idWilayah.append(
+                                        `<option value="${value.id_wilayah}">${value.nama_wilayah}</option>`
+                                    );
                                 });
                             }
+                        });
+
+                        $.ajax({
+                            url: "{{ route('api.get.daerah') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $idProvinsi = $('#id_provinsi');
+                                Object.entries(response.rows).forEach(([key,
+                                    value
+                                ]) => {
+                                    $idProvinsi.append(
+                                        `<option value="${value.id_provinsi}">${value.nama_provinsi}</option>`
+                                    );
+                                });
+                            }
+                        });
+
+                        $('#id_kecamatan').on('change', function() {
+                            const idKecamatan = $('#id_kecamatan').val();
+                            const $idKelurahan = $('#id_kelurahan');
+                            const $idKabupaten = $('#id_kabupaten');
+                            const $idProvinsi = $('#id_provinsi');
+                            $('.kelurahan_container').show();
+
+                            if (idKecamatan === '') {
+                                $idKelurahan.empty();
+                                $('.kelurahan_container').hide();
+                                return;
+                            }
+
+                            $.ajax({
+                                url: "{{ route('api.get.daerah') }}",
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id_kecamatan: idKecamatan,
+                                    id_kabupaten: $idKabupaten.val(),
+                                    id_provinsi: $idProvinsi.val()
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    $idKelurahan.empty();
+                                    $idKelurahan.append(
+                                        `<option value="">Pilih Nama Kelurahan</option>`
+                                    );
+                                    Object.entries(response.rows).forEach(([
+                                        key,
+                                        value
+                                    ]) => {
+                                        $idKelurahan.append(
+                                            `<option value="${value.id_kelurahan}">${value.kelurahan}</option>`
+                                        );
+                                    });
+                                }
+                            });
+                        });
+
+                        $('#id_kabupaten').on('change', function() {
+                            const idKabupaten = $('#id_kabupaten').val();
+                            const idProvinsi = $('#id_provinsi').val();
+                            const $idKecamatan = $('#id_kecamatan');
+                            $('.kecamatan_container').show();
+
+                            if (idKabupaten === '') {
+                                $idKecamatan.empty();
+                                $('.kecamatan_container').hide();
+                                return;
+                            }
+
+                            $.ajax({
+                                url: "{{ route('api.get.daerah') }}",
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id_kabupaten: idKabupaten,
+                                    id_provinsi: idProvinsi
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    $idKecamatan.empty();
+                                    $idKecamatan.append(
+                                        `<option value="">Pilih Nama Kecamatan</option>`
+                                    );
+                                    Object.entries(response.rows).forEach(([
+                                        key, value
+                                    ]) => {
+                                        $idKecamatan.append(
+                                            `<option value="${value.id_kecamatan}">${value.kecamatan}</option>`
+                                        );
+                                    });
+                                }
+                            });
+                        });
+
+                        $('#id_provinsi').on('change', function() {
+                            const idProvinsi = $(this).val();
+                            const $idKabupaten = $('#id_kabupaten');
+                            $('.kabupaten_container').show();
+
+                            if (idProvinsi === '') {
+                                $idKabupaten.empty();
+                                $('.kabupaten_container').hide();
+                                return;
+                            }
+
+                            $.ajax({
+                                url: "{{ route('api.get.daerah') }}",
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id_provinsi: idProvinsi
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    $idKabupaten.empty();
+                                    $idKabupaten.append(
+                                        `<option value="">Pilih Nama Kabupaten</option>`
+                                    );
+                                    Object.entries(response.rows).forEach(([
+                                        key, value
+                                    ]) => {
+                                        $idKabupaten.append(
+                                            `<option value="${value.id_kabupaten}">${value.kabupaten}</option>`
+                                        );
+                                    });
+                                }
+                            });
                         });
                     },
                     preConfirm: () => {
@@ -467,6 +472,10 @@
                             id_wilayah: $('#id_wilayah').val(),
                             kelamin: $('#kelamin').val(),
                             tanggal_lahir: $('#tanggal_lahir').val(),
+                            id_kelurahan: $('#id_kelurahan').val(),
+                            id_kecamatan: $('#id_kecamatan').val(),
+                            id_kabupaten: $('#id_kabupaten').val(),
+                            id_provinsi: $('#id_provinsi').val(),
                             alamat_jemaat: $('#alamat_jemaat').val(),
                             telepon: $('#telepon').val(),
                             hp: $('#hp').val(),
@@ -481,6 +490,7 @@
                             penghasilan: $('#penghasilan').val(),
                             gereja_baptis: $('#gereja_baptis').val(),
                             alat_transportasi: $('#alat_transportasi').val(),
+
                         };
 
                         const photo = $('#photo')[0].files[0];
@@ -491,12 +501,20 @@
                         // Validasi input
                         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         for (const key in data) {
-                            if (data[key] === '' && key !== 'photo' && key !== 'telepon' && key !== 'hp' && key !== 'email' && key !== 'nik' && key !== 'no_kk' && key !== 'stamboek' && key !== 'tempat_lahir' && key !== 'tanggal_baptis' && key !== 'instansi' && key !== 'gereja_baptis' && key !== 'alat_transportasi') {
+                            if (data[key] === '' && key !== 'photo' && key !== 'telepon' &&
+                                key !== 'hp' && key !== 'email' && key !== 'nik' && key !==
+                                'no_kk' && key !== 'stamboek' && key !== 'tempat_lahir' &&
+                                key !== 'tanggal_baptis' && key !== 'instansi' && key !==
+                                'gereja_baptis' && key !== 'alat_transportasi' && key !==
+                                'penghasilan' && key !== 'golongan_darah' &&
+                                key !== 'id_kelurahan' && key !== 'id_kecamatan' && key !==
+                                'id_kabupaten' && key !== 'id_provinsi' && key !== 'photo') {
                                 Swal.showValidationMessage(
                                     `${key.replace(/_/g, ' ')} tidak boleh kosong!`);
                                 return false;
                             }
-                            if (key === 'email' && data[key] !== '' && !emailRegex.test(data[key])) {
+                            if (key === 'email' && data[key] !== '' && !emailRegex.test(data[
+                                    key])) {
                                 Swal.showValidationMessage('Format email tidak valid!');
                                 return false;
                             }
@@ -514,14 +532,16 @@
                                 success: function(response) {
                                     if (response.total > 0) {
                                         reject(
-                                            'NIK sudah ada, silahkan gunakan NIK lain!');
+                                            'NIK sudah ada, silahkan gunakan NIK lain!'
+                                        );
                                     } else {
                                         resolve(data);
                                     }
                                 },
                                 error: function(xhr, status, error) {
                                     reject(
-                                        'Terjadi kesalahan saat memvalidasi NIK.');
+                                        'Terjadi kesalahan saat memvalidasi NIK.'
+                                    );
                                 }
                             });
                         }).catch(error => {
@@ -536,6 +556,10 @@
                             kelamin,
                             tanggal_lahir,
                             alamat_jemaat,
+                            id_kelurahan,
+                            id_kecamatan,
+                            id_kabupaten,
+                            id_provinsi,
                             telepon,
                             hp,
                             email,
@@ -558,6 +582,10 @@
                         formData.append('id_wilayah', id_wilayah);
                         formData.append('kelamin', kelamin);
                         formData.append('tanggal_lahir', tanggal_lahir);
+                        formData.append('id_kelurahan', id_kelurahan);
+                        formData.append('id_kecamatan', id_kecamatan);
+                        formData.append('id_kabupaten', id_kabupaten);
+                        formData.append('id_provinsi', id_provinsi);
                         formData.append('alamat_jemaat', alamat_jemaat);
                         formData.append('telepon', telepon);
                         formData.append('hp', hp);
@@ -599,187 +627,6 @@
                     }
                 });
 
-            });
-
-
-            // Event listener untuk tombol edit
-            $(document).on('click', '.btn-edit', function(event) {
-                event.preventDefault();
-                var id_jemaat = $(this).data('id_jemaat');
-                ApiGetJemaatById(id_jemaat, {
-                    success: function(data) {
-                        Swal.fire({
-                            title: 'Edit Jemaat',
-                            html: `
-                                <form id="editForm">
-                                    <div class="form-group">
-                                        <label for="id_jemaat">ID Jemaat:</label>
-                                        <input type="text" id="id_jemaat" class="form-control" value="${data.id_jemaat}" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="nama_jemaat">Nama Jemaat:</label>
-                                        <input type="text" id="nama_jemaat" class="form-control" value="${data.nama_jemaat}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="wilayah">Wilayah:</label>
-                                        <input type="text" id="wilayah" class="form-control" value="${data.nama_wilayah || 'N/A'}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="status">Status:</label>
-                                        <input type="text" id="status" class="form-control" value="${data.keterangan_status || 'N/A'}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="stamboek">Stamboek:</label>
-                                        <input type="text" id="stamboek" class="form-control" value="${data.stamboek}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tempat_lahir">Tempat Lahir:</label>
-                                        <input type="text" id="tempat_lahir" class="form-control" value="${data.tempat_lahir}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tanggal_lahir">Tanggal Lahir:</label>
-                                        <input type="text" id="tanggal_lahir" class="form-control" value="${data.tanggal_lahir}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kelamin">Kelamin:</label>
-                                        <input type="text" id="kelamin" class="form-control" value="${data.kelamin}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="alamat">Alamat:</label>
-                                        <input type="text" id="alamat" class="form-control" value="${data.alamat_jemaat}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kecamatan">Kecamatan:</label>
-                                        <input type="text" id="kecamatan" class="form-control" value="${data.nama_kecamatan || 'N/A'}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kabupaten">Kabupaten:</label>
-                                        <input type="text" id="kabupaten" class="form-control" value="${data.nama_kabupaten || 'N/A'}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="provinsi">Provinsi:</label>
-                                        <input type="text" id="provinsi" class="form-control" value="${data.nama_provinsi || 'N/A'}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kode_pos">Kode Pos:</label>
-                                        <input type="text" id="kode_pos" class="form-control" value="${data.kodepos || 'N/A'}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email:</label>
-                                        <input type="email" id="email" class="form-control" value="${data.email}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="telepon">Telepon:</label>
-                                        <input type="text" id="telepon" class="form-control" value="${data.telepon}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="photo">Foto:</label>
-                                        <br>
-                                        <img src="${data.photo}" alt="Jemaat Photo" style="width: 300px; margin-top: 10px;">
-                                    </div>
-                        </form>
-                            `,
-                            showCancelButton: true,
-                            confirmButtonText: 'Simpan',
-                            cancelButtonText: 'Batal',
-                            preConfirm: () => {
-
-                                const nama_jemaat = $('#nama_jemaat').val();
-                                const id_wilayah = $('#id_wilayah').val();
-                                const kelamin = $('#kelamin').val();
-                                const tanggal_lahir = $('#tanggal_lahir').val();
-                                const alamat_jemaat = $('#alamat_jemaat').val();
-                                const telepon = $('#telepon').val();
-                                const hp = $('#hp').val();
-                                const email = $('#email').val();
-                                const nik = $('#nik').val();
-                                const no_kk = $('#no_kk').val();
-                                const stamboek = $('#stamboek').val();
-                                const tempat_lahir = $('#tempat_lahir').val();
-                                const tanggal_baptis = $('#tanggal_baptis').val();
-                                const golongan_darah = $('#golongan_darah').val();
-                                const instansi = $('#instansi').val();
-                                const penghasilan = $('#penghasilan').val();
-                                const gereja_baptis = $('#gereja_baptis').val();
-                                const alat_transportasi = $('#alat_transportasi')
-                                    .val();
-
-
-                                return {
-                                    id_jemaat: id_jemaat,
-                                    nama_jemaat: nama_jemaat,
-                                    id_wilayah: id_wilayah,
-                                    kelamin: kelamin,
-                                    tanggal_lahir: tanggal_lahir,
-                                    alamat_jemaat: alamat_jemaat,
-                                    telepon: telepon,
-                                    hp: hp,
-                                    email: email,
-                                    nik: nik,
-                                    no_kk: no_kk,
-                                    stamboek: stamboek,
-                                    tempat_lahir: tempat_lahir,
-                                    tanggal_baptis: tanggal_baptis,
-                                    golongan_darah: golongan_darah,
-                                    instansi: instansi,
-                                    penghasilan: penghasilan,
-                                    gereja_baptis: gereja_baptis,
-                                    alat_transportasi: alat_transportasi
-                                };
-                            }
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // Mengupdate data menggunakan AJAX
-                                $.ajax({
-                                    url: "{{ route('api.update.jemaat') }}", // Ganti dengan endpoint yang sesuai
-                                    type: 'POST',
-                                    data: {
-                                        _token: '{{ csrf_token() }}',
-                                        id_jemaat: id_jemaat,
-                                        nama_jemaat: result.value.nama_jemaat,
-                                        id_wilayah: result.value.id_wilayah,
-                                        kelamin: result.value.kelamin,
-                                        tanggal_lahir: result.value
-                                            .tanggal_lahir,
-                                        alamat_jemaat: result.value
-                                            .alamat_jemaat,
-                                        telepon: result.value.telepon,
-                                        hp: result.value.hp,
-                                        email: result.value.email,
-                                        nik: result.value.nik,
-                                        no_kk: result.value.no_kk,
-                                        stamboek: result.value.stamboek,
-                                        tempat_lahir: result.value.tempat_lahir,
-                                        tanggal_baptis: result.value
-                                            .tanggal_baptis,
-                                        golongan_darah: result.value
-                                            .golongan_darah,
-                                        instansi: result.value.instansi,
-                                        penghasilan: result.value.penghasilan,
-                                        gereja_baptis: result.value
-                                            .gereja_baptis,
-                                        alat_transportasi: result.value
-                                            .alat_transportasi
-                                    },
-                                    success: function(response) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Data jemaat berhasil diubah!'
-                                        });
-                                        $table.bootstrapTable('refresh');
-                                    },
-                                    error: function(xhr, status, error) {
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Data jemaat gagal diupdate!',
-                                            text: xhr.responseText
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
             });
         });
 
@@ -833,7 +680,8 @@
                 type: "POST",
                 url: "{{ route('api.get.jemaat') }}",
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    onlyName: true
                 },
                 dataType: "json",
                 success: function(data) {

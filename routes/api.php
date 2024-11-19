@@ -25,6 +25,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // GET
     //Pengaturan
 Route::post('/get/wilayah', [ApiController::class, 'ApiGetWilayah'])-> name('api.get.wilayah');
+Route::post('/get/daerah', [ApiController::class, 'ApiGetDaerah'])-> name('api.get.daerah');
 Route::post('/get/jabatan-majelis', [ApiController::class, 'ApiGetJabatanMajelis'])-> name('api.get.jabatan-majelis');
 Route::post('/get/jabatan-non-majelis', [ApiController::class, 'ApiGetJabatanNonMajelis'])-> name('api.get.jabatan-non-majelis');
 Route::post('/get/user', [ApiController::class, 'ApiGetUser'])-> name('api.get.user-admin');
@@ -69,6 +70,7 @@ Route::post('/post/kecamatan', [ApiController::class, 'ApiPostKecamatan'])-> nam
 Route::post('/post/kelurahan', [ApiController::class, 'ApiPostKelurahan'])-> name('api.post.kelurahan');
     //Data
 Route::post('/post/jemaat', [ApiController::class, 'ApiPostJemaat'])-> name('api.post.jemaat');
+Route::post('/post/jemaat-daerah', [ApiController::class, 'ApiPostJemaatDaerah'])-> name('api.post.daerah.jemaat');
 Route::post('/post/keluarga', [ApiController::class, 'ApiPostKeluarga'])-> name('api.post.keluarga');
 Route::post('/post/anggotakeluarga', [ApiController::class, 'ApiPostAnggotaKeluarga'])-> name('api.post.anggotakeluarga');
 Route::post('/post/majelis', [ApiController::class, 'ApiPostMajelis'])-> name('api.post.majelis');
@@ -95,6 +97,7 @@ Route::post('/update/pekerjaan', [ApiController::class, 'ApiUpdatePekerjaan'])->
 //daerah
     //Data
 Route::post('/update/jemaat', [ApiController::class, 'ApiUpdateJemaat'])-> name('api.update.jemaat');
+Route::post('/update/jemaat-daerah', [ApiController::class, 'ApiUpdateJemaatDaerah'])-> name('api.update.daerah.jemaat');
 Route::post('/update/keluarga', [ApiController::class, 'ApiUpdateKeluarga'])-> name('api.update.keluarga');
 Route::post('/update/anggotakeluarga', [ApiController::class, 'ApiUpdateAnggotaKeluarga'])-> name('api.update.anggotakeluarga');
 Route::post('/update/majelis', [ApiController::class, 'ApiUpdateMajelis'])-> name('api.update.majelis');

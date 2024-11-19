@@ -9,11 +9,20 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin-wilayah.data.anggota-jemaat') }}" aria-current="true" href="{{ route('admin-wilayah.data.anggota-jemaat') }}">DATA JEMAAT</a>
+                    <a class="nav-link {{ request()->routeIs('admin-wilayah.data.anggota-jemaat', 'admin-wilayah.data.anggota-jemaat-keluarga-detail') ? 'active' : '' }}"
+                       aria-current="true"
+                       href="{{ route('admin-wilayah.data.anggota-jemaat') }}">
+                        DATA JEMAAT
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin-wilayah.data.anggota-jemaat-keluarga') }}" aria-current="true" href="{{ route('admin-wilayah.data.anggota-jemaat-keluarga') }}">KELUARGA JEMAAT</a>
+                    <a class="nav-link {{ request()->routeIs('admin-wilayah.data.anggota-jemaat-keluarga') ? 'active' : '' }}"
+                       aria-current="true"
+                       href="{{ route('admin-wilayah.data.anggota-jemaat-keluarga') }}">
+                        KELUARGA JEMAAT
+                    </a>
                 </li>
+
             </ul>
         </div>
         @yield('content')

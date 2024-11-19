@@ -79,6 +79,15 @@
                 }, {
                     field: 'berkas',
                     title: 'File SK',
+                    formatter: function(value, row, index) {
+                        const fileUrl = `/storage/${value}`;
+
+                        return `
+                            <button class="btn btn-primary">
+                                <a href="${fileUrl}" target="_blank" style="color:white; text-decoration:none;">Lihat File SK</a>
+                            </button>
+                        `;
+                    },
                     align: 'center'
                 }, {
                     field: 'keterangan_status',
@@ -89,7 +98,7 @@
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-warning btn-edit" data-id="${row.id_majelis}" data-name="${row.name}">Edit</button>`;
+                        return `<button class="btn btn-warning btn-edit" data-id="${row.id_majelis}">Edit</button>`;
                     },
                     align: 'center'
                 }, {
@@ -142,6 +151,15 @@
                     }, {
                         field: 'berkas',
                         title: 'File SK',
+                        formatter: function(value, row, index) {
+                            const fileUrl = `/storage/${value}`;
+
+                            return `
+                                <button class="btn btn-primary">
+                                    <a href="${fileUrl}" target="_blank" style="color:white; text-decoration:none;">Lihat File SK</a>
+                                </button>
+                            `;
+                        },
                         align: 'center'
                     }, {
                         field: 'keterangan_status',
@@ -152,7 +170,7 @@
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id_majelis}" data-name="${row.name}">Edit</button>`;
+                            return `<button class="btn btn-warning btn-edit" data-id="${row.id_majelis}">Edit</button>`;
                         },
                         align: 'center'
                     }, {
@@ -168,11 +186,11 @@
 
             // Event listener untuk tombol tambah Majelis
             $('.tambah-majelis').on('click', function(event) {
-            event.preventDefault();
+                event.preventDefault();
 
-            Swal.fire({
-                title: 'Tambah Majelis Baru',
-                html: `
+                Swal.fire({
+                    title: 'Tambah Majelis Baru',
+                    html: `
                     <form id="addMajelisForm">
                         <div class="form-group">
                             <label for="nama_majelis">Nama Majelis</label>
@@ -189,133 +207,154 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="tanggal_mulai">Tanggal Mulai</label>
+                            <label for="tanggal_mulai">Tanggal Mulai *</label>
                             <input type="date" id="tanggal_mulai" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="tanggal_selesai">Tanggal Selesai</label>
+                            <label for="tanggal_selesai">Tanggal Selesai *</label>
                             <input type="date" id="tanggal_selesai" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="no_sk">No. SK</label>
+                            <label for="no_sk">No. SK *</label>
                             <input type="text" id="no_sk" class="form-control" placeholder="Masukkan No. SK">
                         </div>
                         <div class="form-group">
-                            <label for="berkas">File SK</label>
-                            <input type="file" id="berkas" class="form-control">
+                            <label for="berkas">File SK *</label>
+                            <input type="file" id="berkas" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
                         </div>
                         <div class="form-group">
-                            <label for="keterangan_status">Status Majelis</label>
+                            <label for="keterangan_status">Status Majelis *</label>
                             <select id="keterangan_status" class="form-control">
                                 <option value="">Pilih status</option>
                                 <!-- AJAX -->
                             </select>
                         </div>
                     </form>
-                `,
-                showCancelButton: true,
-                confirmButtonText: 'Simpan',
-                cancelButtonText: 'Batal',
-                didOpen: () => {
-                $('#nama_majelis, #jabatan_majelis, #keterangan_status').select2({
-                    placeholder: "Pilih atau cari",
-                    allowClear: true,
-                    dropdownParent: $('.swal2-container')
-                });
-
-                // Load Jabatan Majelis
-                $.ajax({
-                    url: "{{ route('api.get.jabatan-majelis') }}",
-                    type: "POST",
-                    data: { _token: '{{ csrf_token() }}' },
-                    dataType: "json",
-                    success: function(response) {
-                        const $JabatanMajelis = $('#jabatan_majelis');
-                        $JabatanMajelis.empty().append('<option value="">Pilih Jabatan Majelis</option>');
-                        response.forEach(value => {
-                            $JabatanMajelis.append(`<option value="${value.id_jabatan}">${value.jabatan_majelis}</option>`);
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Simpan',
+                    cancelButtonText: 'Batal',
+                    didOpen: () => {
+                        $('#nama_majelis, #jabatan_majelis, #keterangan_status').select2({
+                            placeholder: "Pilih atau cari",
+                            allowClear: true,
+                            dropdownParent: $('.swal2-container')
                         });
-                    },
-                });
 
-                // Load Status Majelis
-                $.ajax({
-                    url: "{{ route('api.get.status') }}",
-                    type: "POST",
-                    data: { _token: '{{ csrf_token() }}' },
-                    dataType: "json",
-                    success: function(response) {
-                        const $statusDropdown = $('#keterangan_status');
-                        $statusDropdown.empty().append('<option value="">Pilih Status</option>');
-
-                        // Adjust based on the actual response structure
-                        (response.rows || response).forEach(item => {
-                            $statusDropdown.append(`<option value="${item.id_status}">${item.keterangan_status}</option>`);
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error loading status data:", error);
-                    }
-                });
-
-
-                // Load and autofill Nama Majelis from Jemaat
-                $.ajax({
-                    url: "{{ route('api.get.jemaat') }}",
-                    type: "POST",
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        onlyName: true
-                        },
-                    dataType: "json",
-                    success: function(response) {
-                        const $namaMajelis = $('#nama_majelis');
-                        $namaMajelis.empty().append('<option value="">Pilih Nama Majelis</option>');
-                        $.each(response.rows, function(key, value) {
-                            $namaMajelis.append(new Option(value.nama_jemaat, value.id_jemaat));
-                        });
-                    },
-                });
-            },
-
-            preConfirm: () => {
-                const data = {
-                    nama_majelis: $('#nama_majelis').val(),
-                    jabatan_majelis: $('#jabatan_majelis').val(),
-                    tanggal_mulai: $('#tanggal_mulai').val(),
-                    tanggal_selesai: $('#tanggal_selesai').val(),
-                    no_sk: $('#no_sk').val(),
-                    berkas: $('#berkas')[0].files[0],
-                    keterangan_status: $('#keterangan_status').val()
-                };
-                // Validate form fields
-                if (!nama_majelis  || !tanggal_mulai || !tanggal_selesai || !no_sk ||!berkas || !keterangan_status) {
-                    Swal.showValidationMessage('Semua kolom harus diisi!');
-                    return false;
-                }
-
-                // Validate date range
-                if (new Date(tanggal_mulai) >= new Date(tanggal_selesai)) {
-                    Swal.showValidationMessage('Tanggal mulai harus lebih kecil dari tanggal selesai!');
-                    return false;
-                }
-
-                // Optional: Validate file type or size
-                if (berkas && !['application/pdf', 'image/jpeg', 'image/png'].includes(berkas.type)) {
-                    Swal.showValidationMessage('Hanya file PDF, JPG, atau PNG yang diizinkan!');
-                    return false;
-                }
-
-                return data;
-            }
-            }).then((result) => {
-                if (result.isConfirmed) {
+                        // Load Jabatan Majelis
                         $.ajax({
-                            url: "{{ route('api.post.majelis') }}",
+                            url: "{{ route('api.get.jabatan-majelis') }}",
                             type: "POST",
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
+                            dataType: "json",
+                            success: function(response) {
+                                const $JabatanMajelis = $('#jabatan_majelis');
+                                $JabatanMajelis.empty().append(
+                                    '<option value="">Pilih Jabatan Majelis</option>'
+                                );
+                                response.forEach(value => {
+                                    $JabatanMajelis.append(
+                                        `<option value="${value.id_jabatan}">${value.jabatan_majelis}</option>`
+                                    );
+                                });
+                            },
+                        });
+
+                        // Load Status Majelis
+                        $.ajax({
+                            url: "{{ route('api.get.status') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $statusDropdown = $('#keterangan_status');
+                                $statusDropdown.empty().append(
+                                    '<option value="">Pilih Status</option>');
+
+                                (response.rows || response).forEach(item => {
+                                    $statusDropdown.append(
+                                        `<option value="${item.id_status}">${item.keterangan_status}</option>`
+                                    );
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error loading status data:", error);
+                            }
+                        });
+
+
+                        // Load and autofill Nama Majelis from Jemaat
+                        $.ajax({
+                            url: "{{ route('api.get.jemaat') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                onlyName: true
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $namaMajelis = $('#nama_majelis');
+                                $namaMajelis.empty().append(
+                                    '<option value="">Pilih Nama Majelis</option>'
+                                );
+                                $.each(response.rows, function(key, value) {
+                                    $namaMajelis.append(new Option(value
+                                        .nama_jemaat, value
+                                        .id_jemaat));
+                                });
+                            },
+                        });
+                    },
+                    preConfirm: () => {
+                        const data = {
+                            nama_majelis: $('#nama_majelis').val(),
+                            jabatan_majelis: $('#jabatan_majelis').val(),
+                            tanggal_mulai: $('#tanggal_mulai').val(),
+                            tanggal_selesai: $('#tanggal_selesai').val(),
+                            no_sk: $('#no_sk').val(),
+                            berkas: $('#berkas')[0].files[0],
+                            keterangan_status: $('#keterangan_status').val()
+                        };
+
+                        // Validasi form
+                        if (!data.nama_majelis || !data.tanggal_mulai || !data
+                            .tanggal_selesai ||
+                            !data.no_sk || !data.berkas || !data.keterangan_status) {
+                            Swal.showValidationMessage('Semua kolom harus diisi!');
+                            return false;
+                        }
+
+                        if (new Date(data.tanggal_mulai) >= new Date(data.tanggal_selesai)) {
+                            Swal.showValidationMessage(
+                                'Tanggal mulai harus lebih kecil dari tanggal selesai!');
+                            return false;
+                        }
+
+                        return data;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Gunakan FormData untuk mengirim data
+                        let formData = new FormData();
+                        formData.append('_token', '{{ csrf_token() }}');
+                        formData.append('id_jemaat', result.value.nama_majelis);
+                        formData.append('id_jabatan', result.value.jabatan_majelis);
+                        formData.append('tanggal_mulai', result.value.tanggal_mulai);
+                        formData.append('tanggal_selesai', result.value.tanggal_selesai);
+                        formData.append('no_sk', result.value.no_sk);
+                        formData.append('berkas', result.value.berkas);
+                        formData.append('id_status', result.value.keterangan_status);
+
+                        $.ajax({
+                            url: "{{ route('api.post.majelis') }}",
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
                             success: function() {
                                 alert.fire({
                                     icon: 'success',
@@ -334,188 +373,260 @@
                 });
             });
 
-
-
-
             // Event listener untuk tombol edit
-            $('.edit-majelis').on('click', function(event) {
-            event.preventDefault();
+            $(document).on('click', '.btn-edit', function(event) {
+                event.preventDefault();
 
-            // Ambil data Majelis yang akan diedit (misalnya melalui atribut data atau Ajax)
-            const id_majelis = $(this).data('id'); // pastikan tombol memiliki atribut data-id dengan id_majelis
-            $.ajax({
-                url: "{{ route('api.get.majelis') }}", // ganti dengan API untuk mengambil detail data majelis
-                type: "POST",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id_majelis: id_majelis
-                },
-                success: function(majelis) {
-                    // Menampilkan Swal dengan form yang sudah terisi data Majelis yang akan diedit
-                    Swal.fire({
-                        title: 'Edit Majelis',
-                        html: `
-                            <form id="editMajelisForm">
-                                <div class="form-group">
-                                    <label for="nama_majelis">Nama Majelis</label>
-                                    <select id="nama_majelis" class="form-control">
-                                        <option value="">Pilih Nama Majelis</option>
-                                        <!-- Dinamis, dimuat menggunakan AJAX -->
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="jabatan_majelis">Jabatan Majelis</label>
-                                    <select id="jabatan_majelis" class="form-control">
-                                        <option value="">Pilih Jabatan Majelis</option>
-                                        <!-- AJAX -->
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="tanggal_mulai">Tanggal Mulai</label>
-                                    <input type="date" id="tanggal_mulai" class="form-control" value="${majelis.tanggal_mulai}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="tanggal_selesai">Tanggal Selesai</label>
-                                    <input type="date" id="tanggal_selesai" class="form-control" value="${majelis.tanggal_selesai}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="no_sk">No. SK</label>
-                                    <input type="text" id="no_sk" class="form-control" value="${majelis.no_sk}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="berkas">File SK</label>
-                                    <input type="file" id="berkas" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="keterangan_status">Status Majelis</label>
-                                    <select id="keterangan_status" class="form-control">
-                                        <option value="">Pilih Status</option>
-                                        <!-- AJAX -->
-                                    </select>
-                                </div>
-                            </form>
-                        `,
-                        showCancelButton: true,
-                        confirmButtonText: 'Simpan',
-                        cancelButtonText: 'Batal',
-                        didOpen: () => {
-                            $('#nama_majelis, #jabatan_majelis, #keterangan_status').select2({
-                                placeholder: "Pilih atau cari",
-                                allowClear: true,
-                                dropdownParent: $('.swal2-container')
-                            });
+                const id_majelis = $(this).data('id');
+                $.ajax({
+                    url: "{{ route('api.get.majelis') }}",
+                    type: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id_majelis
+                    },
+                    success: function(majelis) {
+                        var majelis = majelis.rows[0];
+                        Swal.fire({
+                    title: 'Edit Majelis',
+                    html: `
+                    <form id="addMajelisForm">
+                        <div class="form-group">
+                            <label for="nama_majelis">Nama Majelis</label>
+                            <select id="nama_majelis" class="form-control">
+                                <option value="">Pilih Nama Majelis</option>
+                                <!-- AJAX -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="jabatan_majelis">Jabatan Majelis</label>
+                            <select id="jabatan_majelis" class="form-control">
+                                <option value="">Pilih Jabatan Majelis</option>
+                                <!-- AJAX -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggal_mulai">Tanggal Mulai *</label>
+                            <input type="date" id="tanggal_mulai" class="form-control" value="${majelis.tanggal_mulai}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggal_selesai">Tanggal Selesai *</label>
+                            <input type="date" id="tanggal_selesai" class="form-control" value="${majelis.tanggal_selesai}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="no_sk">No. SK *</label>
+                            <input type="text" id="no_sk" class="form-control" placeholder="Masukkan No. SK"value="${majelis.no_sk}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="berkas">File SK *</label>
+                            ${majelis.berkas_url ? `<a href="${majelis.berkas_url}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat File SK yang Sudah Ada</a>` : ''}
+                            <input type="file" id="berkas" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
+                        </div>
+                        <div class="form-group">
+                            <label for="keterangan_status">Status Majelis *</label>
+                            <select id="keterangan_status" class="form-control">
+                                <option value="">Pilih status</option>
+                                <!-- AJAX -->
+                            </select>
+                        </div>
+                    </form>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Simpan',
+                    cancelButtonText: 'Batal',
+                    didOpen: () => {
+                        $('#nama_majelis, #jabatan_majelis, #keterangan_status').select2({
+                            placeholder: "Pilih atau cari",
+                            allowClear: true,
+                            dropdownParent: $('.swal2-container')
+                        });
 
-                            // Load data untuk dropdown seperti pada versi tambah
-                            loadDropdownData('#jabatan_majelis', 'api.get.jabatan-majelis', majelis.id_jabatan);
-                            loadDropdownData('#keterangan_status', 'api.get.status', majelis.id_status);
-                            loadDropdownData('#nama_majelis', 'api.get.jemaat', majelis.id_jemaat);
+                        // Load Jabatan Majelis
+                        $.ajax({
+                            url: "{{ route('api.get.jabatan-majelis') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $JabatanMajelis = $('#jabatan_majelis');
+                                $JabatanMajelis.empty().append(
+                                    '<option value="">Pilih Jabatan Majelis</option>'
+                                );
+                                response.forEach(value => {
+                                    $JabatanMajelis.append(
+                                        `<option value="${value.id_jabatan}">${value.jabatan_majelis}</option>`
+                                    );
+                                });
+                                $('#jabatan_majelis').val(majelis.id_jabatan);
+                            },
+                        });
 
-                        },
-                        preConfirm: () => {
-                            const data = {
-                                id_majelis: id_majelis,
-                                nama_majelis: $('#nama_majelis').val(),
-                                jabatan_majelis: $('#jabatan_majelis').val(),
-                                tanggal_mulai: $('#tanggal_mulai').val(),
-                                tanggal_selesai: $('#tanggal_selesai').val(),
-                                no_sk: $('#no_sk').val(),
-                                berkas: $('#berkas')[0].files[0],
-                                keterangan_status: $('#keterangan_status').val()
-                            };
-                            // Validasi form seperti pada versi tambah
-                            if (!data.nama_majelis || !data.jabatan_majelis || !data.tanggal_mulai || !data.tanggal_selesai || !data.no_sk || !data.keterangan_status) {
-                                Swal.showValidationMessage('Semua kolom harus diisi!');
-                                return false;
+                        // Load Status Majelis
+                        $.ajax({
+                            url: "{{ route('api.get.status') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $statusDropdown = $('#keterangan_status');
+                                $statusDropdown.empty().append(
+                                    '<option value="">Pilih Status</option>');
+
+                                (response.rows || response).forEach(item => {
+                                    $statusDropdown.append(
+                                        `<option value="${item.id_status}">${item.keterangan_status}</option>`
+                                    );
+                                });
+                                $('#keterangan_status').val(majelis.id_status);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error loading status data:", error);
                             }
-                            return data;
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const formData = new FormData();
-                            formData.append('_token', '{{ csrf_token() }}');
-                            formData.append('id_majelis', id_majelis);
-                            formData.append('nama_majelis', $('#nama_majelis').val());
-                            formData.append('jabatan_majelis', $('#jabatan_majelis').val());
-                            formData.append('tanggal_mulai', $('#tanggal_mulai').val());
-                            formData.append('tanggal_selesai', $('#tanggal_selesai').val());
-                            formData.append('no_sk', $('#no_sk').val());
-                            formData.append('berkas', $('#berkas')[0].files[0]);
-                            formData.append('keterangan_status', $('#keterangan_status').val());
+                        });
 
-                            $.ajax({
-                                url: "{{ route('api.update.majelis') }}", 
-                                type: "POST",
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success: function() {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Data majelis berhasil diubah!'
-                                    });
-                                    $table.bootstrapTable('refresh');
-                                },
-                                error: function() {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Data majelis gagal diubah!'
-                                    });
-                                }
-                            });
+
+                        // Load and autofill Nama Majelis from Jemaat
+                        $.ajax({
+                            url: "{{ route('api.get.jemaat') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                onlyName: true
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $namaMajelis = $('#nama_majelis');
+                                $namaMajelis.empty().append(
+                                    '<option value="">Pilih Nama Majelis</option>'
+                                );
+                                $.each(response.rows, function(key, value) {
+                                    $namaMajelis.append(new Option(value
+                                        .nama_jemaat, value
+                                        .id_jemaat));
+                                });
+                                $('#nama_majelis').val(majelis.id_jemaat);
+                            },
+                        });
+                    },
+                    preConfirm: () => {
+                        const data = {
+                            nama_majelis: $('#nama_majelis').val(),
+                            jabatan_majelis: $('#jabatan_majelis').val(),
+                            tanggal_mulai: $('#tanggal_mulai').val(),
+                            tanggal_selesai: $('#tanggal_selesai').val(),
+                            no_sk: $('#no_sk').val(),
+                            berkas: $('#berkas')[0].files[0],
+                            keterangan_status: $('#keterangan_status').val()
+                        };
+
+                        // Validasi form
+                        if (!data.nama_majelis || !data.tanggal_mulai || !data
+                            .tanggal_selesai ||
+                            !data.no_sk || !data.keterangan_status) {
+                            Swal.showValidationMessage('Semua kolom harus diisi!');
+                            return false;
                         }
-                    });
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal memuat data majelis!'
-                    });
-                }
+
+                        if (new Date(data.tanggal_mulai) >= new Date(data.tanggal_selesai)) {
+                            Swal.showValidationMessage(
+                                'Tanggal mulai harus lebih kecil dari tanggal selesai!');
+                            return false;
+                        }
+
+                        return data;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Gunakan FormData untuk mengirim data
+                        let formData = new FormData();
+                        formData.append('_token', '{{ csrf_token() }}');
+                        formData.append('id_majelis', id_majelis);
+                        formData.append('id_jemaat', result.value.nama_majelis);
+                        formData.append('id_jabatan', result.value.jabatan_majelis);
+                        formData.append('tanggal_mulai', result.value.tanggal_mulai);
+                        formData.append('tanggal_selesai', result.value.tanggal_selesai);
+                        formData.append('no_sk', result.value.no_sk);
+                        formData.append('berkas', result.value.berkas);
+                        formData.append('id_status', result.value.keterangan_status);
+
+                        $.ajax({
+                            url: "{{ route('api.update.majelis') }}",
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function() {
+                                alert.fire({
+                                    icon: 'success',
+                                    title: 'Data majelis berhasil diupdate!'
+                                });
+                                $table.bootstrapTable('refresh');
+                            },
+                            error: function() {
+                                alert.fire({
+                                    icon: 'error',
+                                    title: 'Data majelis gagal diupdate!'
+                                });
+                            }
+                        });
+                    }
+                });
+                    },
+                    error: function() {
+                        alert.fire({
+                            icon: 'error',
+                            title: 'Gagal memuat data majelis!'
+                        });
+                    }
+                });
             });
-        });
 
         });
 
         $(document).on('click', '.btn-delete', function(event) {
-        event.preventDefault();
-        var id_majelis = $(this).data('id');
+            event.preventDefault();
+            var id_majelis = $(this).data('id');
 
-        Swal.fire({
-            title: 'Are you sure?',
-            html: `<div class="text-delete">You won't be able to revert this!</div>`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: `{{ route('api.delete.majelis') }}`,
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        id_majelis: id_majelis
-                    },
-                    dataType: "json",
-                    success: function(response) {
-                        alert.fire({
-                            icon: 'success',
-                            title: 'Data Majelis berhasil Dihapus!'
-                        });
-                        $table.bootstrapTable('refresh');
-                    },
-                    error: function(xhr, status, error) {
-                        alert.fire({
-                            icon: 'error',
-                            title: 'Data Majelis gagal dihapus!',
-                            text: error
-                        });
-                    }
-                });
-            }
+            Swal.fire({
+                title: 'Are you sure?',
+                html: `<div class="text-delete">You won't be able to revert this!</div>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `{{ route('api.delete.majelis') }}`,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            id_majelis: id_majelis
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            alert.fire({
+                                icon: 'success',
+                                title: 'Data Majelis berhasil Dihapus!'
+                            });
+                            $table.bootstrapTable('refresh');
+                        },
+                        error: function(xhr, status, error) {
+                            alert.fire({
+                                icon: 'error',
+                                title: 'Data Majelis gagal dihapus!',
+                                text: error
+                            });
+                        }
+                    });
+                }
+            });
         });
-});
 
 
         function ApiGetMajelis(params) {

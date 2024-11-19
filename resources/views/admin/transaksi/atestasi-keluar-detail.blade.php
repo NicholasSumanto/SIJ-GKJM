@@ -27,7 +27,7 @@
                 <li class="breadcrumb-item active">Detail Atestasi Keluar ({{ $atestasiKeluarDetail->id_keluar }})</li>
             </ol>
         </nav>
-        <a href="" class="btn btn-success tambah-atestasi-keluar">Tambah Detail Atestasi Kwluar</a>
+        <a href="" class="btn btn-success tambah-atestasi-keluar">Tambah Detail Atestasi Keluar</a>
         <div id="toolbar" class="select">
             <select class="form-control">
                 <option value="">Export (Hanya yang Ditampilkan)</option>

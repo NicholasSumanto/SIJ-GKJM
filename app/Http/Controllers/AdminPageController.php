@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AtestasiKeluarDtl;
+use App\Models\Kelurahan;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Kematian;
@@ -14,6 +15,7 @@ use App\Models\AtestasiKeluar;
 use App\Models\Provinsi;
 use App\Models\Wilayah;
 use Illuminate\Support\Facades\DB;
+use Storage;
 
 class AdminPageController extends Controller
 {
@@ -229,6 +231,24 @@ class AdminPageController extends Controller
     public function adminDataAnggotaJemaatDetail($id)
     {
         $jemaat = Jemaat::find($id);
+        if ($jemaat->id_kelurahan != null) {
+            $jemaat->nama_kelurahan = Kelurahan::find($jemaat->id_kelurahan)->kelurahan;
+        }
+
+        if ($jemaat->id_kecamatan != null) {
+            $jemaat->nama_kecamatan = Kecamatan::find($jemaat->id_kecamatan)->kecamatan;
+        }
+
+        if ($jemaat->id_kabupaten != null) {
+            $jemaat->nama_kabupaten = Kabupaten::find($jemaat->id_kabupaten)->kabupaten;
+        }
+
+        if ($jemaat->id_provinsi != null) {
+            $jemaat->nama_provinsi = Provinsi::find($jemaat->id_provinsi)->nama_provinsi;
+        }
+
+        $jemaat->photo_url = $jemaat->photo ? Storage::url($jemaat->photo) : null;
+
         return view('admin.data.anggota-jemaat-detail', compact('jemaat'));
     }
 

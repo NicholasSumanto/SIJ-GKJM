@@ -76,6 +76,7 @@ Route::middleware('auth:admin')->group(function () {
 Route::middleware('auth:adminWilayah')->group(function () {
     Route::get('/admin-wilayah/dashboard', action: AdminWilayahPageController::class . '@adminWilayahDashboard')->name('admin-wilayah.dashboard');
     Route::get('/admin-wilayah/data/anggota-jemaat', action: AdminWilayahPageController::class . '@adminWilayahDataAnggotaJemaat')->name('admin-wilayah.data.anggota-jemaat');
+    Route::get('/admin-wilayah/data/anggota-jemaat/{id}/{validasi}', AdminWilayahPageController::class . '@adminWilayahDataAnggotaJemaatDetail')->name('admin-wilayah.data.anggota-jemaat-keluarga-detail');
     Route::get('/admin-wilayah/data/anggota-jemaat-keluarga', action: AdminWilayahPageController::class . '@adminWilayahDataAnggotaJemaatKeluarga')->name('admin-wilayah.data.anggota-jemaat-keluarga');
 });
 

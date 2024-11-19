@@ -1,4 +1,4 @@
-@extends('layouts.admin-main-data')
+@extends('layouts.admin-wilayah-main-data')
 
 @section('title', 'Anggota Jemaat')
 
@@ -41,6 +41,10 @@
                 <tr>
                     <th>Nama Jemaat</th>
                     <td>{{ $jemaat->nama_jemaat ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Status Validasi</th>
+                    <td>{{ $jemaat->validasi ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Tempat Lahir</th>
@@ -192,13 +196,6 @@
                                         <input type="text" id="nama_jemaat" class="form-control" placeholder="Masukkan Nama Jemaat" required value="${data.nama_jemaat}">
                                     </div>
                                     <div class="form-group">
-                                        <label for="id_wilayah">Nama Wilayah *</label>
-                                        <select id="id_wilayah" class="form-control" required>
-                                            <option value="">Pilih Wilayah</option>
-                                            <!-- AJAX -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
                                         <label for="kelamin">Kelamin *</label>
                                         <select id="kelamin" class="form-control" required>
                                             <option value="" disabled selected>Pilih Kelamin</option>
@@ -314,29 +311,6 @@
                                 // Mengisi data kelamin dan golongan darah
                                 $('#kelamin').val(data.kelamin);
                                 $('#golongan_darah').val(data.golongan_darah);
-
-                                // Load data wilayah
-                                $.ajax({
-                                    url: "{{ route('api.get.wilayah') }}",
-                                    type: "POST",
-                                    data: {
-                                        _token: '{{ csrf_token() }}'
-                                    },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        const $idWilayah = $(
-                                            '#id_wilayah').empty();
-                                        $idWilayah.append(
-                                            '<option value="">Pilih Wilayah</option>'
-                                        );
-                                        response.forEach((item) => {
-                                            $idWilayah.append(
-                                                `<option value="${item.id_wilayah}">${item.nama_wilayah}</option>`
-                                            );
-                                        });
-                                        $idWilayah.val(data.id_wilayah);
-                                    }
-                                });
 
                                 // Load data provinsi
                                 $.ajax({
@@ -508,7 +482,6 @@
                                     _token: '{{ csrf_token() }}',
                                     id_jemaat: id_jemaat,
                                     nama_jemaat: $('#nama_jemaat').val(),
-                                    id_wilayah: $('#id_wilayah').val(),
                                     kelamin: $('#kelamin').val(),
                                     tanggal_lahir: $('#tanggal_lahir').val(),
                                     id_kelurahan: $('#id_kelurahan').val(),
@@ -577,6 +550,7 @@
                                             _token: '{{ csrf_token() }}',
                                             nama_jemaat: data
                                                 .nama_jemaat,
+                                            validasi: '{{ $jemaat->validasi }}'
                                         },
                                         dataType: "json",
                                         success: function(
@@ -607,7 +581,6 @@
                                 const {
                                     nama_jemaat,
                                     id_jemaat,
-                                    id_wilayah,
                                     kelamin,
                                     tanggal_lahir,
                                     alamat_jemaat,
@@ -633,9 +606,9 @@
 
                                 const formData = new FormData();
                                 formData.append('_token', '{{ csrf_token() }}');
+                                formData.append('validasi', '{{ $jemaat->validasi }}');
                                 formData.append('id_jemaat', id_jemaat);
                                 formData.append('nama_jemaat', nama_jemaat);
-                                formData.append('id_wilayah', id_wilayah);
                                 formData.append('kelamin', kelamin);
                                 formData.append('tanggal_lahir', tanggal_lahir);
                                 formData.append('id_kelurahan', id_kelurahan);
@@ -660,7 +633,7 @@
 
 
                                 $.ajax({
-                                    url: "{{ route('api.update.jemaat') }}",
+                                    url: "{{ route('api.update.daerah.jemaat') }}",
                                     type: 'POST',
                                     data: formData,
                                     contentType: false,
@@ -691,7 +664,8 @@
                     url: "{{ route('api.get.jemaat.by.id', ['id_jemaat' => '__ID__']) }}".replace('__ID__',
                         id_jemaat),
                     data: {
-                        _token: '{{ csrf_token() }}'
+                        _token: '{{ csrf_token() }}',
+                        validasi: '{{ $jemaat->validasi }}'
                     },
                     dataType: "json",
                     success: function(data) {

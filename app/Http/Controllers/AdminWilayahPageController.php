@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JemaatBaru;
+use App\Models\JemaatTitipan;
+use App\Models\Kelurahan;
+use App\Models\Provinsi;
 use App\Models\User;
 use App\Models\Jemaat;
 use App\Models\Kematian;
@@ -14,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\RolePengguna as Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Storage;
 
 class AdminWilayahPageController extends Controller
 {
@@ -195,6 +200,36 @@ class AdminWilayahPageController extends Controller
     public function adminWilayahDataAnggotaJemaat()
     {
         return view('admin-wilayah.data.anggota-jemaat');
+    }
+
+    public function adminWilayahDataAnggotaJemaatDetail($id, $validasi)
+    {
+        if($validasi == "tidak valid"){
+            $jemaat = JemaatBaru::find($id);
+        } else {
+            $jemaat = Jemaat::find($id);
+            $jemaat->validasi = $validasi;
+        }
+
+        if ($jemaat->id_kelurahan != null) {
+            $jemaat->nama_kelurahan = Kelurahan::find($jemaat->id_kelurahan)->kelurahan;
+        }
+
+        if ($jemaat->id_kecamatan != null) {
+            $jemaat->nama_kecamatan = Kecamatan::find($jemaat->id_kecamatan)->kecamatan;
+        }
+
+        if ($jemaat->id_kabupaten != null) {
+            $jemaat->nama_kabupaten = Kabupaten::find($jemaat->id_kabupaten)->kabupaten;
+        }
+
+        if ($jemaat->id_provinsi != null) {
+            $jemaat->nama_provinsi = Provinsi::find($jemaat->id_provinsi)->nama_provinsi;
+        }
+
+        $jemaat->photo_url = $jemaat->photo ? Storage::url($jemaat->photo) : null;
+
+        return view('admin-wilayah.data.anggota-jemaat-detail', compact('jemaat'));
     }
     public function adminWilayahDataAnggotaJemaatKeluarga()
     {

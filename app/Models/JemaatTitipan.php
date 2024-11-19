@@ -15,6 +15,7 @@ class JemaatTitipan extends Model
     protected $fillable = [
         'nama_jemaat',
         'nama_gereja',
+        'id_jemaat',
         'kelamin',
         'alamat_jemaat',
         'titipan',
