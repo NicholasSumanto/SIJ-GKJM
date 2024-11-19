@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.admin-wilayah')
 
 @section('main-content')
 
@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <form id="form" method="GET" action="{{ route('admin.dashboard') }}" class="container mt-4">
+    <form id="form" method="GET" action="{{ route('admin-wilayah.dashboard') }}" class="container mt-4">
         <div class="card p-3 shadow-sm">
             <div class="form-row align-items-center">
                 <div class="col-auto">
@@ -30,6 +30,15 @@
                         <option value="Laki-laki" {{ request('Kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                         <option value="Perempuan" {{ request('Kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                     </select>
+                </div>
+                <div class="card shadow h-100 py-4 ml-3" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                    Total: {{ $totalJemaat }}
+                </div>
+                <div class="card shadow h-100 py-4 ml-3" style="background-color: #f9cafcaf; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                    Jemaat Perempuan: {{ $perempuan }}
+                </div>
+                <div class="card shadow h-100 py-4 ml-3" style="background-color: #bdd9f5a9; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                    Jemaat Laki-laki: {{ $laki }}
                 </div>
             </div>
         </div>
@@ -60,7 +69,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Jemaat Keluar Masuk {{$tahun}}</h4>
                     <span>
-                        <form id="keluarMasuk" method="GET" action="{{ route('admin.dashboard') }}">
+                        <form id="keluarMasuk" method="GET" action="{{ route('admin-wilayah.dashboard') }}">
                             <select id="InOut" name="InOut" class="form-select" onchange="this.form.submit()">
                                 <option value="">All</option>
                                 <option value="Masuk" {{ request('InOut') == 'Masuk' ? 'selected' : '' }}>Masuk</option>
