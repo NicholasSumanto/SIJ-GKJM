@@ -681,7 +681,6 @@
                 url: "{{ route('api.get.jemaat') }}",
                 data: {
                     _token: '{{ csrf_token() }}',
-                    onlyName: true
                 },
                 dataType: "json",
                 success: function(data) {
