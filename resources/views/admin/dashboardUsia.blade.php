@@ -26,7 +26,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-s font-weight-bold text-danger text-uppercase mb-2">Semua</div>
+                            <div class="text-s font-weight-bold text-danger text-uppercase mb-2">Total Jemaat</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalJemaat }}</div>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
     const ageGroupChart = new Chart(chart1, {
         type: 'doughnut',
         data: {
-            labels: ['Sekolah Minggu Kecil', 'Sekolah Minggu Besar', 'Remaja','Pemuda','Dewasa Muda','Dewasa','Lansia'
+            labels: ['Sekolah Minggu Kecil (<6th)', 'Sekolah Minggu Besar (7-15th)', 'Remaja (16-18th)','Pemuda (19-30th)','Dewasa Muda (31-39th)','Dewasa (40-59th)','Lansia (>60th)'
             ],
             datasets: [{
                 label: 'Jumlah Jemaat',
