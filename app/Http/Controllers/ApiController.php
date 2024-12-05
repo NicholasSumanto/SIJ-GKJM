@@ -1318,13 +1318,8 @@ class ApiController extends Controller
                 'totalNotFiltered' => AtestasiKeluar::count(),
                 'rows' => $data
                     ->map(function ($item) {
-                        $pendeta = Pendeta::where('id_pendeta', $item->id_pendeta)
-                            ->select('nama_pendeta')
-                            ->first();
                         return [
                             'id_keluar' => $item->id_keluar,
-                            'id_pendeta' => $item->id_pendeta,
-                            'nama_pendeta' => $pendeta ? $pendeta->nama_pendeta : null,
                             'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
                             'tanggal' => $item->tanggal,
@@ -1343,13 +1338,8 @@ class ApiController extends Controller
                 'totalNotFiltered' => AtestasiKeluar::count(),
                 'rows' => $data
                     ->map(function ($item) {
-                        $pendeta = Pendeta::where('id_pendeta', $item->id_pendeta)
-                            ->select('nama_pendeta')
-                            ->first();
                         return [
                             'id_keluar' => $item->id_keluar,
-                            'id_pendeta' => $item->id_pendeta,
-                            'nama_pendeta' => $pendeta ? $pendeta->nama_pendeta : null,
                             'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
                             'tanggal' => $item->tanggal,
@@ -2346,7 +2336,6 @@ class ApiController extends Controller
         }
 
         $data = new AtestasiKeluar();
-        $data->id_pendeta = $request->id_pendeta;
         $data->nama_gereja = $namaGereja;
         $data->no_surat = $request->no_surat;
         $data->tanggal = $request->tanggal;
@@ -3050,7 +3039,6 @@ class ApiController extends Controller
             $namaGereja = $request->nama_gereja;
         }
 
-        $data->id_pendeta = $request->id_pendeta;
         $data->nama_gereja = $namaGereja;
         $data->no_surat = $request->no_surat;
         $data->tanggal = $request->tanggal;

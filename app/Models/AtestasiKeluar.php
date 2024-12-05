@@ -15,7 +15,6 @@ class AtestasiKeluar extends Model
     protected $fillable = [
         'id_jemaat',
         'id_wilayah',
-        'id_pendeta',
         'nama_gereja',
         'no_surat',
         'tanggal',
@@ -30,10 +29,5 @@ class AtestasiKeluar extends Model
     public function wilayah()
     {
         return $this->belongsTo(Wilayah::class, 'id_wilayah', 'id_wilayah');
-    }
-
-    public function pendeta()
-    {
-        return $this->belongsTo(Pendeta::class, 'id_pendeta', 'id_pendeta');
     }
 }

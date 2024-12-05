@@ -23,7 +23,6 @@ class AtestasiKeluarFactory extends Factory
     {
         return [
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
-            'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,
             'nama_gereja' => $this->churches[array_rand($this->churches)],
             'no_surat' => $this->faker->unique()->numerify('SK-####'),
             'tanggal' => $this->faker->date(),

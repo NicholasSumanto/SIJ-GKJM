@@ -14,13 +14,11 @@ return new class extends Migration
         Schema::create('atestasi_keluar', function (Blueprint $table) {
             $table->id('id_keluar');
             $table->unsignedBiginteger('id_wilayah')->nullable();
-            $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->string('nama_gereja');
             $table->string('no_surat');
             $table->date('tanggal');
             $table->string('keterangan');
             $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
         Schema::create('atestasi_keluar_dtl', function (Blueprint $table) {

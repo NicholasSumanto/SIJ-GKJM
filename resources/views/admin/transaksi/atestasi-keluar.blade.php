@@ -63,11 +63,8 @@
                     field: 'no_surat',
                     title: 'Nomor Surat'
                 }, {
-                    field: 'nama_pendeta',
-                    title: 'Nama Pendeta'
-                }, {
                     field: 'nama_gereja',
-                    title: 'Nama Gereja'
+                    title: 'Nama Gereja Tujuan'
                 }, {
                     field: 'tanggal',
                     title: 'Tanggal'
@@ -82,17 +79,17 @@
                     },
                     align: 'center'
                 }, {
+                        field: 'lihat',
+                        title: 'Lihat Detail',
+                        formatter: function(value, row, index) {
+                            return `<button class="btn btn-primary btn-view" data-id="${row.id_keluar}">Lihat</button>`;
+                        },
+                        align: 'center'
+                },{
                     field: 'delete',
                     title: 'Delete',
                     formatter: function(value, row, index) {
                         return `<button class="btn btn-danger btn-delete" data-id="${row.id_keluar}">Delete</button>`;
-                    },
-                    align: 'center'
-                }, {
-                    field: 'lihat',
-                    title: 'Lihat Detail',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-view" data-id="${row.id_keluar}">Lihat</button>`;
                     },
                     align: 'center'
                 }],
@@ -113,12 +110,9 @@
                     }, {
                         field: 'no_surat',
                         title: 'Nomor Surat'
-                    }, {
-                        field: 'nama_pendeta',
-                        title: 'Nama Pendeta'
-                    }, {
+                    },  {
                         field: 'nama_gereja',
-                        title: 'Nama Gereja'
+                        title: 'Nama Gereja Tujuan'
                     }, {
                         field: 'tanggal',
                         title: 'Tanggal'
@@ -133,17 +127,17 @@
                         },
                         align: 'center'
                     }, {
-                        field: 'delete',
-                        title: 'Delete',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_keluar}">Delete</button>`;
-                        },
-                        align: 'center'
-                    }, {
                         field: 'lihat',
                         title: 'Lihat Detail',
                         formatter: function(value, row, index) {
                             return `<button class="btn btn-primary btn-view" data-id="${row.id_keluar}">Lihat</button>`;
+                        },
+                        align: 'center'
+                    },{
+                        field: 'delete',
+                        title: 'Delete',
+                        formatter: function(value, row, index) {
+                            return `<button class="btn btn-danger btn-delete" data-id="${row.id_keluar}">Delete</button>`;
                         },
                         align: 'center'
                     }],
@@ -161,13 +155,7 @@
                     html: `
                         <form id="addWilayahForm">
                             <div class="form-group">
-                                <label for="nama_pendeta">Nama Pendeta *</label>
-                                <select id="nama_pendeta" class="form-control" required style="width: 100%;">
-                                    <option value="">Pilih Nama Pendeta</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="nama_gereja">Nama Gereja *</label>
+                                <label for="nama_gereja">Nama Gereja Tujuan *</label>
                                 <select id="nama_gereja" class="form-control" required style="width: 100%;">
                                     <option value="">Pilih Nama Gereja</option>
                                 </select>
@@ -193,7 +181,7 @@
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
                     didOpen: () => {
-                        $('#nama_gereja, #nama_pendeta').select2({
+                        $('#nama_gereja').select2({
                             placeholder: "Pilih atau cari",
                             allowClear: true,
                             dropdownParent: $(
@@ -233,29 +221,9 @@
                             }
                         });
 
-                        // Load Nama Pendeta
-                        $.ajax({
-                            url: "{{ route('api.get.pendeta') }}",
-                            type: "POST",
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                onlyName: true
-                            },
-                            dataType: "json",
-                            success: function(response) {
-                                const $pendetaSelect = $('#nama_pendeta');
-                                $pendetaSelect.empty().append(
-                                    '<option value="">Pilih Nama Pendeta</option>'
-                                );
-                                $.each(response.rows, function(key, value) {
-                                    $pendetaSelect.append(new Option(value.nama_pendeta,value.id_pendeta));
-                                });
-                            }
-                        });
                     },
                     preConfirm: () => {
                         const data = {
-                            id_pendeta: $('#nama_pendeta').val(),
                             nama_gereja: $('#nama_gereja').val(),
                             new_gereja: $('#new_gereja').val(),
                             no_surat: $('#no_surat').val(),
@@ -272,7 +240,7 @@
                         }
 
                         // Validasi semua input, pastikan tidak ada yang kosong
-                        if (!data.id_pendeta || !data.nama_gereja || !data.no_surat || !data
+                        if ( !data.nama_gereja || !data.no_surat || !data
                             .tanggal || !data.keterangan) {
                             Swal.showValidationMessage('Data tidak boleh kosong!');
                             return false;
@@ -322,20 +290,13 @@
                     dataType: "json",
                     success: function(response) {
                         var nama_gereja = response.rows[0].nama_gereja;
-                        var id_pendeta = response.rows[0].id_pendeta;
 
                         Swal.fire({
                             title: 'Edit Atestasi Keluar',
                             html: `
                                 <form id="editAtestesiKeluarForm">
                                     <div class="form-group">
-                                        <label for="nama_pendeta">Nama Pendeta *</label>
-                                        <select id="nama_pendeta" class="form-control" required style="width: 100%;">
-                                            <option value="">Pilih Nama Pendeta</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="nama_gereja">Nama Gereja *</label>
+                                        <label for="nama_gereja">Nama Gereja Tujuan*</label>
                                         <select id="nama_gereja" class="form-control" required style="width: 100%;">
                                             <option value="">Pilih Nama Gereja</option>
                                         </select>
@@ -361,7 +322,7 @@
                             confirmButtonText: 'Simpan',
                             cancelButtonText: 'Batal',
                             didOpen: () => {
-                                $('#nama_gereja, #nama_pendeta').select2({
+                                $('#nama_gereja').select2({
                                     placeholder: "Pilih atau cari",
                                     allowClear: true,
                                     dropdownParent: $(
@@ -413,40 +374,9 @@
                                     }
                                 });
 
-                                // Load Nama Pendeta
-                                $.ajax({
-                                    url: "{{ route('api.get.pendeta') }}",
-                                    type: "POST",
-                                    data: {
-                                        _token: '{{ csrf_token() }}',
-                                        onlyName: true
-                                    },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        const $pendetaSelect = $(
-                                            '#nama_pendeta');
-                                        $pendetaSelect.empty().append(
-                                            '<option value="">Pilih Nama Pendeta</option>'
-                                        );
-                                        $.each(response.rows, function(
-                                            key, value) {
-                                            $pendetaSelect
-                                                .append(
-                                                    new Option(
-                                                        value
-                                                        .nama_pendeta,
-                                                        value
-                                                        .id_pendeta
-                                                    ));
-                                        });
-
-                                        $pendetaSelect.val(id_pendeta);
-                                    }
-                                });
                             },
                             preConfirm: () => {
                                 const data = {
-                                    id_pendeta: $('#nama_pendeta').val(),
                                     nama_gereja: $('#nama_gereja').val(),
                                     new_gereja: $('#new_gereja').val(),
                                     no_surat: $('#no_surat').val(),
@@ -466,7 +396,7 @@
                                 }
 
                                 // Validasi semua input, pastikan tidak ada yang kosong
-                                if (!data.id_pendeta || !data.nama_gereja || !data
+                                if ( !data.nama_gereja || !data
                                     .no_surat || !data
                                     .tanggal || !data.keterangan) {
                                     Swal.showValidationMessage(
