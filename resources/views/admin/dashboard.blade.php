@@ -210,7 +210,7 @@
         const Baptis = new Chart(chart3, {
             type: 'line',
             data: {
-                labels: @json($labelBaptis),
+                labels:  ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sept','Okt','Nov','Des'],
                 datasets: [{
                         label: 'Baptis Anak',
                         data: @json($isiBA),
