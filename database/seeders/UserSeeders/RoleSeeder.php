@@ -19,18 +19,8 @@ class RoleSeeder extends Seeder
         DB::table('role_pengguna')->insert([
             ['nama_role' => 'Super Admin','created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),],
-            ['nama_role' => 'Admin Wilayah 1','created_at' => Carbon::now(),
+            ['nama_role' => 'Admin Wilayah','created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),],
-            ['nama_role' => 'Admin Wilayah 2','created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),],
-            ['nama_role' => 'Admin Wilayah 3','created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),],
-            ['nama_role' => 'Admin Wilayah 4','created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),],
-            ['nama_role' => 'Admin Wilayah 5','created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),],
-
-
         ]);
     }
 }

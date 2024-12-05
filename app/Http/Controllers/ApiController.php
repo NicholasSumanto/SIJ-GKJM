@@ -306,10 +306,17 @@ class ApiController extends Controller
                 'totalNotFiltered' => User::count(),
                 'rows' => $data
                     ->map(function ($item) {
+                        if ($item->id_wilayah == null) {
+                            $namaWilayah = null;
+                        } else {
+                            $namaWilayah = Wilayah::where('id_wilayah', $item->id_wilayah)->first()->nama_wilayah;
+                        }
                         return [
                             'username' => $item->username,
                             'nama_user' => $item->nama_user,
                             'role' => $item->role ? $item->role->nama_role : null,
+                            'wilayah' => $namaWilayah,
+                            'id_wilayah' => $item->id_wilayah,
                         ];
                     })
                     ->toArray(),
@@ -323,10 +330,17 @@ class ApiController extends Controller
                 'totalNotFiltered' => User::count(),
                 'rows' => $data
                     ->map(function ($item) {
+                        if ($item->id_wilayah == null) {
+                            $namaWilayah = null;
+                        } else {
+                            $namaWilayah = Wilayah::where('id_wilayah', $item->id_wilayah)->first()->nama_wilayah;
+                        }
                         return [
                             'username' => $item->username,
                             'nama_user' => $item->nama_user,
                             'role' => $item->role ? $item->role->nama_role : null,
+                            'wilayah' => $namaWilayah,
+                            'id_wilayah' => $item->id_wilayah,
                         ];
                     })
                     ->toArray(),
@@ -592,6 +606,9 @@ class ApiController extends Controller
                     ->select(['id_jemaat', 'nama_jemaat'])
                     ->get();
                 $data = $jemaat;
+            } else if ($request->has('baru')) {
+                $jemaat = JemaatBaru::select(['id_jemaat', 'nama_jemaat'])->where('validasi', 'tidak valid')->get();
+                $data = $jemaat;
             } else {
                 $data = Jemaat::select(['id_jemaat', 'nama_jemaat'])->get();
             }
@@ -618,9 +635,9 @@ class ApiController extends Controller
                 }
             } else {
                 $data = Jemaat::where('id_jemaat', $request->id)->get();
-                    if ($request->validasi == 'tidak valid') {
-                        JemaatBaru::where('id_jemaat', $request->id_jemaat)->get();
-                    }
+                if ($request->validasi == 'tidak valid') {
+                    JemaatBaru::where('id_jemaat', $request->id_jemaat)->get();
+                }
             }
 
             $formattedData = [
@@ -657,12 +674,10 @@ class ApiController extends Controller
                             'photo' => $item->photo,
                             'tanggal_baptis' => $item->tanggal_baptis,
                             'golongan_darah' => $item->golongan_darah,
-                            'id_pendidikan' => $item->id_pendidikan,
+                            'pendidikan' => $item->id_pendidikan,
                             'nama_pendidikan' => $item->pendidikan ? $item->pendidikan->nama_pendidikan : null,
-                            'id_ilmu' => $item->id_ilmu,
-                            'bidang_ilmu' => $item->ilmu ? $item->ilmu->nama_ilmu : null,
-                            'id_pekerjaan' => $item->id_pekerjaan,
-                            'pekerjaan' => $item->pekerjaan ? $item->pekerjaan->pekerjaan : null,
+                            'ilmu' => $item->id_ilmu,
+                            'pekerjaan' => $item->id_pekerjaan,
                             'instansi' => $item->instansi,
                             'penghasilan' => $item->penghasilan,
                             'gereja_baptis' => $item->gereja_baptis,
@@ -674,13 +689,12 @@ class ApiController extends Controller
 
             return response()->json($formattedData);
         } else {
-            if ($request->has('id_role')) {
-                $nama_wilayah = Role::where('id_role', $request->id_role)->first()->nama_role;
-                $parseWilayahString = preg_replace('/Admin\s*/', '', $nama_wilayah);
-                $idWilayah = Wilayah::where('nama_wilayah', $parseWilayahString)->first()->id_wilayah;
+            if ($request->has('username')) {
+                $data = User::where('username', $request->username)->first();
+                $idWilayah = Wilayah::where('id_wilayah', $data->id_wilayah)->first();
 
                 // Ambil data dari JemaatBaru
-                $jemaatBaru = JemaatBaru::where('id_wilayah', $idWilayah)->get();
+                $jemaatBaru = JemaatBaru::where('id_wilayah', $idWilayah->id_wilayah)->get();
 
                 // Ambil data dari Jemaat dan tetapkan 'validasi' sebagai 'valid'
                 $jemaat = Jemaat::where('id_wilayah', $idWilayah)->get()->map(function ($item) {
@@ -689,6 +703,9 @@ class ApiController extends Controller
                 });
 
                 $data = $jemaatBaru->merge($jemaat);
+            } else if ($request->has('baru')) {
+                $jemaat = JemaatBaru::where('validasi', '!=', 'valid')->get();
+                $data = $jemaat;
             } else {
                 $data = Jemaat::all();
             }
@@ -727,12 +744,9 @@ class ApiController extends Controller
                             'photo' => $item->photo,
                             'tanggal_baptis' => $item->tanggal_baptis,
                             'golongan_darah' => $item->golongan_darah,
-                            'id_pendidikan' => $item->id_pendidikan,
-                            'nama_pendidikan' => $item->pendidikan ? $item->pendidikan->nama_pendidikan : null,
-                            'id_ilmu' => $item->id_ilmu,
-                            'bidang_ilmu' => $item->ilmu ? $item->ilmu->nama_ilmu : null,
-                            'id_pekerjaan' => $item->id_pekerjaan,
-                            'pekerjaan' => $item->pekerjaan ? $item->pekerjaan->pekerjaan : null,
+                            'pendidikan' => $item->pendidikan,
+                            'ilmu' => $item->ilmu,
+                            'pekerjaan' => $item->pekerjaan,
                             'instansi' => $item->instansi,
                             'penghasilan' => $item->penghasilan,
                             'gereja_baptis' => $item->gereja_baptis,
@@ -750,7 +764,7 @@ class ApiController extends Controller
     public function ApiGetJemaatById(Request $request, $id_jemaat)
     {
         // Retrieve the Jemaat record by ID
-        if($request->validasi == 'valid'){
+        if ($request->validasi == 'valid') {
             $jemaat = Jemaat::with(['wilayah', 'status', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi', 'pendidikan', 'ilmu', 'pekerjaan', 'pernikahan'])->find($id_jemaat);
         } else {
             $jemaat = JemaatBaru::with(['wilayah', 'status', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi', 'pendidikan', 'ilmu', 'pekerjaan', 'pernikahan'])->find($id_jemaat);
@@ -796,12 +810,9 @@ class ApiController extends Controller
             'photo_url' => $jemaat->photo_url,
             'tanggal_baptis' => $jemaat->tanggal_baptis,
             'golongan_darah' => $jemaat->golongan_darah ? $jemaat->golongan_darah : null,
-            'id_pendidikan' => $jemaat->id_pendidikan,
-            'pendidikan' => $jemaat->pendidikan ? $jemaat->pendidikan->nama_pendidikan : null,
-            'id_ilmu' => $jemaat->id_ilmu,
-            'bidang_ilmu' => $jemaat->ilmu ? $jemaat->ilmu->bidangilmu : null,
-            'id_pekerjaan' => $jemaat->id_pekerjaan,
-            'pekerjaan' => $jemaat->pekerjaan ? $jemaat->pekerjaan->pekerjaan : null,
+            'pendidikan' => $jemaat->pendidikan,
+            'ilmu' => $jemaat->ilmu,
+            'pekerjaan' => $jemaat->id_pekerjaan,
             'instansi' => $jemaat->instansi,
             'penghasilan' => $jemaat->penghasilan,
             'gereja_baptis' => $jemaat->gereja_baptis,
@@ -837,11 +848,14 @@ class ApiController extends Controller
                     })
                     ->toArray(),
             ];
-
             return response()->json($formattedData);
         } else {
-            // Mengambil semua data keluarga
-            $data = Keluarga::all();
+            if ($request->has('id_wilayah')) {
+                $data = Keluarga::where('id_wilayah', $request->id_wilayah)->get();
+            } else {
+                // Mengambil semua data keluarga
+                $data = Keluarga::all();
+            }
             $formattedData = [
                 'total' => $data->count(),
                 'totalNotFiltered' => Keluarga::count(),
@@ -917,7 +931,11 @@ class ApiController extends Controller
                             'sekolah' => $item->sekolah,
                             'tahun_lulus' => $item->tahun_lulus,
                             'keterangan' => $item->keterangan,
+                            'tanggal_mulai' => $item->tanggal_mulai,
+                            'tanggal_selesai' => $item->tanggal_selesai,
                             'ijazah' => $item->ijazah,
+                            'id_status' => $item->id_status,
+                            'keterangan_status' => $item->status ? $item->status->keterangan_status : null,
                         ];
                     })
                     ->toArray(),
@@ -939,7 +957,11 @@ class ApiController extends Controller
                             'sekolah' => $item->sekolah,
                             'tahun_lulus' => $item->tahun_lulus,
                             'keterangan' => $item->keterangan,
+                            'tanggal_mulai' => $item->tanggal_mulai,
+                            'tanggal_selesai' => $item->tanggal_selesai,
                             'ijazah' => $item->ijazah,
+                            'id_status' => $item->id_status,
+                            'keterangan_status' => $item->status ? $item->status->keterangan_status : null,
                         ];
                     })
                     ->toArray(),
@@ -1099,13 +1121,16 @@ class ApiController extends Controller
                         return [
                             'id_titipan' => $item->id_titipan,
                             'id_jemaat' => $item->id_jemaat,
-                            // 'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
-                            'nama_gereja' => $item->nama_gereja,
+                            'nama_gereja_asal' => $item->nama_gereja,
+                            'nama_gereja_tujuan' => $item->nama_gereja,
                             'nama_jemaat' => $item->nama_jemaat ? $item->nama_jemaat : Jemaat::where('id_jemaat', $item->id_jemaat)->first()->nama_jemaat,
+                            'tanggal_titipan' => $item->tanggal_titipan,
+                            'tanggal_selesai' => $item->tanggal_selesai,
                             'kelamin' => $item->kelamin,
                             'alamat_jemaat' => $item->alamat_jemaat,
                             'titipan' => $item->titipan,
                             'surat' => $item->surat,
+                            'status_titipan' => $item->status_titipan,
                             'berkas_url' => $item->surat ? Storage::url($item->surat) : null,
                         ];
                     })
@@ -1123,14 +1148,17 @@ class ApiController extends Controller
                         return [
                             'id_titipan' => $item->id_titipan,
                             'id_jemaat' => $item->id_jemaat,
-                            'id_wilayah' => $item->id_wilayah,
-                            // 'nama_wilayah' => $item->wilayah ? $item->wilayah->nama_wilayah : null,
-                            'nama_gereja' => $item->nama_gereja,
+                            'nama_gereja_asal' => $item->nama_gereja,
+                            'nama_gereja_tujuan' => $item->nama_gereja,
                             'nama_jemaat' => $item->nama_jemaat ? $item->nama_jemaat : Jemaat::where('id_jemaat', $item->id_jemaat)->first()->nama_jemaat,
+                            'tanggal_titipan' => $item->tanggal_titipan,
+                            'tanggal_selesai' => $item->tanggal_selesai,
                             'kelamin' => $item->kelamin,
                             'alamat_jemaat' => $item->alamat_jemaat,
                             'titipan' => $item->titipan,
                             'surat' => $item->surat,
+                            'status' => $item->status,
+                            'berkas_url' => $item->surat ? Storage::url($item->surat) : null,
                         ];
                     })
                     ->toArray(),
@@ -1389,6 +1417,7 @@ class ApiController extends Controller
                         return [
                             'id_masuk' => $item->id_masuk,
                             'id_wilayah' => $item->id_wilayah,
+                            'nama_masuk' => $item->nama_masuk,
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
@@ -1414,10 +1443,11 @@ class ApiController extends Controller
                         return [
                             'id_masuk' => $item->id_masuk,
                             'id_wilayah' => $item->id_wilayah,
+                            'nama_masuk' => $item->nama_masuk,
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
-                            'tanggal' => $item->tanggal,
+                            'tanggal_masuk' => $item->tanggal_masuk,
                             'surat' => $item->surat,
                         ];
                     })
@@ -1447,8 +1477,51 @@ class ApiController extends Controller
                             ->select('nama_pendeta')
                             ->first();
                         return [
+                            'status' => $item->status,
+                            'id_jemaat' => $item->id_jemaat,
                             'id_ba' => $item->id_ba,
                             'id_wilayah' => $item->id_wilayah,
+                            'alamat' => $item->alamat,
+                            'kelamin' => $item->kelamin,
+                            'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
+                            'id_pendeta' => $item->id_pendeta,
+                            'nama_pendeta' => $nama_pendeta ? $nama_pendeta->nama_pendeta : null,
+                            'nomor' => $item->nomor,
+                            'nama' => $item->nama,
+                            'tempat_lahir' => $item->tempat_lahir,
+                            'tanggal_lahir' => $item->tanggal_lahir,
+                            'ayah' => $item->ayah,
+                            'ibu' => $item->ibu,
+                            'tanggal_baptis' => $item->tanggal_baptis,
+                            'ketua_majelis' => $item->ketua_majelis,
+                            'sekretaris_majelis' => $item->sekretaris_majelis,
+                        ];
+                    })
+                    ->toArray(),
+            ];
+
+            return response()->json($formattedData);
+        } else if ($request->has('id_jemaat')) {
+            $data = BaptisAnak::where('id_jemaat', $request->id_jemaat)->get();
+
+            $formattedData = [
+                'total' => $data->count(),
+                'totalNotFiltered' => BaptisAnak::count(),
+                'rows' => $data
+                    ->map(function ($item) {
+                        $nama_wilayah = Wilayah::where('id_wilayah', $item->id_wilayah)
+                            ->select('nama_wilayah')
+                            ->first();
+                        $nama_pendeta = Pendeta::where('id_pendeta', $item->id_pendeta)
+                            ->select('nama_pendeta')
+                            ->first();
+                        return [
+                            'status' => $item->status,
+                            'id_jemaat' => $item->id_jemaat,
+                            'id_ba' => $item->id_ba,
+                            'id_wilayah' => $item->id_wilayah,
+                            'alamat' => $item->alamat,
+                            'kelamin' => $item->kelamin,
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'id_pendeta' => $item->id_pendeta,
                             'nama_pendeta' => $nama_pendeta ? $nama_pendeta->nama_pendeta : null,
@@ -1483,7 +1556,10 @@ class ApiController extends Controller
                             ->first();
                         return [
                             'id_ba' => $item->id_ba,
+                            'id_jemaat' => $item->id_jemaat,
                             'id_wilayah' => $item->id_wilayah,
+                            'alamat' => $item->alamat,
+                            'kelamin' => $item->kelamin,
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'id_pendeta' => $item->id_pendeta,
                             'nama_pendeta' => $nama_pendeta ? $nama_pendeta->nama_pendeta : null,
@@ -1525,8 +1601,12 @@ class ApiController extends Controller
                             ->select('nama_pendeta')
                             ->first();
                         return [
+                            'status' => $item->status,
+                            'id_jemaat' => $item->id_jemaat,
                             'id_bd' => $item->id_bd,
                             'id_wilayah' => $item->id_wilayah,
+                            'alamat' => $item->alamat,
+                            'kelamin' => $item->kelamin,
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'id_pendeta' => $item->id_pendeta,
                             'nama_pendeta' => $nama_pendeta ? $nama_pendeta->nama_pendeta : null,
@@ -1561,7 +1641,10 @@ class ApiController extends Controller
                             ->first();
                         return [
                             'id_bd' => $item->id_bd,
+                            'id_jemaat' => $item->id_jemaat,
                             'id_wilayah' => $item->id_wilayah,
+                            'alamat' => $item->alamat,
+                            'kelamin' => $item->kelamin,
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'id_pendeta' => $item->id_pendeta,
                             'nama_pendeta' => $nama_pendeta ? $nama_pendeta->nama_pendeta : null,
@@ -1603,8 +1686,12 @@ class ApiController extends Controller
                             ->select('nama_pendeta')
                             ->first();
                         return [
+                            'status' => $item->status,
+                            'id_jemaat' => $item->id_jemaat,
                             'id_sidi' => $item->id_sidi,
                             'id_wilayah' => $item->id_wilayah,
+                            'alamat' => $item->alamat,
+                            'kelamin' => $item->kelamin,
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'id_pendeta' => $item->id_pendeta,
                             'nama_pendeta' => $nama_pendeta ? $nama_pendeta->nama_pendeta : null,
@@ -1639,7 +1726,10 @@ class ApiController extends Controller
                             ->first();
                         return [
                             'id_sidi' => $item->id_sidi,
+                            'id_jemaat' => $item->id_jemaat,
                             'id_wilayah' => $item->id_wilayah,
+                            'alamat' => $item->alamat,
+                            'kelamin' => $item->kelamin,
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'id_pendeta' => $item->id_pendeta,
                             'nama_pendeta' => $nama_pendeta ? $nama_pendeta->nama_pendeta : null,
@@ -1733,6 +1823,7 @@ class ApiController extends Controller
             'role_user' => 'string|max:255|nullable',
             'new_role' => 'strng|max:255|nullable',
             'password' => 'required|string',
+            'id_wilayah' => 'integer|nullable',
         ]);
 
         if ($validatedData['role_user'] != null) {
@@ -1758,6 +1849,7 @@ class ApiController extends Controller
             'nama_user' => $validatedData['nama_user'],
             'id_role' => $validatedData['role_id'],
             'password' => Hash::make($validatedData['password']),
+            'id_wilayah' => $validatedData['id_wilayah'] ?? null,
         ]);
 
         return response()->json(
@@ -1898,29 +1990,28 @@ class ApiController extends Controller
 
         $data->tanggal_baptis = $request->tanggal_baptis;
         $data->golongan_darah = $request->golongan_darah;
-        $data->id_pendidikan = $request->id_pendidikan;
-        $data->id_ilmu = $request->id_ilmu;
-        $data->id_pekerjaan = $request->id_pekerjaan;
+        $data->pendidikan = $request->pendidikan;
+        $data->ilmu = $request->ilmu;
+        $data->pekerjaan = $request->pekerjaan;
         $data->instansi = $request->instansi;
         $data->penghasilan = $request->penghasilan;
         $data->gereja_baptis = $request->gereja_baptis;
         $data->alat_transportasi = $request->alat_transportasi;
         $data->save();
 
-        return response()->json($data);
+        $jemaat = Jemaat::where('id_jemaat', $data->id_jemaat)->first();
+
+        return response()->json($jemaat);
     }
     // POST JEMAAT END
 
     // POST JEMAAT DAERAH
     public function ApiPostJemaatDaerah(Request $request)
     {
-        $nama_wilayah = Role::where('id_role', $request->id_role)->first()->nama_role;
-        $parseWilayahString = preg_replace('/Admin\s*/', '', $nama_wilayah);
-        $idWilayah = Wilayah::where('nama_wilayah', $parseWilayahString)->first()->id_wilayah;
 
         $data = new JemaatBaru();
         $data->validasi = "tidak valid";
-        $data->id_wilayah = $idWilayah;
+        $data->id_wilayah = $request->id_wilayah;
         $data->id_status = $request->id_status;
         $data->stamboek = $request->stamboek;
         $data->nama_jemaat = $request->nama_jemaat;
@@ -1947,9 +2038,9 @@ class ApiController extends Controller
 
         $data->tanggal_baptis = $request->tanggal_baptis;
         $data->golongan_darah = $request->golongan_darah;
-        $data->id_pendidikan = $request->id_pendidikan;
-        $data->id_ilmu = $request->id_ilmu;
-        $data->id_pekerjaan = $request->id_pekerjaan;
+        $data->pendidikan = $request->pendidikan;
+        $data->ilmu = $request->ilmu;
+        $data->pekerjaan = $request->pekerjaan;
         $data->instansi = $request->instansi;
         $data->penghasilan = $request->penghasilan;
         $data->gereja_baptis = $request->gereja_baptis;
@@ -1959,6 +2050,46 @@ class ApiController extends Controller
         return response()->json($data);
     }
     // POST JEMAAT DAERAH END
+
+    // POST VALIDASI JEMAAT
+    public function ApiPostValidasiJemaat(Request $request)
+    {
+        $data = JemaatBaru::where('id_jemaat', $request->id_jemaat)->first();
+        $jemaat = new Jemaat();
+        $jemaat->id_wilayah = $data->id_wilayah;
+        $jemaat->id_status = $data->id_status;
+        $jemaat->stamboek = $data->stamboek;
+        $jemaat->nama_jemaat = $data->nama_jemaat;
+        $jemaat->tempat_lahir = $data->tempat_lahir;
+        $jemaat->tanggal_lahir = $data->tanggal_lahir;
+        $jemaat->kelamin = $data->kelamin;
+        $jemaat->alamat_jemaat = $data->alamat_jemaat;
+        $jemaat->id_kelurahan = $data->id_kelurahan;
+        $jemaat->id_kecamatan = $data->id_kecamatan;
+        $jemaat->id_kabupaten = $data->id_kabupaten;
+        $jemaat->id_provinsi = $data->id_provinsi;
+        $jemaat->kodepos = $data->kodepos;
+        $jemaat->telepon = $data->telepon;
+        $jemaat->hp = $data->hp;
+        $jemaat->email = $data->email;
+        $jemaat->nik = $data->nik;
+        $jemaat->no_kk = $data->no_kk;
+        $jemaat->photo = $data->photo;
+        $jemaat->tanggal_baptis = $data->tanggal_baptis;
+        $jemaat->golongan_darah = $data->golongan_darah;
+        $jemaat->pendidikan = $data->pendidikan;
+        $jemaat->ilmu = $data->ilmu;
+        $jemaat->pekerjaan = $data->pekerjaan;
+        $jemaat->instansi = $data->instansi;
+        $jemaat->penghasilan = $data->penghasilan;
+        $jemaat->gereja_baptis = $data->gereja_baptis;
+        $jemaat->alat_transportasi = $data->alat_transportasi;
+        $jemaat->save();
+
+        $data->delete();
+
+        return response()->json($data);
+    }
 
     // POST KELUARGA
     public function ApiPostKeluarga(Request $request)
@@ -2007,6 +2138,9 @@ class ApiController extends Controller
         $data->jenjang = $request->jenjang;
         $data->sekolah = $request->sekolah;
         $data->tahun_lulus = $request->tahun_lulus;
+        $data->tanggal_mulai = $request->tanggal_mulai;
+        $data->tanggal_selesai = $request->tanggal_selesai;
+        $data->id_status = $request->id_status;
         $data->keterangan = $request->keterangan;
         $data->ijazah = $request->ijazah;
         $data->save();
@@ -2075,7 +2209,6 @@ class ApiController extends Controller
 
         $data->save();
 
-        $data->save();
 
         return response()->json($data);
     }
@@ -2104,10 +2237,12 @@ class ApiController extends Controller
         } else {
             $data->nama_jemaat = $request->nama_jemaat;
         }
-        $data->nama_gereja = $namaGereja;
+        $data->nama_gereja_asal = $namaGereja;
+        $data->nama_gereja_tujuan = $namaGereja;
         $data->kelamin = $request->kelamin;
         $data->alamat_jemaat = $request->alamat_jemaat;
         $data->titipan = $request->titipan;
+        $data->status_titipan = $request->status_titipan;
 
         if ($request->hasFile('surat')) {
             $file = $request->file('surat');
@@ -2235,6 +2370,9 @@ class ApiController extends Controller
         $data->id_keluar = $request->id_keluar;
         $data->id_jemaat = $request->id_jemaat;
         $data->keterangan = $request->keterangan;
+        $jemaat = Jemaat::find($request->id_jemaat);
+        $jemaat->id_status = '3';
+        $jemaat->save();
         $data->save();
 
         return response()->json($data);
@@ -2244,28 +2382,101 @@ class ApiController extends Controller
     // POST ATESTASI MASUK
     public function ApiPostAtestasiMasuk(Request $request)
     {
+        // Simpan data ke tabel Jemaat
+        $jemaat = new Jemaat();
+        $jemaat->id_wilayah = $request->id_wilayah;
+        $jemaat->id_status = $request->id_status;
+        $jemaat->nama_jemaat = $request->nama_jemaat; // Data dari form untuk Jemaat
+        $jemaat->tempat_lahir = $request->tempat_lahir;
+        $jemaat->tanggal_lahir = $request->tanggal_lahir;
+        $jemaat->kelamin = $request->kelamin;
+        $jemaat->alamat_jemaat = $request->alamat_jemaat;
+        $jemaat->id_kelurahan = $request->id_kelurahan;
+        $jemaat->id_kecamatan = $request->id_kecamatan;
+        $jemaat->id_kabupaten = $request->id_kabupaten;
+        $jemaat->id_provinsi = $request->id_provinsi;
+        $jemaat->kodepos = $request->kodepos;
+        $jemaat->telepon = $request->telepon;
+        $jemaat->hp = $request->hp;
+        $jemaat->email = $request->email;
+        $jemaat->nik = $request->nik;
+        $jemaat->no_kk = $request->no_kk;
+
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $path = $file->store('photo', 'public');
+            $jemaat->photo = $path;
+        }
+
+        $jemaat->tanggal_baptis = $request->tanggal_baptis;
+        $jemaat->golongan_darah = $request->golongan_darah;
+        $jemaat->id_pendidikan = $request->id_pendidikan;
+        $jemaat->id_ilmu = $request->id_ilmu;
+        $jemaat->id_pekerjaan = $request->id_pekerjaan;
+        $jemaat->instansi = $request->instansi;
+        $jemaat->penghasilan = $request->penghasilan;
+        $jemaat->gereja_baptis = $request->gereja_baptis;
+        $jemaat->alat_transportasi = $request->alat_transportasi;
+        $jemaat->save(); // Simpan data Jemaat
+
+        // Simpan data ke tabel AtestasiMasuk
+
+        $namaGereja = '';
+        if ($request->nama_gereja == null) {
+            $namaGereja = $request->new_gereja;
+        } else {
+            $namaGereja = $request->nama_gereja;
+        }
+
         $data = new AtestasiMasuk();
+        $data->id_jemaat = $jemaat->id_jemaat;
         $data->id_wilayah = $request->id_wilayah;
-        $data->nama_gereja = $request->nama_gereja;
+        $data->nama_masuk = $request->nama_masuk;
+        $data->nama_gereja = $request->$namaGereja;
         $data->no_surat = $request->no_surat;
-        $data->tanggal = $request->tanggal;
+        $data->tanggal_masuk = $request->tanggal_masuk;
         $data->surat = $request->surat;
-        $data->save();
+        $data->save(); // Simpan data AtestasiMasuk
 
         return response()->json($data);
     }
+
+
     // POST ATESTASI MASUK END
 
     // POST BAPTIS ANAK
     public function ApiPostBaptisAnak(Request $request)
     {
         $data = new BaptisAnak();
+        if ($request->nama == 'add-new-nama') {
+            $jemaat = new Jemaat();
+            $jemaat->nama_jemaat = $request->new->name;
+            $jemaat->tempat_lahir = $request->tempat_lahir;
+            $jemaat->tanggal_lahir = $request->tanggal_lahir;
+            $jemaat->kelamin = $request->kelamin;
+            $jemaat->alamat_jemaat = $request->alamat;
+            $jemaat->tanggal_baptis = $request->tanggal_baptis;
+            $jemaat->id_wilayah = $request->id_wilayah;
+            $jemaat->save();
+            $data->id_jemaat = $jemaat->id_jemaat;
+            $data->alamat = $request->alamat_jemaat;
+            $data->kelamin = $request->kelamin;
+            $data->nama = $request->new_name;
+            $data->tempat_lahir = $request->tempat_lahir;
+            $data->tanggal_lahir = $request->tanggal_lahir;
+        } else {
+            $nama = Jemaat::find($request->nama);
+            $data->id_jemaat = $request->nama;
+            $data->alamat = $nama->alamat;
+            $data->kelamin = $nama->kelamin;
+            $data->nama = $nama->nama_jemaat;
+            $data->tempat_lahir = $nama->tempat_lahir;
+            $data->tanggal_lahir = $nama->tanggal_lahir;
+        }
+
         $data->id_wilayah = $request->id_wilayah;
         $data->id_pendeta = $request->id_pendeta;
         $data->nomor = $request->nomor;
-        $data->nama = $request->nama;
-        $data->tempat_lahir = $request->tempat_lahir;
-        $data->tanggal_lahir = $request->tanggal_lahir;
         $data->ayah = $request->ayah;
         $data->ibu = $request->ibu;
         $data->tanggal_baptis = $request->tanggal_baptis;
@@ -2286,9 +2497,22 @@ class ApiController extends Controller
             ]);
         }
 
+        $jemaat = new Jemaat();
+        $jemaat->nama_jemaat = $request->nama;
+        $jemaat->tempat_lahir = $request->tempat_lahir;
+        $jemaat->tanggal_lahir = $request->tanggal_lahir;
+        $jemaat->kelamin = $request->kelamin;
+        $jemaat->alamat_jemaat = $request->alamat;
+        $jemaat->tanggal_baptis = $request->tanggal_baptis;
+        $jemaat->id_wilayah = $request->id_wilayah;
+        $jemaat->save();
+
         $data = new BaptisDewasa();
+        $data->id_jemaat = $jemaat->id_jemaat;
         $data->id_wilayah = $request->id_wilayah;
         $data->id_pendeta = $request->id_pendeta;
+        $data->alamat = $request->alamat;
+        $data->kelamin = $request->kelamin;
         $data->nomor = $request->nomor;
         $data->nama = $request->nama;
         $data->tempat_lahir = $request->tempat_lahir;
@@ -2313,9 +2537,22 @@ class ApiController extends Controller
             ]);
         }
 
+        $jemaat = new Jemaat();
+        $jemaat->nama_jemaat = $request->nama;
+        $jemaat->tempat_lahir = $request->tempat_lahir;
+        $jemaat->tanggal_lahir = $request->tanggal_lahir;
+        $jemaat->kelamin = $request->kelamin;
+        $jemaat->alamat_jemaat = $request->alamat;
+        $jemaat->tanggal_baptis = $request->tanggal_baptis;
+        $jemaat->id_wilayah = $request->id_wilayah;
+        $jemaat->save();
+
         $data = new BaptisSidi();
+        $data->id_jemaat = $jemaat->id_jemaat;
         $data->id_sidi = $request->id_sidi;
         $data->id_wilayah = $request->id_wilayah;
+        $data->alamat = $request->alamat;
+        $data->kelamin = $request->kelamin;
         $data->id_pendeta = $request->id_pendeta;
         $data->nomor = $request->nomor;
         $data->nama = $request->nama;
@@ -2403,6 +2640,7 @@ class ApiController extends Controller
             'role_user' => 'string|max:255|nullable',
             'new_role' => 'strng|max:255|nullable',
             'password' => 'string|nullable',
+            'id_wilayah' => 'integer|nullable',
         ]);
 
         $user = User::find($validatedData['old_username']);
@@ -2431,6 +2669,7 @@ class ApiController extends Controller
         if (isset($validatedData['password'])) {
             $user->password = Hash::make($validatedData['password']);
         }
+        $user->id_wilayah = $validatedData['id_wilayah'];
 
         $user->save();
 
@@ -2503,9 +2742,9 @@ class ApiController extends Controller
 
         $data->tanggal_baptis = $request->tanggal_baptis;
         $data->golongan_darah = $request->golongan_darah;
-        $data->id_pendidikan = $request->id_pendidikan;
-        $data->id_ilmu = $request->id_ilmu;
-        $data->id_pekerjaan = $request->id_pekerjaan;
+        $data->pendidikan = $request->pendidikan;
+        $data->ilmu = $request->ilmu;
+        $data->pekerjaan = $request->pekerjaan;
         $data->instansi = $request->instansi;
         $data->penghasilan = $request->penghasilan;
         $data->gereja_baptis = $request->gereja_baptis;
@@ -2519,7 +2758,7 @@ class ApiController extends Controller
     // UPDATE JEMAAT DAERAH
     public function ApiUpdateJemaatDaerah(Request $request)
     {
-        if($request->validasi == "tidak valid"){
+        if ($request->validasi == "tidak valid") {
             $data = JemaatBaru::find($request->id_jemaat);
         } else {
             $data = Jemaat::find($request->id_jemaat);
@@ -2555,9 +2794,9 @@ class ApiController extends Controller
 
         $data->tanggal_baptis = $request->tanggal_baptis;
         $data->golongan_darah = $request->golongan_darah;
-        $data->id_pendidikan = $request->id_pendidikan;
-        $data->id_ilmu = $request->id_ilmu;
-        $data->id_pekerjaan = $request->id_pekerjaan;
+        $data->pendidikan = $request->pendidikan;
+        $data->ilmu = $request->ilmu;
+        $data->pekerjaan = $request->pekerjaan;
         $data->instansi = $request->instansi;
         $data->penghasilan = $request->penghasilan;
         $data->gereja_baptis = $request->gereja_baptis;
@@ -2617,8 +2856,19 @@ class ApiController extends Controller
         $data->jenjang = $request->jenjang;
         $data->sekolah = $request->sekolah;
         $data->tahun_lulus = $request->tahun_lulus;
+        $data->tanggal_mulai = $request->tanggal_mulai;
+        $data->tanggal_selesai = $request->tanggal_selesai;
         $data->keterangan = $request->keterangan;
-        $data->ijazah = $request->ijazah;
+        $data->id_status = $request->id_status;
+        if ($request->hasFile('ijazah')) {
+            if ($data->ijazah && Storage::disk('public')->exists($data->ijazah)) {
+                Storage::disk('public')->delete($data->ijazah);
+            }
+
+            $file = $request->file('ijazah');
+            $path = $file->store('ijazah', 'public');
+            $data->ijazah = $path;
+        }
         $data->save();
 
         return response()->json($data);
@@ -2815,6 +3065,7 @@ class ApiController extends Controller
     public function ApiUpdateAtestasiMasuk(Request $request)
     {
         $data = AtestasiMasuk::find($request->old_id_masuk);
+        $jemaat = Jemaat::find($data->id_jemaat);
 
         $namaGereja = '';
 
@@ -2839,13 +3090,35 @@ class ApiController extends Controller
     public function ApiUpdateBaptisAnak(Request $request)
     {
         $data = BaptisAnak::find($request->old_id_ba);
+        if ($request->nama == 'add-new-nama') {
+            $jemaat = new Jemaat();
+            $jemaat->nama_jemaat = $request->new_name;
+            $jemaat->tempat_lahir = $request->tempat_lahir;
+            $jemaat->tanggal_lahir = $request->tanggal_lahir;
+            $jemaat->kelamin = $request->kelamin;
+            $jemaat->alamat_jemaat = $request->alamat;
+            $jemaat->tanggal_baptis = $request->tanggal_baptis;
+            $jemaat->id_wilayah = $request->id_wilayah;
+            $jemaat->save();
+            $data->id_jemaat = $jemaat->id_jemaat;
+            $data->alamat = $request->alamat_jemaat;
+            $data->kelamin = $request->kelamin;
+            $data->nama = $request->new_name;
+            $data->tempat_lahir = $request->tempat_lahir;
+            $data->tanggal_lahir = $request->tanggal_lahir;
+        } else {
+            $nama = Jemaat::find($request->nama);
+            $data->id_jemaat = $request->nama;
+            $data->alamat = $nama->alamat;
+            $data->kelamin = $nama->kelamin;
+            $data->nama = $nama->nama_jemaat;
+            $data->tempat_lahir = $nama->tempat_lahir;
+            $data->tanggal_lahir = $nama->tanggal_lahir;
+        }
 
         $data->id_wilayah = $request->id_wilayah;
         $data->id_pendeta = $request->id_pendeta;
         $data->nomor = $request->nomor;
-        $data->nama = $request->nama;
-        $data->tempat_lahir = $request->tempat_lahir;
-        $data->tanggal_lahir = $request->tanggal_lahir;
         $data->ayah = $request->ayah;
         $data->ibu = $request->ibu;
         $data->tanggal_baptis = $request->tanggal_baptis;
@@ -2860,8 +3133,20 @@ class ApiController extends Controller
     // UPDATE BAPTIS DEWASA START
     public function ApiUpdateBaptisDewasa(Request $request)
     {
-        $data = BaptisDewasa::find($request->old_id_bd);
+        $jemaat = Jemaat::find($request->id_jemaat);
+        $jemaat->nama_jemaat = $request->nama;
+        $jemaat->tempat_lahir = $request->tempat_lahir;
+        $jemaat->tanggal_lahir = $request->tanggal_lahir;
+        $jemaat->kelamin = $request->kelamin;
+        $jemaat->alamat_jemaat = $request->alamat;
+        $jemaat->tanggal_baptis = $request->tanggal_baptis;
+        $jemaat->id_wilayah = $request->id_wilayah;
+        $jemaat->save();
 
+        $data = BaptisDewasa::find($request->old_id_bd);
+        $data->id_status = $request->id_status;
+        $data->alamat = $request->alamat;
+        $data->kelamin = $request->kelamin;
         $data->id_wilayah = $request->id_wilayah;
         $data->id_pendeta = $request->id_pendeta;
         $data->nomor = $request->nomor;
@@ -2882,8 +3167,20 @@ class ApiController extends Controller
     // UPDATE BAPTIS SIDI START
     public function ApiUpdateBaptisSidi(Request $request)
     {
-        $data = BaptisSidi::find($request->old_id_sidi);
+        $jemaat = Jemaat::find($request->id_jemaat);
+        $jemaat->nama_jemaat = $request->nama;
+        $jemaat->tempat_lahir = $request->tempat_lahir;
+        $jemaat->tanggal_lahir = $request->tanggal_lahir;
+        $jemaat->kelamin = $request->kelamin;
+        $jemaat->alamat_jemaat = $request->alamat;
+        $jemaat->tanggal_baptis = $request->tanggal_baptis;
+        $jemaat->id_wilayah = $request->id_wilayah;
+        $jemaat->save();
 
+        $data = BaptisSidi::find($request->old_id_sidi);
+        $data->id_status = $request->id_status;
+        $data->alamat = $request->alamat;
+        $data->kelamin = $request->kelamin;
         $data->id_wilayah = $request->id_wilayah;
         $data->id_pendeta = $request->id_pendeta;
         $data->nomor = $request->nomor;
@@ -3124,8 +3421,8 @@ class ApiController extends Controller
 
     public function ApiDeleteJemaat(Request $request)
     {
-        if($request->has('validasi')){
-            if($request->validasi == "tidak valid"){
+        if ($request->has('validasi')) {
+            if ($request->validasi == "tidak valid") {
                 $data = JemaatBaru::find($request->id_jemaat);
             } else {
                 $data = Jemaat::find($request->id_jemaat);
@@ -3286,6 +3583,10 @@ class ApiController extends Controller
     {
         $data = AtestasiKeluarDtl::find($request->id_keluar_dtl);
         if ($data) {
+            $jemaat = Jemaat::find($data->id_jemaat);
+            $jemaat->id_status = '1';
+            $jemaat->save();
+
             $data->delete();
             return response()->json([
                 'message' => 'Atestasi keluar detail deleted successfully',

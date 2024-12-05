@@ -71,6 +71,7 @@ Route::post('/post/kelurahan', [ApiController::class, 'ApiPostKelurahan'])-> nam
     //Data
 Route::post('/post/jemaat', [ApiController::class, 'ApiPostJemaat'])-> name('api.post.jemaat');
 Route::post('/post/jemaat-daerah', [ApiController::class, 'ApiPostJemaatDaerah'])-> name('api.post.daerah.jemaat');
+Route::post('/post/jemaat/validasi', [ApiController::class, 'ApiPostValidasiJemaat'])-> name('api.post.validasi.jemaat');
 Route::post('/post/keluarga', [ApiController::class, 'ApiPostKeluarga'])-> name('api.post.keluarga');
 Route::post('/post/anggotakeluarga', [ApiController::class, 'ApiPostAnggotaKeluarga'])-> name('api.post.anggotakeluarga');
 Route::post('/post/majelis', [ApiController::class, 'ApiPostMajelis'])-> name('api.post.majelis');

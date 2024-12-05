@@ -1,6 +1,6 @@
 @extends('layouts.admin-main-data')
 
-@section('title', 'Anggota Jemaat')
+@section('title', 'Detail Jemaat')
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -43,6 +43,14 @@
                     <td>{{ $jemaat->nama_jemaat ?? '-' }}</td>
                 </tr>
                 <tr>
+                    <th>Wilayah</th>
+                    <td>{{ $jemaat->wilayah['nama_wilayah'] ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Jenis Kelamin</th>
+                    <td>{{ $jemaat->kelamin ?? '-' }}</td>
+                </tr>
+                <tr>
                     <th>Tempat Lahir</th>
                     <td>{{ $jemaat->tempat_lahir ?? '-' }}</td>
                 </tr>
@@ -51,36 +59,28 @@
                     <td>{{ $jemaat->tanggal_lahir ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Jenis Kelamin</th>
-                    <td>{{ $jemaat->kelamin ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <th>Golongan Darah</th>
-                    <td>{{ $jemaat->golongan_darah ?? '-' }}</td>
-                </tr>
-                <tr>
                     <th>Alamat</th>
                     <td>{{ $jemaat->alamat_jemaat ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Kelurahan</th>
-                    <td>{{ $jemaat->nama_kelurahan ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <th>Kecamatan</th>
-                    <td>{{ $jemaat->nama_kecamatan ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <th>Kabupaten</th>
-                    <td>{{ $jemaat->nama_kabupaten ?? '-' }}</td>
+                    <th>Kodepos</th>
+                    <td>{{ $jemaat->kodepos ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Provinsi</th>
                     <td>{{ $jemaat->nama_provinsi ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Kodepos</th>
-                    <td>{{ $jemaat->kodepos ?? '-' }}</td>
+                    <th>Kabupaten</th>
+                    <td>{{ $jemaat->nama_kabupaten ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Kecamatan</th>
+                    <td>{{ $jemaat->nama_kecamatan ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Kelurahan</th>
+                    <td>{{ $jemaat->nama_kelurahan ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>No. Telepon</th>
@@ -103,16 +103,16 @@
                     <td>{{ $jemaat->no_kk ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Wilayah</th>
-                    <td>{{ $jemaat->wilayah['nama_wilayah'] ?? '-' }}</td>
+                    <th>Golongan Darah</th>
+                    <td>{{ $jemaat->golongan_darah ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Status</th>
-                    <td>{{ $jemaat->status['keterangan_status'] ?? '-' }}</td>
+                    <th>Pendidikan</th>
+                    <td>{{ $jemaat->pendidikan ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Gereja Baptis</th>
-                    <td>{{ $jemaat->gereja_baptis ?? '-' }}</td>
+                    <th>Bidang Ilmu</th>
+                    <td>{{ $jemaat->ilmu ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Instansi</th>
@@ -120,7 +120,7 @@
                 </tr>
                 <tr>
                     <th>Pekerjaan</th>
-                    <td>{{ $jemaat->id_pekerjaan ?? '-' }}</td>
+                    <td>{{ $jemaat->pekerjaan ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Penghasilan</th>
@@ -128,20 +128,28 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>Alat Transportasi</th>
+                    <td>{{ $jemaat->alat_transportasi ?? '-' }}</td>
+                </tr>
+                <tr>
                     <th>Stamboek</th>
                     <td>{{ $jemaat->stamboek ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <th>Gereja Baptis</th>
+                    <td>{{ $jemaat->gereja_baptis ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Tanggal Baptis</th>
                     <td>{{ $jemaat->tanggal_baptis ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <th>Alat Transportasi</th>
-                    <td>{{ $jemaat->alat_transportasi ?? '-' }}</td>
+                    <th>Status</th>
+                    <td>{{ $jemaat->status['keterangan_status'] ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>
-                        Foto <br>
+                        Photo <br>
                         @if ($jemaat->photo_url !== null)
                             <a href="{{ $jemaat->photo_url }}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat
                                 Detail Foto</a>
@@ -184,128 +192,167 @@
                     success: function(data) {
                         var old_nama_jemaat = data.nama_jemaat;
                         Swal.fire({
-                            title: 'Tambah Jemaat Baru',
+                            title: 'Edit Jemaat ',
                             html: `
                                 <form id="addJemaatForm">
-                                    <div class="form-group">
-                                        <label for="nama_jemaat">Nama Jemaat *</label>
-                                        <input type="text" id="nama_jemaat" class="form-control" placeholder="Masukkan Nama Jemaat" required value="${data.nama_jemaat}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="id_wilayah">Nama Wilayah *</label>
-                                        <select id="id_wilayah" class="form-control" required>
-                                            <option value="">Pilih Wilayah</option>
-                                            <!-- AJAX -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="kelamin">Kelamin *</label>
-                                        <select id="kelamin" class="form-control" required>
-                                            <option value="" disabled selected>Pilih Kelamin</option>
-                                            <option value="Laki-laki">Laki-laki</option>
-                                            <option value="Perempuan">Perempuan</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tanggal_lahir">Tanggal Lahir *</label>
-                                        <input type="date" id="tanggal_lahir" class="form-control" value="${data.tanggal_lahir ?? ''}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="alamat_jemaat">Alamat *</label>
-                                        <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" value="${data.alamat_jemaat ?? ''}" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="id_provinsi">Provinsi</label>
-                                        <select id="id_provinsi" class="form-control">
-                                            <option value="">Pilih Nama Provinsi</option>
-                                                    <!-- AJAX -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group kabupaten_container" style="display: none;">
-                                        <label for="id_kabupaten">Kabupaten</label>
-                                        <select id="id_kabupaten" class="form-control">
-                                            <option value="">Pilih Nama Kabupaten</option>
-                                                    <!-- AJAX -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group kecamatan_container" style="display: none;">
-                                        <label for="id_kecamatan">Kecamatan</label>
-                                        <select id="id_kecamatan" class="form-control">
-                                            <option value="">Pilih Nama Kecamatan</option>
-                                                    <!-- AJAX -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group kelurahan_container" style="display: none;">
-                                        <label for="id_kelurahan">Kelurahan</label>
-                                        <select id="id_kelurahan" class="form-control">
-                                            <option value="">Pilih Nama Kelurahan</option>
-                                                    <!-- AJAX -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="telepon">Telepon</label>
-                                        <input type="tel" id="telepon" class="form-control" placeholder="Masukkan Nomor Telepon" value="${data.telepon ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="hp">HP</label>
-                                        <input type="tel" id="hp" class="form-control" placeholder="Masukkan Nomor HP" value="${data.hp ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" id="email" class="form-control" placeholder="Masukkan Email" value="${data.email ?? ''}"">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="nik">NIK</label>
-                                        <input type="text" id="nik" class="form-control" placeholder="Masukkan NIK" value="${data.nik ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="no_kk">Nomor KK</label>
-                                        <input type="text" id="no_kk" class="form-control" placeholder="Masukkan Nomor KK" value="${data.no_kk ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="stamboek">Stamboek</label>
-                                        <input type="text" id="stamboek" class="form-control" placeholder="Masukkan Stamboek" value="${data.stamboek ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tempat_lahir">Tempat Lahir</label>
-                                        <input type="text" id="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir" value="${data.tempat_lahir ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tanggal_baptis">Tanggal Baptis</label>
-                                        <input type="date" id="tanggal_baptis" class="form-control" value="${data.tanggal_baptis ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="golongan_darah">Golongan Darah</label>
-                                        <select id="golongan_darah" class="form-control">
-                                            <option value="-"selected>Pilih Golongan Darah</option>
-                                            <option value="A">A</option>
-                                            <option value="B">B</option>
-                                            <option value="AB">AB</option>
-                                            <option value="O">O</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="instansi">Instansi</label>
-                                        <input type="text" id="instansi" class="form-control" placeholder="Masukkan Instansi" value="${data.instansi ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="penghasilan">Penghasilan</label>
-                                        <input type="number" id="penghasilan" class="form-control" placeholder="Masukkan Penghasilan" min="0" step="any" value="${data.penghasilan ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="gereja_baptis">Gereja Baptis</label>
-                                        <input type="text" id="gereja_baptis" class="form-control" placeholder="Masukkan Gereja Baptis" value="${data.gereja_baptis ?? ''}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="alat_transportasi">Alat Transportasi</label>
-                                        <input type="text" id="alat_transportasi" class="form-control" placeholder="Masukkan Alat Transportasi" value=${data.alat_transportasi ?? ''}>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="photo">Foto</label>
-                                        ${data.photo_url ? `<a href="${data.photo_url}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat Foto yang Sudah Ada</a>` : ''}
-                                        <input type="file" id="photo" class="form-control" accept="image/jpeg, image/png">
-                                    </div>
-                                </form>
+                                <div class="form-group">
+                                    <label for="nama_jemaat">Nama Jemaat *</label>
+                                    <input type="text" id="nama_jemaat" class="form-control" placeholder="Masukkan Nama Jemaat" required value="${data.nama_jemaat}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_wilayah">Nama Wilayah *</label>
+                                    <select id="id_wilayah" class="form-control" required>
+                                        <option value="">Pilih Wilayah</option>
+                                        <!-- AJAX -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="kelamin">Jenis Kelamin *</label>
+                                    <select id="kelamin" class="form-control" required>
+                                        <option value="" disabled selected>Pilih Kelamin</option>
+                                        <option value="Laki-laki">Laki-laki</option>
+                                        <option value="Perempuan">Perempuan</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tempat_lahir">Tempat Lahir</label>
+                                    <input type="text" id="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir" value="${data.tempat_lahir ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tanggal_lahir">Tanggal Lahir *</label>
+                                    <input type="date" id="tanggal_lahir" class="form-control" value="${data.tanggal_lahir ?? ''}" required>
+                                </div>
+                                 <div class="form-group">
+                                    <label for="alamat_jemaat">Alamat</label>
+                                    <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" value="${data.alamat_jemaat ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="kodepos">Kode pos</label>
+                                    <input type="text" id="kodepos" class="form-control" placeholder="Masukkan Kodepos" value="${data.kodepos ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="alamat_jemaat">Alamat</label>
+                                    <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" value="${data.alamat_jemaat ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_provinsi">Provinsi</label>
+                                    <select id="id_provinsi" class="form-control">
+                                        <option value="">Pilih Nama Provinsi</option>
+                                        <!-- AJAX -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_kabupaten">Kabupaten</label>
+                                    <select id="id_kabupaten" class="form-control">
+                                        <option value="">Pilih Nama Kabupaten</option>
+                                        <!-- AJAX -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_kecamatan">Kecamatan</label>
+                                    <select id="id_kecamatan" class="form-control">
+                                        <option value="">Pilih Nama Kecamatan</option>
+                                        <!-- AJAX -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="id_kelurahan">Kelurahan</label>
+                                    <select id="id_kelurahan" class="form-control">
+                                        <option value="">Pilih Nama Kelurahan</option>
+                                        <!-- AJAX -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="telepon">Telepon</label>
+                                    <input type="tel" id="telepon" class="form-control" placeholder="Masukkan Nomor Telepon" value="${data.telepon ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="hp">HP</label>
+                                    <input type="tel" id="hp" class="form-control" placeholder="Masukkan Nomor HP" value="${data.hp ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" class="form-control" placeholder="Masukkan Email" value="${data.email ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="nik">NIK</label>
+                                    <input type="text" id="nik" class="form-control" placeholder="Masukkan NIK" value="${data.nik ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="no_kk">Nomor KK</label>
+                                    <input type="text" id="no_kk" class="form-control" placeholder="Masukkan Nomor KK" value="${data.no_kk ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="golongan_darah">Golongan Darah</label>
+                                    <select id="golongan_darah" class="form-control">
+                                        <option value="-" selected>Pilih Golongan Darah</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="AB">AB</option>
+                                        <option value="O">O</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pendidikan">Pendidikan Terakhir</label>
+                                    <select id="pendidikan" class="form-control">
+                                        <option value="-"selected>Pilih Pendidikan</option>
+                                        <option value="SD">SD</option>
+                                        <option value="SMP">SMP</option>
+                                        <option value="SMA">SMA</option>
+                                        <option value="D1">D1</option>
+                                        <option value="D2">D2</option>
+                                        <option value="D3">D3</option>
+                                        <option value="S1">S1</option>
+                                        <option value="S2">S2</option>
+                                        <option value="S3">S3</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ilmu">Bidang Ilmu</label>
+                                    <input type="text" id="ilmu" class="form-control" placeholder="Masukkan Bidang Ilmu" value="${data.ilmu ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="instansi">Instansi</label>
+                                    <input type="text" id="instansi" class="form-control" placeholder="Masukkan Instansi" value="${data.instansi ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pekerjaan">Pekerjaan</label>
+                                    <input type="text" id="pekerjaan" class="form-control" placeholder="Masukkan Pekerjaan" value="${data.pekerjaan ?? ''}>
+                                </div>
+                                <div class="form-group">
+                                    <label for="penghasilan">Penghasilan</label>
+                                    <input type="number" id="penghasilan" class="form-control" placeholder="Masukkan Penghasilan" min="0" step="any" value="${data.penghasilan ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="alat_transportasi">Alat Transportasi</label>
+                                    <input type="text" id="alat_transportasi" class="form-control" placeholder="Masukkan Alat Transportasi" value="${data.alat_transportasi ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="stamboek">Stamboek</label>
+                                    <input type="text" id="stamboek" class="form-control" placeholder="Masukkan Stamboek" value="${data.stamboek ?? ''}">
+                                </div>
+                                 <div class="form-group">
+                                    <label for="gereja_baptis">Gereja Baptis</label>
+                                    <input type="text" id="gereja_baptis" class="form-control" placeholder="Masukkan Gereja Baptis" value="${data.gereja_baptis ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="tanggal_baptis">Tanggal Baptis</label>
+                                    <input type="date" id="tanggal_baptis" class="form-control" value="${data.tanggal_baptis ?? ''}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="keterangan_status">Status Jemaat *</label>
+                                    <select id="keterangan_status" class="form-control">
+                                        <option value="">Pilih status</option>
+                                        <!-- AJAX -->
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="photo">Foto</label>
+                                    ${data.photo_url ? `<a href="${data.photo_url}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat Foto yang Sudah Ada</a>` : ''}
+                                    <input type="file" id="photo" class="form-control" accept="image/jpeg, image/png">
+                                </div>
+                            </form>
+
                             `,
                             showCancelButton: true,
                             confirmButtonText: 'Simpan',
@@ -314,6 +361,31 @@
                                 // Mengisi data kelamin dan golongan darah
                                 $('#kelamin').val(data.kelamin);
                                 $('#golongan_darah').val(data.golongan_darah);
+                                $('#pendidikan').val(data.pendidikan);
+
+                                // Load data status
+                                $.ajax({
+                                    url: "{{ route('api.get.status') }}",
+                                    type: "POST",
+                                    data: {
+                                        _token: '{{ csrf_token() }}'
+                                    },
+                                    dataType: "json",
+                                    success: function(response) {
+                                        const $statusDropdown = $('#keterangan_status');
+                                        $statusDropdown.empty().append(
+                                            '<option value="">Pilih Status</option>');
+
+                                        (response.rows || response).forEach(item => {
+                                            $statusDropdown.append(
+                                                `<option value="${item.id_status}">${item.keterangan_status}</option>`
+                                            );
+                                        });
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error("Error loading status data:", error);
+                                    }
+                                });
 
                                 // Load data wilayah
                                 $.ajax({
@@ -506,7 +578,6 @@
                             preConfirm: () => {
                                 const data = {
                                     _token: '{{ csrf_token() }}',
-                                    id_jemaat: id_jemaat,
                                     nama_jemaat: $('#nama_jemaat').val(),
                                     id_wilayah: $('#id_wilayah').val(),
                                     kelamin: $('#kelamin').val(),
@@ -522,27 +593,30 @@
                                     nik: $('#nik').val(),
                                     no_kk: $('#no_kk').val(),
                                     stamboek: $('#stamboek').val(),
+                                    kodepos: $('#kodepos').val(),
+                                    pekerjaan: $('#pekerjaan').val(),
+                                    ilmu: $('#ilmu').val(),
+                                    pendidikan: $('#pendidikan').val(),
                                     tempat_lahir: $('#tempat_lahir').val(),
                                     tanggal_baptis: $('#tanggal_baptis').val(),
                                     golongan_darah: $('#golongan_darah').val(),
                                     instansi: $('#instansi').val(),
                                     penghasilan: $('#penghasilan').val(),
                                     gereja_baptis: $('#gereja_baptis').val(),
-                                    alat_transportasi: $('#alat_transportasi')
-                                        .val(),
-                                    foto: $('#photo')[0].files[0]
+                                    alat_transportasi: $('#alat_transportasi').val(),
+                                    keterangan_status: $('#keterangan_status').val(),
+                                    photo: $('#photo')[0].files[0]
                                 };
 
                                 const photo = $('#photo')[0].files[0];
-                                if (photo) {
                                     data.photo = photo;
-                                }
+
 
                                 // Validasi input
                                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                                 for (const key in data) {
                                     if (data[key] === '' && key !== 'photo' &&
-                                        key !== 'telepon' &&
+                                        key !== 'telepon' && key !== 'id_status' &&
                                         key !== 'hp' && key !== 'email' && key !==
                                         'nik' && key !==
                                         'no_kk' && key !== 'stamboek' && key !==
@@ -606,7 +680,6 @@
                             if (result.isConfirmed && result.value) {
                                 const {
                                     nama_jemaat,
-                                    id_jemaat,
                                     id_wilayah,
                                     kelamin,
                                     tanggal_lahir,
@@ -616,6 +689,7 @@
                                     id_kabupaten,
                                     id_provinsi,
                                     telepon,
+                                    kodepos,
                                     hp,
                                     email,
                                     nik,
@@ -625,22 +699,25 @@
                                     tanggal_baptis,
                                     golongan_darah,
                                     instansi,
+                                    pekerjaan,
+                                    pendidikan,
+                                    ilmu,
                                     penghasilan,
                                     gereja_baptis,
                                     alat_transportasi,
+                                    keterangan_status,
                                     foto
                                 } = result.value;
 
                                 const formData = new FormData();
                                 formData.append('_token', '{{ csrf_token() }}');
-                                formData.append('id_jemaat', id_jemaat);
                                 formData.append('nama_jemaat', nama_jemaat);
                                 formData.append('id_wilayah', id_wilayah);
                                 formData.append('kelamin', kelamin);
                                 formData.append('tanggal_lahir', tanggal_lahir);
                                 formData.append('id_kelurahan', id_kelurahan);
                                 formData.append('id_kecamatan', id_kecamatan);
-                                if(id_kabupaten) formData.append('id_kabupaten', id_kabupaten);
+                                formData.append('id_kabupaten', id_kabupaten);
                                 formData.append('id_provinsi', id_provinsi);
                                 formData.append('alamat_jemaat', alamat_jemaat);
                                 formData.append('telepon', telepon);
@@ -652,10 +729,14 @@
                                 formData.append('tempat_lahir', tempat_lahir);
                                 formData.append('tanggal_baptis', tanggal_baptis);
                                 formData.append('golongan_darah', golongan_darah);
+                                formData.append('pekerjaan', pekerjaan);
+                                formData.append('ilmu', ilmu);
+                                formData.append('pendidikan',pendidikan);
                                 formData.append('instansi', instansi);
                                 formData.append('penghasilan', penghasilan);
                                 formData.append('gereja_baptis', gereja_baptis);
                                 formData.append('alat_transportasi', alat_transportasi);
+                                formData.append('id_status', result.value.keterangan_status);
                                 if (foto) formData.append('photo', foto);
 
 

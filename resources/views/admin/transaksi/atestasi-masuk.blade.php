@@ -54,7 +54,10 @@
                 columns: [{
                     field: 'id_masuk',
                     title: 'ID Masuk'
-                }, {
+                },{
+                    field: 'nama_masuk',
+                    title: 'Nama'
+                },{
                     field: 'no_surat',
                     title: 'Nomor Surat'
                 }, {
@@ -62,13 +65,23 @@
                     title: 'Nama Wilayah'
                 }, {
                     field: 'nama_gereja',
-                    title: 'Nama Gereja'
+                    title: 'Nama Gereja Asal'
                 }, {
-                    field: 'tanggal',
-                    title: 'Tanggal'
+                    field: 'tanggal_masuk',
+                    title: 'Tanggal Masuk'
                 }, {
                     field: 'surat',
-                    title: 'Surat'
+                    title: 'Surat',
+                    formatter: function(value, row, index) {
+                        const fileUrl = `/storage/${value}`;
+
+                        return `
+                            <button class="btn btn-primary">
+                                <a href="${fileUrl}" target="_blank" style="color:white; text-decoration:none;">Lihat Surat</a>
+                            </button>
+                        `;
+                    },
+                    align: 'center'
                 }, {
                     field: 'edit',
                     title: 'Edit',
@@ -99,6 +112,9 @@
                         field: 'id_masuk',
                         title: 'ID Masuk'
                     }, {
+                        field: 'nama_masuk',
+                        title: 'Nama'
+                    },{
                         field: 'no_surat',
                         title: 'Nomor Surat'
                     }, {
@@ -106,13 +122,23 @@
                         title: 'Nama Wilayah'
                     }, {
                         field: 'nama_gereja',
-                        title: 'Nama Gereja'
+                        title: 'Nama Gereja Asal'
                     }, {
-                        field: 'tanggal',
-                        title: 'Tanggal'
+                        field: 'tanggal_masuk',
+                        title: 'Tanggal_Masuk'
                     }, {
                         field: 'surat',
-                        title: 'Surat'
+                        title: 'Surat',
+                        formatter: function(value, row, index) {
+                            const fileUrl = `/storage/${value}`;
+
+                            return `
+                                <button class="btn btn-primary">
+                                    <a href="${fileUrl}" target="_blank" style="color:white; text-decoration:none;">Lihat Surat</a>
+                                </button>
+                            `;
+                        },
+                        align: 'center'
                     }, {
                         field: 'edit',
                         title: 'Edit',
@@ -134,152 +160,441 @@
                 });
             }).trigger('change');
 
-            // Event listener untuk tombol tambah wilayah
-            $('.tambah-atestasi-masuk').on('click', function() {
-                event.preventDefault();
-                Swal.fire({
-                    title: 'Tambah Atestasi Masuk Baru',
-                    html: `
-                        <form id="addAtestasiMasukBaruForm">
-                            <div class="form-group">
-                                <label for="no_surat">Nomor Surat *</label>
-                                <input type="text" id="no_surat" class="form-control" placeholder="Masukkan Nomor Surat *" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="nama_wilayah">Nama Wilayah *</label>
-                                <select id="nama_wilayah" class="form-control" required style="width: 100%;">
-                                    <option value="">Pilih Nama Wilayah</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="nama_gereja">Nama Gereja *</label>
-                                <select id="nama_gereja" class="form-control" required style="width: 100%;">
-                                    <option value="">Pilih Nama Gereja</option>
-                                </select>
-                                <div id="new-gereja-container" style="margin-top: 10px; display: none;">
-                                    <input type="text" id="new_gereja" class="form-control" placeholder="Masukkan Gereja Baru">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="tanggal">Tanggal *</label>
-                                <input type="date" id="tanggal" class="form-control" required>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="surat">Surat *</label>
-                                <textarea id="surat" name="surat" cols="50" style="width: 100%;"></textarea>
-                            </div>
-                        </form>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Simpan',
-                    cancelButtonText: 'Batal',
-                    didOpen: () => {
-                        $('#nama_wilayah, #nama_gereja').select2({
-                            placeholder: "Pilih atau cari",
-                            allowClear: true,
-                            dropdownParent: $(
-                                '.swal2-container')
-                        });
+            // Event listener untuk tombol tambah atestasi masuk
+           $('.tambah-atestasi-masuk').on('click', function(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Tambah Atestasi Baru',
+                html: `
+                <form id="addAtestasiForm">
+                    <div class="form-group">
+                        <label for="nomor_surat">Nomor Surat *</label>
+                        <input type="text" id="nomor_surat" class="form-control" placeholder="Masukkan Nomor Surat" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_masuk">Tanggal Masuk *</label>
+                        <input type="date" id="tanggal_masuk" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nama_gereja">Nama Gereja Asal *</label>
+                        <select id="nama_gereja" class="form-control" required>
+                            <option value="">Pilih Nama Gereja</option>
+                            <!-- AJAX -->
+                        </select>
+                        <div id="new-gereja-container" style="margin-top: 10px; display: none;">
+                            <input type="text" id="new_gereja" class="form-control" placeholder="Masukkan Gereja Baru *">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="surat">Surat *</label>
+                        <input type="file" id="surat" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
+                    </div>
+                    <hr>
+                    <h3 align="center">Data Jemaat</h3>
+                    <div class="form-group">
+                        <label for="nama_jemaat">Nama Jemaat *</label>
+                        <input type="text" id="nama_jemaat" class="form-control" placeholder="Masukkan Nama Jemaat" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_wilayah">Nama Wilayah *</label>
+                        <select id="id_wilayah" class="form-control" required>
+                            <option value="">Pilih Wilayah</option>
+                            <!-- AJAX will populate options -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="kelamin">Kelamin *</label>
+                        <select id="kelamin" class="form-control" required>
+                            <option value="" disabled selected>Pilih Kelamin</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_lahir">Tanggal Lahir *</label>
+                        <input type="date" id="tanggal_lahir" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="alamat_jemaat">Alamat *</label>
+                        <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_provinsi">Provinsi</label>
+                        <select id="id_provinsi" class="form-control">
+                            <option value="">Pilih Nama Provinsi</option>
+                            <!-- AJAX will populate options -->
+                        </select>
+                    </div>
+                    <div class="form-group kabupaten_container" style="display: none;">
+                        <label for="id_kabupaten">Kabupaten</label>
+                        <select id="id_kabupaten" class="form-control">
+                            <option value="">Pilih Nama Kabupaten</option>
+                            <!-- AJAX will populate options -->
+                        </select>
+                    </div>
+                    <div class="form-group kecamatan_container" style="display: none;">
+                        <label for="id_kecamatan">Kecamatan</label>
+                        <select id="id_kecamatan" class="form-control">
+                            <option value="">Pilih Nama Kecamatan</option>
+                            <!-- AJAX will populate options -->
+                        </select>
+                    </div>
+                    <div class="form-group kelurahan_container" style="display: none;">
+                        <label for="id_kelurahan">Kelurahan</label>
+                        <select id="id_kelurahan" class="form-control">
+                            <option value="">Pilih Nama Kelurahan</option>
+                            <!-- AJAX will populate options -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="telepon">Telepon</label>
+                        <input type="tel" id="telepon" class="form-control" placeholder="Masukkan Nomor Telepon">
+                    </div>
+                    <div class="form-group">
+                        <label for="hp">HP</label>
+                        <input type="tel" id="hp" class="form-control" placeholder="Masukkan Nomor HP">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="Masukkan Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="nik">NIK</label>
+                        <input type="text" id="nik" class="form-control" placeholder="Masukkan NIK">
+                    </div>
+                    <div class="form-group">
+                        <label for="no_kk">Nomor KK</label>
+                        <input type="text" id="no_kk" class="form-control" placeholder="Masukkan Nomor KK">
+                    </div>
+                    <div class="form-group">
+                        <label for="stamboek">Stamboek</label>
+                        <input type="text" id="stamboek" class="form-control" placeholder="Masukkan Stamboek">
+                    </div>
+                    <div class="form-group">
+                        <label for="tempat_lahir">Tempat Lahir</label>
+                        <input type="text" id="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir">
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_baptis">Tanggal Baptis</label>
+                        <input type="date" id="tanggal_baptis" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="golongan_darah">Golongan Darah</label>
+                        <select id="golongan_darah" class="form-control">
+                            <option value="-" selected>Pilih Golongan Darah</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="AB">AB</option>
+                            <option value="O">O</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="instansi">Instansi</label>
+                        <input type="text" id="instansi" class="form-control" placeholder="Masukkan Instansi">
+                    </div>
+                    <div class="form-group">
+                        <label for="penghasilan">Penghasilan</label>
+                        <input type="number" id="penghasilan" class="form-control" placeholder="Masukkan Penghasilan" min="0" step="any">
+                    </div>
+                    <div class="form-group">
+                        <label for="gereja_baptis">Gereja Baptis</label>
+                        <input type="text" id="gereja_baptis" class="form-control" placeholder="Masukkan Gereja Baptis">
+                    </div>
+                    <div class="form-group">
+                        <label for="alat_transportasi">Alat Transportasi</label>
+                        <input type="text" id="alat_transportasi" class="form-control" placeholder="Masukkan Alat Transportasi">
+                    </div>
+                    <div class="form-group">
+                        <label for="keterangan_status">Status Jemaat *</label>
+                        <select id="keterangan_status" class="form-control" required>
+                            <option value="">Pilih status</option>
+                            <!-- AJAX will populate options -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="photo">Foto</label>
+                        <input type="file" id="photo" class="form-control" accept="image/jpeg, image/png">
+                    </div>
+                </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                cancelButtonText: 'Batal',
+                didOpen: () => {
+                    $('#nama_gereja, #id_wilayah').select2({
+                        placeholder: "Pilih atau cari",
+                        allowClear: true,
+                        dropdownParent: $('.swal2-container')
+                    });
 
-                        // Load Nama Gereja
-                        $.ajax({
-                            url: "{{ route('api.get.gereja') }}",
+                    $.ajax({
+                            url: "{{ route('api.get.status') }}",
                             type: "POST",
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
                             dataType: "json",
                             success: function(response) {
-                                const $gerejaSelect = $('#nama_gereja');
-                                $gerejaSelect.empty().append(
-                                    '<option value="">Pilih Nama Gereja</option>'
-                                );
-                                $.each(response, function(key, value) {
-                                    $gerejaSelect.append(new Option(value
-                                        .nama_gereja,
-                                        value.nama_gereja));
+                                const $statusDropdown = $('#keterangan_status');
+                                $statusDropdown.empty().append(
+                                    '<option value="" disabled selected>Pilih Status</option>');
+
+                                (response.rows || response).forEach(item => {
+                                    $statusDropdown.append(
+                                        `<option value="${item.id_status}">${item.keterangan_status}</option>`
+                                    );
                                 });
-                                $gerejaSelect.append(new Option(
-                                    '+ Tambah Gereja Baru',
-                                    'add-new-gereja'));
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error loading status data:", error);
                             }
                         });
 
-                        // Load Nama Wilayah
-                        $.ajax({
-                            url: "{{ route('api.get.wilayah') }}",
+                    // Load Nama Gereja
+                    $.ajax({
+                        url: "{{ route('api.get.gereja') }}",
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            const $gerejaSelect = $(
+                                '#nama_gereja');
+                            Object.entries(response)
+                                .forEach(function([key,
+                                    value
+                                ]) {
+                                    $gerejaSelect
+                                        .append(
+                                            `<option value="${value.nama_gereja}">${value.nama_gereja}</option>`
+                                        );
+                                });
+
+                            $gerejaSelect.append(
+                                '<option value="add-new-gereja">+ Tambah Gereja Baru</option>'
+                            );
+                            $gerejaSelect.val(data
+                                .nama_gereja);
+                        }
+                    });
+
+                    $('#nama_gereja').change(function() {
+                        const selectedValue = $(this).val();
+                        if (selectedValue ===
+                            'add-new-gereja') {
+                            $('#new-gereja-container').show();
+                            $('#new_gereja').val('');
+                        } else {
+                            $('#new-gereja-container').hide();
+                            $('#new_gereja').val('');
+                        }
+                    });
+
+                    // Load Nama Wilayah
+                    $.ajax({
+                        url: "{{ route('api.get.wilayah') }}",
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            const $wilayahSelect = $('#id_wilayah');
+                            $wilayahSelect.empty().append('<option value="">Pilih Nama Wilayah</option>');
+                            $.each(response, function(key, value) {
+                                $wilayahSelect.append(new Option(value.nama_wilayah, value.id_wilayah));
+                            });
+                        }
+                    });
+
+                    $.ajax({
+                            url: "{{ route('api.get.daerah') }}",
                             type: "POST",
                             data: {
                                 _token: '{{ csrf_token() }}'
                             },
                             dataType: "json",
                             success: function(response) {
-                                const $wilayahSelect = $('#nama_wilayah');
-                                $wilayahSelect.empty().append(
-                                    '<option value="">Pilih Nama Wilayah</option>'
-                                );
-                                $.each(response, function(key, value) {
-                                    $wilayahSelect.append(new Option(value
-                                        .nama_wilayah,
-                                        value.id_wilayah));
+                                const $idProvinsi = $('#id_provinsi');
+                                Object.entries(response.rows).forEach(([key,
+                                    value
+                                ]) => {
+                                    $idProvinsi.append(
+                                        `<option value="${value.id_provinsi}">${value.nama_provinsi}</option>`
+                                    );
                                 });
                             }
                         });
-                    },
-                    preConfirm: () => {
-                        const data = {
-                            no_surat: $('#no_surat').val(),
-                            id_wilayah: $('#nama_wilayah').val(),
-                            nama_gereja: $('#nama_gereja').val(),
-                            new_gereja: $('#new_gereja').val(),
-                            tanggal: $('#tanggal').val(),
-                            surat: $('#surat').val()
-                        };
 
-                        // Jika memilih "Tambah Gereja Baru", ganti nama_gereja dengan new_gereja jika terisi
-                        if (data.nama_gereja === 'add-new-gereja' && data.new_gereja) {
-                            data.nama_gereja = data.new_gereja;
-                        } else if (data.nama_gereja === 'add-new-gereja' && !data.new_gereja) {
-                            Swal.showValidationMessage('Masukkan nama gereja baru');
-                            return false;
-                        }
+                        $('#id_kecamatan').on('change', function() {
+                            const idKecamatan = $('#id_kecamatan').val();
+                            const $idKelurahan = $('#id_kelurahan');
+                            const $idKabupaten = $('#id_kabupaten');
+                            const $idProvinsi = $('#id_provinsi');
+                            $('.kelurahan_container').show();
 
-                        // Validasi semua input, pastikan tidak ada yang kosong
-                        if (!data.no_surat || !data.nama_gereja || !data.id_wilayah || !data
-                            .tanggal || !data
-                            .surat) {
-                            Swal.showValidationMessage('Data tidak boleh kosong!');
-                            return false;
-                        }
-
-                        return data;
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('api.post.atestasimasuk') }}",
-                            type: "POST",
-                            data: {
-                                ...result.value,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function() {
-                                alert.fire({
-                                    icon: 'success',
-                                    title: 'Data atestasi keluar berhasil ditambahkan!'
-                                });
-                                $table.bootstrapTable('refresh');
-                            },
-                            error: function() {
-                                alert.fire({
-                                    icon: 'error',
-                                    title: 'Data atestasi keluar gagal ditambahkan!'
-                                });
+                            if (idKecamatan === '') {
+                                $idKelurahan.empty();
+                                $('.kelurahan_container').hide();
+                                return;
                             }
+
+                            $.ajax({
+                                url: "{{ route('api.get.daerah') }}",
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id_kecamatan: idKecamatan,
+                                    id_kabupaten: $idKabupaten.val(),
+                                    id_provinsi: $idProvinsi.val()
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    $idKelurahan.empty();
+                                    $idKelurahan.append(
+                                        `<option value="">Pilih Nama Kelurahan</option>`
+                                    );
+                                    Object.entries(response.rows).forEach(([
+                                        key,
+                                        value
+                                    ]) => {
+                                        $idKelurahan.append(
+                                            `<option value="${value.id_kelurahan}">${value.kelurahan}</option>`
+                                        );
+                                    });
+                                }
+                            });
                         });
+
+                        $('#id_kabupaten').on('change', function() {
+                            const idKabupaten = $('#id_kabupaten').val();
+                            const idProvinsi = $('#id_provinsi').val();
+                            const $idKecamatan = $('#id_kecamatan');
+                            $('.kecamatan_container').show();
+
+                            if (idKabupaten === '') {
+                                $idKecamatan.empty();
+                                $('.kecamatan_container').hide();
+                                return;
+                            }
+
+                            $.ajax({
+                                url: "{{ route('api.get.daerah') }}",
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id_kabupaten: idKabupaten,
+                                    id_provinsi: idProvinsi
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    $idKecamatan.empty();
+                                    $idKecamatan.append(
+                                        `<option value="">Pilih Nama Kecamatan</option>`
+                                    );
+                                    Object.entries(response.rows).forEach(([
+                                        key, value
+                                    ]) => {
+                                        $idKecamatan.append(
+                                            `<option value="${value.id_kecamatan}">${value.kecamatan}</option>`
+                                        );
+                                    });
+                                }
+                            });
+                        });
+
+                        $('#id_provinsi').on('change', function() {
+                            const idProvinsi = $(this).val();
+                            const $idKabupaten = $('#id_kabupaten');
+                            $('.kabupaten_container').show();
+
+                            if (idProvinsi === '') {
+                                $idKabupaten.empty();
+                                $('.kabupaten_container').hide();
+                                return;
+                            }
+
+                            $.ajax({
+                                url: "{{ route('api.get.daerah') }}",
+                                type: "POST",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id_provinsi: idProvinsi
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    $idKabupaten.empty();
+                                    $idKabupaten.append(
+                                        `<option value="">Pilih Nama Kabupaten</option>`
+                                    );
+                                    Object.entries(response.rows).forEach(([
+                                        key, value
+                                    ]) => {
+                                        $idKabupaten.append(
+                                            `<option value="${value.id_kabupaten}">${value.kabupaten}</option>`
+                                        );
+                                    });
+                                }
+                            });
+                        });
+
+                },
+                preConfirm: () => {
+                    const data = {
+                        nomor_surat: $('#nomor_surat').val(),
+                        tanggal_masuk: $('#tanggal_masuk').val(),
+                        nama_gereja: $('#nama_gereja').val(),
+                        new_gereja: $('#new_gereja').val(),
+                        nama_jemaat: $('#nama_jemaat').val(),
+                        id_wilayah: $('#id_wilayah').val(),
+                        surat: $('#surat')[0].files[0]
+                    };
+
+                    // Validate input
+                    if (data.nama_gereja === 'add-new-gereja' && !data.new_gereja) {
+                        Swal.showValidationMessage('Masukkan nama gereja baru');
+                        return false;
                     }
-                });
+
+                    if (!data.nomor_surat || !data.tanggal_masuk || !data.nama_gereja || !data.nama_jemaat || !data.id_wilayah || !data.surat) {
+                        Swal.showValidationMessage('Data tidak boleh kosong!');
+                        return false;
+                    }
+
+                    // Replace `nama_gereja` with `new_gereja` if needed
+                    if (data.nama_gereja === 'add-new-gereja') {
+                        data.nama_gereja = data.new_gereja;
+                    }
+
+                    return data;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('api.post.atestasimasuk') }}",
+                        type: "POST",
+                        data: {
+                            ...result.value,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function() {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Data atestasi masuk berhasil ditambahkan!'
+                            });
+                            $table.bootstrapTable('refresh');
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data atestasi masuk gagal ditambahkan!'
+                            });
+                        }
+                    });
+                }
             });
+        });
 
             // Event listener untuk tombol edit
             $(document).on('click', '.btn-edit', function() {
@@ -305,6 +620,10 @@
                                     <div class="form-group">
                                         <label for="no_surat">Nomor Surat *</label>
                                         <input type="text" id="no_surat" class="form-control" placeholder="Masukkan Nomor Surat *" value="${response.rows[0].no_surat}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nama_masuk">Nama Jemaat Baru *</label>
+                                        <input type="text" id="nama_masuk" class="form-control" placeholder="Masukkan Nama Jemaat Baru *" value="${response.rows[0].nama_masuk}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="nama_wilayah">Nama Wilayah *</label>
@@ -407,10 +726,11 @@
                             preConfirm: () => {
                                 const data = {
                                     no_surat: $('#no_surat').val(),
+                                    nama_masuk: $('#nama_masuk').val(),
                                     id_wilayah: $('#nama_wilayah').val(),
                                     nama_gereja: $('#nama_gereja').val(),
                                     new_gereja: $('#new_gereja').val(),
-                                    tanggal: $('#tanggal').val(),
+                                    tanggal_masuk: $('#tanggal_masuk').val(),
                                     surat: $('#surat').val()
                                 };
 

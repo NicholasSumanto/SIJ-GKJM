@@ -13,8 +13,12 @@ class BaptisSidi extends Model
     protected $primaryKey = 'id_sidi';
 
     protected $fillable = [
+        'status',
+        'id_jemaat',
         'id_wilayah',
         'id_pendeta',
+        'alamat',
+        'kelamin',
         'nomor_sidi',
         'nama',
         'tempat_lahir',

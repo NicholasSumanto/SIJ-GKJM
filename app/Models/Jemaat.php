@@ -11,6 +11,9 @@ class Jemaat extends Model
 
     protected $table = 'jemaat';
     protected $primaryKey = 'id_jemaat';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
 
     protected $fillable = [
         'id_wilayah',
@@ -38,9 +41,9 @@ class Jemaat extends Model
         'id_bd',
         'tanggal_baptis',
         'golongan_darah',
-        'id_pendidikan',
-        'id_ilmu',
-        'id_pekerjaan',
+        'pendidikan',
+        'ilmu',
+        'pekerjaan',
         'instansi',
         'penghasilan',
         'gereja_baptis',
@@ -75,21 +78,6 @@ class Jemaat extends Model
     public function provinsi()
     {
         return $this->belongsTo(Provinsi::class, 'id_provinsi');
-    }
-
-    public function pendidikan()
-    {
-        return $this->belongsTo(Pendidikan::class, 'id_pendidikan');
-    }
-
-    public function ilmu()
-    {
-        return $this->belongsTo(BidangIlmu::class, 'id_ilmu');
-    }
-
-    public function pekerjaan()
-    {
-        return $this->belongsTo(Pekerjaan::class, 'id_pekerjaan');
     }
     public function pernikahan()
     {

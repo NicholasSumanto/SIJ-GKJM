@@ -553,7 +553,7 @@
 
                         const formData = new FormData();
                         formData.append('_token', '{{ csrf_token() }}');
-                        formData.append('id_role', {{ Auth::user()->id_role }});
+                        formData.append('id_wilayah', {{ Auth::user()->id_wilayah }});
                         formData.append('nama_jemaat', nama_jemaat);
                         formData.append('kelamin', kelamin);
                         formData.append('tanggal_lahir', tanggal_lahir);
@@ -655,7 +655,7 @@
                 url: "{{ route('api.get.jemaat') }}",
                 data: {
                     _token: '{{ csrf_token() }}',
-                    id_role: '{{ Auth::user()->id_role }}'
+                    username: '{{ Auth::user()->username }}'
                 },
                 dataType: "json",
                 success: function(data) {
@@ -673,7 +673,7 @@
             $.ajax({
                 type: "POST",
                 url: "{{ route('api.get.jemaat.by.id', ['id_jemaat' => '__ID__']) }}".replace('__ID__',
-                    id_jemaat), // Ganti __ID__ dengan id_jemaat
+                    id_jemaat),
                 data: {
                     _token: '{{ csrf_token() }}'
                 },

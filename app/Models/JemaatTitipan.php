@@ -14,12 +14,15 @@ class JemaatTitipan extends Model
 
     protected $fillable = [
         'nama_jemaat',
-        'nama_gereja',
-        'id_jemaat',
+        'nama_gereja_asal',
+        'nama_gereja_tujuan',
+        'tanggal_titipan',
+        'tanggal_selesai',
         'kelamin',
         'alamat_jemaat',
         'titipan',
         'surat',
+        'status_titipan',
     ];
 
 }

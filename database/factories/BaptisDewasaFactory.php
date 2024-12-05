@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\BaptisDewasa;
 use App\Models\Pendeta;
 use App\Models\Wilayah;
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 
@@ -15,6 +16,7 @@ class BaptisDewasaFactory extends Factory
     public function definition(): array
     {
         return [
+            'id_status' => Status::inRandomOrder()->first()->id_status,
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
             'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,
             'nomor' => 'BD-' . $this->faker->unique()->numberBetween(100, 999),

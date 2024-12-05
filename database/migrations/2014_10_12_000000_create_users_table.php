@@ -15,15 +15,17 @@ class CreateUsersTable extends Migration
     {
         Schema::create('role_pengguna', function (Blueprint $table) {
             $table->id('id_role');
-            $table->enum('nama_role', ['Super Admin','Admin Wilayah 1','Admin Wilayah 2','Admin Wilayah 3','Admin Wilayah 4','Admin Wilayah 5','Admin Wilayah 6']);
+            $table->enum('nama_role', ['Super Admin','Admin Wilayah']);
             $table->timestamps();
         });
         Schema::create('users', function (Blueprint $table) {
             $table->string('username',100)->primary();
             $table->string('nama_user');
             $table->string('password');
+            $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->unsignedBigInteger('id_role');
             $table->foreign('id_role')->references('id_role')->on('role_pengguna')->onUpdate('cascade');
+            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });

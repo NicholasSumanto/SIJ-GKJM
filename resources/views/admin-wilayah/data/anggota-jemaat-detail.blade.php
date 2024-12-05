@@ -22,7 +22,7 @@
     <div class="card-body">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item" aria-current="page"><a href="{{ route('admin.data.anggota-jemaat') }}">Daftar
+                <li class="breadcrumb-item" aria-current="page"><a href="{{ route('admin-wilayah.data.anggota-jemaat') }}">Daftar
                         Jemaat</a></li>
                 <li class="breadcrumb-item active">Detail Jemaat ({{ $jemaat->nama_jemaat }})</li>
             </ol>

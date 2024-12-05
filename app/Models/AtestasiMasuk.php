@@ -15,9 +15,10 @@ class AtestasiMasuk extends Model
     protected $fillable = [
         'id_wilayah',
         'nama_gereja',
+        'nama_masuk',
         'id_jemaat',
         'no_surat',
-        'tanggal',
+        'tanggal_masuk',
         'surat',
     ];
 

@@ -85,11 +85,11 @@
                     filterControl: 'select',
                     align: 'center'
                 }, {
-                    field: 'nama_pendidikan',
-                    title: 'Pendidikan',
+                    field: 'keterangan_status',
+                    title: 'Status',
                     filterControl: 'select',
                     align: 'center'
-                }, {
+                },{
                     field: 'view',
                     title: 'View',
                     formatter: function(value, row, index) {
@@ -151,8 +151,8 @@
                         filterControl: 'select',
                         align: 'center'
                     }, {
-                        field: 'nama_pendidikan',
-                        title: 'Pendidikan',
+                        field: 'keterangan_status',
+                        title: 'Status',
                         filterControl: 'select',
                         align: 'center'
                     }, {
@@ -214,12 +214,20 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="tempat_lahir">Tempat Lahir *</label>
+                            <input type="text" id="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir"  required>
+                        </div>
+                        <div class="form-group">
                             <label for="tanggal_lahir">Tanggal Lahir *</label>
                             <input type="date" id="tanggal_lahir" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="alamat_jemaat">Alamat *</label>
                             <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="kodepos">Kode pos</label>
+                            <input type="text" id="kodepos" class="form-control" placeholder="Masukkan Kodepos">
                         </div>
                         <div class="form-group">
                             <label for="id_provinsi">Provinsi</label>
@@ -270,18 +278,6 @@
                             <input type="text" id="no_kk" class="form-control" placeholder="Masukkan Nomor KK">
                         </div>
                         <div class="form-group">
-                            <label for="stamboek">Stamboek</label>
-                            <input type="text" id="stamboek" class="form-control" placeholder="Masukkan Stamboek">
-                        </div>
-                        <div class="form-group">
-                            <label for="tempat_lahir">Tempat Lahir</label>
-                            <input type="text" id="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir">
-                        </div>
-                        <div class="form-group">
-                            <label for="tanggal_baptis">Tanggal Baptis</label>
-                            <input type="date" id="tanggal_baptis" class="form-control">
-                        </div>
-                        <div class="form-group">
                             <label for="golongan_darah">Golongan Darah</label>
                             <select id="golongan_darah" class="form-control">
                                 <option value="-"selected>Pilih Golongan Darah</option>
@@ -292,20 +288,58 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="pendidikan">Pendidikan Terakhir</label>
+                            <select id="pendidikan" class="form-control">
+                                <option value="-"selected>Pilih Pendidikan</option>
+                                <option value="SD">SD</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="D1">D1</option>
+                                <option value="D2">D2</option>
+                                <option value="D3">D3</option>
+                                <option value="S1">S1</option>
+                                <option value="S2">S2</option>
+                                <option value="S3">S3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ilmu">Bidang Ilmu</label>
+                            <input type="text" id="ilmu" class="form-control" placeholder="Masukkan Bidang Ilmu">
+                        </div>
+                        <div class="form-group">
                             <label for="instansi">Instansi</label>
                             <input type="text" id="instansi" class="form-control" placeholder="Masukkan Instansi">
+                        </div>
+                         <div class="form-group">
+                            <label for="pekerjaan">Pekerjaan</label>
+                            <input type="text" id="pekerjaan" class="form-control" placeholder="Masukkan Pekerjaan">
                         </div>
                         <div class="form-group">
                             <label for="penghasilan">Penghasilan</label>
                             <input type="number" id="penghasilan" class="form-control" placeholder="Masukkan Penghasilan" min="0" step="any">
                         </div>
                         <div class="form-group">
+                            <label for="alat_transportasi">Alat Transportasi</label>
+                            <input type="text" id="alat_transportasi" class="form-control" placeholder="Masukkan Alat Transportasi">
+                        </div>
+                        <div class="form-group">
+                            <label for="stamboek">Stamboek</label>
+                            <input type="text" id="stamboek" class="form-control" placeholder="Masukkan Stamboek">
+                        </div>
+                        <div class="form-group">
                             <label for="gereja_baptis">Gereja Baptis</label>
                             <input type="text" id="gereja_baptis" class="form-control" placeholder="Masukkan Gereja Baptis">
                         </div>
                         <div class="form-group">
-                            <label for="alat_transportasi">Alat Transportasi</label>
-                            <input type="text" id="alat_transportasi" class="form-control" placeholder="Masukkan Alat Transportasi">
+                            <label for="tanggal_baptis">Tanggal Baptis</label>
+                            <input type="date" id="tanggal_baptis" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="keterangan_status">Status Jemaat *</label>
+                            <select id="keterangan_status" class="form-control" required>
+                                <option value="">Pilih status</option>
+                                <!-- AJAX -->
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="photo">Foto</label>
@@ -317,6 +351,29 @@
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
                     didOpen: () => {
+                        $.ajax({
+                            url: "{{ route('api.get.status') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $statusDropdown = $('#keterangan_status');
+                                $statusDropdown.empty().append(
+                                    '<option value="" disabled selected>Pilih Status</option>');
+
+                                (response.rows || response).forEach(item => {
+                                    $statusDropdown.append(
+                                        `<option value="${item.id_status}">${item.keterangan_status}</option>`
+                                    );
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error loading status data:", error);
+                            }
+                        });
+
                         $.ajax({
                             url: "{{ route('api.get.wilayah') }}",
                             type: "POST",
@@ -333,6 +390,7 @@
                                 });
                             }
                         });
+
 
                         $.ajax({
                             url: "{{ route('api.get.daerah') }}",
@@ -483,6 +541,10 @@
                             nik: $('#nik').val(),
                             no_kk: $('#no_kk').val(),
                             stamboek: $('#stamboek').val(),
+                            kodepos: $('#kodepos').val(),
+                            pekerjaan: $('#pekerjaan').val(),
+                            ilmu: $('#ilmu').val(),
+                            pendidikan: $('#pendidikan').val(),
                             tempat_lahir: $('#tempat_lahir').val(),
                             tanggal_baptis: $('#tanggal_baptis').val(),
                             golongan_darah: $('#golongan_darah').val(),
@@ -490,6 +552,7 @@
                             penghasilan: $('#penghasilan').val(),
                             gereja_baptis: $('#gereja_baptis').val(),
                             alat_transportasi: $('#alat_transportasi').val(),
+                            keterangan_status: $('#keterangan_status').val()
 
                         };
 
@@ -506,9 +569,9 @@
                                 'no_kk' && key !== 'stamboek' && key !== 'tempat_lahir' &&
                                 key !== 'tanggal_baptis' && key !== 'instansi' && key !==
                                 'gereja_baptis' && key !== 'alat_transportasi' && key !==
-                                'penghasilan' && key !== 'golongan_darah' &&
-                                key !== 'id_kelurahan' && key !== 'id_kecamatan' && key !==
-                                'id_kabupaten' && key !== 'id_provinsi' && key !== 'photo') {
+                                'penghasilan' && key !== 'golongan_darah' && key !== 'pekerjaan'
+                                && key !== 'pendidikan' && key !== 'ilmu' && key !== 'kodepos' && key !== 'id_kelurahan'
+                                && key !== 'id_kecamatan' && key !== 'id_kabupaten' && key !== 'id_provinsi') {
                                 Swal.showValidationMessage(
                                     `${key.replace(/_/g, ' ')} tidak boleh kosong!`);
                                 return false;
@@ -532,7 +595,7 @@
                                 success: function(response) {
                                     if (response.total > 0) {
                                         reject(
-                                            'NIK sudah ada, silahkan gunakan NIK lain!'
+                                            'Nama Jemaat sudah ada, silahkan gunakan Nama lain!'
                                         );
                                     } else {
                                         resolve(data);
@@ -540,7 +603,7 @@
                                 },
                                 error: function(xhr, status, error) {
                                     reject(
-                                        'Terjadi kesalahan saat memvalidasi NIK.'
+                                        'Terjadi kesalahan saat memvalidasi Nama.'
                                     );
                                 }
                             });
@@ -561,6 +624,7 @@
                             id_kabupaten,
                             id_provinsi,
                             telepon,
+                            kodepos,
                             hp,
                             email,
                             nik,
@@ -570,9 +634,13 @@
                             tanggal_baptis,
                             golongan_darah,
                             instansi,
+                            pekerjaan,
+                            pendidikan,
+                            ilmu,
                             penghasilan,
                             gereja_baptis,
                             alat_transportasi,
+                            keterangan_status,
                             photo
                         } = result.value;
 
@@ -596,10 +664,14 @@
                         formData.append('tempat_lahir', tempat_lahir);
                         formData.append('tanggal_baptis', tanggal_baptis);
                         formData.append('golongan_darah', golongan_darah);
+                        formData.append('pekerjaan', pekerjaan);
+                        formData.append('ilmu', ilmu);
+                        formData.append('pendidikan',pendidikan);
                         formData.append('instansi', instansi);
                         formData.append('penghasilan', penghasilan);
                         formData.append('gereja_baptis', gereja_baptis);
                         formData.append('alat_transportasi', alat_transportasi);
+                        formData.append('id_status', result.value.keterangan_status);
                         if (photo) {
                             formData.append('photo', photo);
                         }
@@ -681,6 +753,7 @@
                 url: "{{ route('api.get.jemaat') }}",
                 data: {
                     _token: '{{ csrf_token() }}',
+                    // onlyName: true
                 },
                 dataType: "json",
                 success: function(data) {

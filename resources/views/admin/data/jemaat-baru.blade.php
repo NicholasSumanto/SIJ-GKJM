@@ -18,8 +18,7 @@
     <div class="card-body">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item" aria-current="page"><a href="#">Daftar Jemaat</a></li>
-                <li class="breadcrumb-item active">Detail Jemaat (xxxx)</li>
+                <li class="breadcrumb-item active" aria-current="page">Daftar Jemaat</li>
             </ol>
         </nav>
 
@@ -60,61 +59,55 @@
             // Initialize bootstrap table
             $table.bootstrapTable({
                 columns: [{
-                    field: 'id',
+                    field: 'no',
                     title: 'No',
-                    align: 'center'
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return index + 1;
+                    }
                 }, {
-                    field: 'id',
-                    title: 'ID Jemaat',
-                    align: 'center'
-                }, {
-                    field: 'name',
+                    field: 'nama_jemaat',
                     title: 'Nama',
                     align: 'center'
                 }, {
-                    field: 'wilayah',
+                    field: 'nama_wilayah',
                     title: 'Wilayah',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'kelamin',
                     title: 'Kelamin',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
-                    field: 'status',
+                    field: 'keterangan_status',
                     title: 'Status',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
-                    field: 'darah',
+                    field: 'golongan_darah',
                     title: 'Darah',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
-                    field: 'pendidikan',
+                    field: 'nama_pendidikan',
                     title: 'Pendidikan',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'view',
                     title: 'View',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-success btn-view" data-id="${row.id}">View</button>`;
+                        return `<button class="btn btn-primary btn-view" data-id_jemaat="${row.id_jemaat}">View</button>`;
                     },
                     align: 'center'
                 }, {
                     field: 'validasi',
-                    title: 'Validasi',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-primary btn-edit" data-id="${row.id}" data-name="${row.name}">Validasi</button>`;
-                    },
-                    align: 'center'
-                }, {
-                    field: 'delete',
-                    title: 'Delete',
-                    formatter: function(value, row, index) {
-                        return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
-                    },
+                    title: 'Status',
                     align: 'center'
                 }],
                 exportOptions: {
-                    columns: [0, 1]
+                    ignoreColumn: [7, 8, 9]
                 }
             });
 
@@ -129,168 +122,79 @@
                         checkbox: true,
                         visible: exportDataType === 'selected'
                     }, {
-                        field: 'id',
+                        field: 'no',
                         title: 'No',
-                        align: 'center'
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            return index + 1;
+                        }
                     }, {
-                        field: 'id',
-                        title: 'ID Jemaat',
-                        align: 'center'
-                    }, {
-                        field: 'name',
+                        field: 'nama_jemaat',
                         title: 'Nama',
                         align: 'center'
                     }, {
-                        field: 'wilayah',
+                        field: 'nama_wilayah',
                         title: 'Wilayah',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'kelamin',
                         title: 'Kelamin',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
-                        field: 'status',
+                        field: 'keterangan_status',
                         title: 'Status',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
-                        field: 'darah',
+                        field: 'golongan_darah',
                         title: 'Darah',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
-                        field: 'pendidikan',
+                        field: 'nama_pendidikan',
                         title: 'Pendidikan',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'view',
                         title: 'View',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-success btn-view" data-id="${row.id}">View</button>`;
+                            return `<button class="btn btn-primary btn-view" data-id_jemaat="${row.id_jemaat}">View</button>`;
                         },
                         align: 'center'
+
                     }, {
                         field: 'validasi',
-                        title: 'Validasi',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id}" data-name="${row.name}" style="color: #ffff;">Validasi</button>`;
-                        },
+                        title: 'Status',
                         align: 'center'
-                    }, {
-                        field: 'delete',
-                        title: 'Delete',
-                        formatter: function(value, row, index) {
-                            return `<button class="btn btn-danger btn-delete" data-id="${row.id}">Delete</button>`;
-                        },
-                        align: 'center'
-                    }]
+                    }],
+                    exportOptions: {
+                        ignoreColumn: [6, 7, 8]
+                    }
                 });
             }).trigger('change');
 
-            // Event listener untuk tombol edit
-            $(document).on('click', '.btn-edit', function() {
+            $(document).on('click', '.btn-view', function(event) {
                 event.preventDefault();
-                var id = $(this).data('id');
-                var name = $(this).data('name');
+                var id_jemaat = $(this).data('id_jemaat');
 
-                Swal.fire({
-                    title: 'Edit Wilayah',
-                    html: `
-                        <form id="editForm">
-                            <div class="form-group">
-                                <label for="idWilayah">ID Wilayah</label>
-                                <input type="text" id="idWilayah" class="form-control" value="${id}" disabled>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label for="nameItem">Nama Wilayah</label>
-                                <input type="text" id="nameItem" class="form-control" value="${name}">
-                            </div>
-                        </form>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Save',
-                    cancelButtonText: 'Cancel',
-                    preConfirm: () => {
-                        const newName = $('#nameItem').val();
-                        if (!newName) {
-                            Swal.showValidationMessage('Nama item tidak boleh kosong!');
-                            return false;
-                        }
-                        return {
-                            newName: newName
-                        };
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const newName = result.value.newName;
+                var url = '{{ route('admin.data.anggota-jemaat-baru-keluarga-detail', ':id') }}';
+                url = url.replace(':id', id_jemaat);
 
-                        // Contoh: Update menggunakan AJAX
-                        $.ajax({
-                            url: `/edit/${id}`,
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                id: id,
-                                name: newName
-                            },
-                            success: function(response) {
-                                alert.fire({
-                                    icon: 'success',
-                                    title: 'Data wilayah berhasil diubah!'
-                                });
-                                $table.bootstrapTable('refresh');
-                            },
-                            error: function(xhr, status, error) {
-                                alert.fire({
-                                    icon: 'danger',
-                                    title: 'Data wilayah gagal diupdate!'
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-        });
-
-        $(document).on('click', '.btn-delete', function() {
-            event.preventDefault();
-            var id = $(this).data('id');
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: `/delete/${id}`,
-                        type: 'DELETE',
-                        success: function(response) {
-                            alert.fire({
-                                icon: 'success',
-                                title: 'Data wilayah berhasil dihapus!'
-                            });
-                            $table.bootstrapTable('refresh');
-                        },
-                        error: function(xhr, status, error) {
-                            alert.fire({
-                                icon: 'error',
-                                title: 'Data wilayah gagal dihapus!'
-                            });
-                        }
-                    });
-                }
+                window.location.href = url;
             });
         });
 
         function ApiGetJemaatBaru(params) {
             $.ajax({
-                type: "GET",
-                url: "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                type: "POST",
+                url: "{{ route('api.get.jemaat') }}",
                 data: {
-                    // _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    // onlyName: true,
+                    baru: true
                 },
                 dataType: "json",
                 success: function(data) {

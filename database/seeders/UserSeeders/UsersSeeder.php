@@ -19,7 +19,7 @@ class UsersSeeder extends Seeder
 
         $roles = DB::table('role_pengguna')->pluck('id_role')->take(6)->toArray();
 
-        foreach (range(1, 8) as $index) {
+        foreach (range(1, 2) as $index) {
             $id_role = $roles[array_rand($roles) % count($roles)];
 
 

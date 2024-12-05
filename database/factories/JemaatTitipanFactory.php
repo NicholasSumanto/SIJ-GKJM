@@ -21,10 +21,14 @@ class JemaatTitipanFactory extends Factory
     {
         return [
             'nama_jemaat' => $this->faker->name,
-            'nama_gereja' => $this->churches[array_rand($this->churches)],
+            'tanggal_titipan' => $this->faker->date(),
+            'tanggal_selesai' => $this->faker->date(),
+            'nama_gereja_asal' => $this->churches[array_rand($this->churches)],
+            'nama_gereja_tujuan' => $this->churches[array_rand($this->churches)],
             'kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
             'alamat_jemaat' => $this->faker->address,
             'titipan' => $this->faker->randomElement(['Masuk', 'Keluar']),
+            'status_titipan' => $this->faker->randomElement(['Selesai', 'Belum Selesai']),
             'surat' => 'titipan/' . uniqid() . '.pdf',
         ];
     }

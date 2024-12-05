@@ -4,6 +4,7 @@
 
 @push('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/bootstrap-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
 @endpush
@@ -27,6 +28,7 @@
 
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('js/bootstrap-table.js') }}"></script>
     <script src="{{ asset('js/table-export/jsPDF/polyfills.umd.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-table-export.js') }}"></script>
@@ -49,6 +51,9 @@
                 }, {
                     field: 'role',
                     title: 'Role Admin'
+                }, {
+                    field: 'wilayah',
+                    title: 'Wilayah'
                 }, {
                     field: 'edit',
                     title: 'Edit',
@@ -88,6 +93,9 @@
                     }, {
                         field: 'role',
                         title: 'Role Admin'
+                    }, {
+                        field: 'wilayah',
+                        title: 'Wilayah'
                     }, {
                         field: 'edit',
                         title: 'Edit',
@@ -133,15 +141,19 @@
                                 <label for="ulangi_password">Ulangi Password User *</label>
                                 <input type="password" id="ulangi_password" class="form-control" placeholder="Ulang Password User" required>
                             </div>
-                            <div class="form-group mb-0">
+                            <div class="form-group">
                                 <label for="role_user">Role User *</label>
                                 <select id="role_user" class="form-control" required>
                                     <option value="">Pilih Role User</option>
                                     <!-- AJAX -->
                                 </select>
-                                <div id="new-role-container" style="margin-top: 10px; display: none;">
-                                    <input type="text" id="new_role" class="form-control" placeholder="Masukkan Role Baru">
-                                </div>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label for="id_wilayah">Wilayah User</label>
+                                <select id="id_wilayah" class="form-control" required>
+                                    <option value="">Pilih Wilayah User</option>
+                                    <!-- AJAX -->
+                                </select>
                             </div>
                         </form>
                     `,
@@ -149,6 +161,13 @@
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
                     didOpen: () => {
+                        $('#id_wilayah').select2({
+                            placeholder: "Pilih atau cari",
+                            allowClear: true,
+                            dropdownParent: $(
+                                '.swal2-container')
+                        });
+
                         $.ajax({
                             url: "{{ route('api.get.roles') }}",
                             type: "POST",
@@ -163,12 +182,35 @@
                                         `<option value="${role.id_role}">${role.nama_role}</option>`
                                     );
                                 });
-                                $roleSelect.append(
-                                    '<option value="add-new-role">+ Tambah Role Baru</option>'
-                                );
                             },
                             error: function(xhr, status, error) {
                                 Swal.fire('Error', 'Gagal memuat data role user',
+                                    'error');
+                            }
+                        });
+
+                        $.ajax({
+                            url: "{{ route('api.get.wilayah') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $wilayahSelect = $(
+                                    '#id_wilayah');
+                                response.forEach(function(
+                                    wilayah) {
+                                    $wilayahSelect.append(
+                                        `<option value="${wilayah.id_wilayah}">${wilayah.nama_wilayah}</option>`
+                                    );
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                                console.error('Response Text:', xhr
+                                .responseText);
+                                Swal.fire('Error', 'Gagal memuat data wilayah user',
                                     'error');
                             }
                         });
@@ -192,6 +234,7 @@
                         const new_role = $('#new_role').val();
                         const password = $('#password').val();
                         const ulangi_password = $('#ulangi_password').val();
+                        const id_wilayah = $('#id_wilayah').val();
 
                         // Validasi input
                         if (!username || !nama_user || !role_user) {
@@ -240,7 +283,8 @@
                                             new_role: new_role ===
                                                 '' ?
                                                 '' : new_role,
-                                            password: password
+                                            password: password,
+                                            id_wilayah: id_wilayah
                                         });
                                     }
                                 },
@@ -261,7 +305,8 @@
                             nama_user,
                             role_user,
                             new_role,
-                            password
+                            password,
+                            id_wilayah
                         } = result.value;
 
                         $.ajax({
@@ -273,7 +318,8 @@
                                 nama_user: nama_user,
                                 role_user: role_user,
                                 new_role: new_role,
-                                password: password
+                                password: password,
+                                id_wilayah: id_wilayah
                             },
                             success: function(response) {
                                 alert.fire({
@@ -311,6 +357,7 @@
                         var username = response.rows[0].username;
                         var nama_user = response.rows[0].nama_user;
                         var role = response.rows[0].role;
+                        var id_wilayah = response.rows[0].id_wilayah;
 
                         Swal.fire({
                             title: 'Edit User Admin',
@@ -332,15 +379,19 @@
                                     <label for="ulangi_password">Ulangi Password User * (Jika Berganti) </label>
                                     <input type="password" id="ulangi_password" class="form-control" placeholder="Ulang Password User" required>
                                 </div>
-                                <div class="form-group mb-0">
+                                 <div class="form-group mb-0">
                                     <label for="role_user">Role User *</label>
                                     <select id="role_user" class="form-control" required>
                                         <option value="">Pilih Role User</option>
                                         <!-- AJAX -->
                                     </select>
-                                    <div id="new-role-container" style="margin-top: 10px; display: none;">
-                                        <input type="text" id="new_role" class="form-control" placeholder="Masukkan Role Baru">
-                                    </div>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label for="id_wilayah">Wilayah User</label>
+                                    <select id="id_wilayah" class="form-control" required>
+                                        <option value="">Pilih Wilayah User</option>
+                                        <!-- AJAX -->
+                                    </select>
                                 </div>
                             </form>
                             `,
@@ -348,6 +399,13 @@
                             confirmButtonText: 'Simpan',
                             cancelButtonText: 'Batal',
                             didOpen: () => {
+                                $('#id_wilayah').select2({
+                                    placeholder: "Pilih atau cari",
+                                    allowClear: true,
+                                    dropdownParent: $(
+                                        '.swal2-container')
+                                });
+
                                 $.ajax({
                                     url: "{{ route('api.get.roles') }}",
                                     type: "POST",
@@ -364,9 +422,6 @@
                                                 `<option value="${role.id_role}">${role.nama_role}</option>`
                                             );
                                         });
-                                        $roleSelect.append(
-                                            '<option value="add-new-role">+ Tambah Role Baru</option>'
-                                        );
 
                                         // Pilih role yang sesuai dengan response
                                         $('#role_user option').filter(
@@ -376,6 +431,33 @@
                                                     role;
                                             }).prop('selected',
                                             true);
+                                    },
+                                    error: function(xhr, status, error) {
+                                        Swal.fire('Error',
+                                            'Gagal memuat data role user',
+                                            'error');
+                                    }
+                                });
+
+                                $.ajax({
+                                    url: "{{ route('api.get.wilayah') }}",
+                                    type: "POST",
+                                    data: {
+                                        _token: '{{ csrf_token() }}'
+                                    },
+                                    dataType: "json",
+                                    success: function(response) {
+                                        const $wilayahSelect = $(
+                                            '#id_wilayah');
+                                        response.forEach(function(
+                                            wilayah) {
+                                            $wilayahSelect
+                                                .append(
+                                                    `<option value="${wilayah.id_wilayah}">${wilayah.nama_wilayah}</option>`
+                                                );
+                                        });
+                                        $wilayahSelect.val(
+                                            id_wilayah);
                                     },
                                     error: function(xhr, status, error) {
                                         Swal.fire('Error',
@@ -404,6 +486,7 @@
                                 const new_role = $('#new_role').val();
                                 const password = $('#password').val();
                                 const ulangi_password = $('#ulangi_password').val();
+                                const id_wilayah = $('#id_wilayah').val();
 
                                 // Validasi input
                                 if (!username || !nama_user || !role_user) {
@@ -438,7 +521,8 @@
                                     role_user: role_user === 'add-new-role' ? '' :
                                         role_user,
                                     new_role: new_role === '' ? '' : new_role,
-                                    password: password
+                                    password: password,
+                                    id_wilayah: id_wilayah
                                 };
                             }
                         }).then((result) => {
@@ -448,7 +532,8 @@
                                     nama_user,
                                     role_user,
                                     new_role,
-                                    password
+                                    password,
+                                    id_wilayah
                                 } = result.value;
 
                                 $.ajax({
@@ -461,7 +546,8 @@
                                         nama_user: nama_user,
                                         role_user: role_user,
                                         new_role: new_role,
-                                        password: password
+                                        password: password,
+                                        id_wilayah: id_wilayah
                                     },
                                     success: function(response) {
                                         alert.fire({

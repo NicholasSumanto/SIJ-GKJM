@@ -62,9 +62,17 @@
                     field: 'nama',
                     title: 'Nama',
                     align: 'center'
-                },{
+                }, {
                     field: 'nama_wilayah',
                     title: 'Nama Wilayah',
+                    align: 'center'
+                }, {
+                    field: 'alamat',
+                    title: 'Alamat Tinggal',
+                    align: 'center'
+                }, {
+                    field: 'kelamin',
+                    title: 'Kelamin',
                     align: 'center'
                 }, {
                     field: 'nama_pendeta',
@@ -74,7 +82,7 @@
                     field: 'nomor',
                     title: 'Nomor',
                     align: 'center'
-                },  {
+                }, {
                     field: 'tempat_lahir',
                     title: 'Tempat Lahir',
                     align: 'center'
@@ -143,9 +151,17 @@
                         field: 'nama',
                         title: 'Nama ',
                         align: 'center'
-                    },{
+                    }, {
                         field: 'nama_wilayah',
                         title: 'Nama Wilayah',
+                        align: 'center'
+                    }, {
+                        field: 'alamat',
+                        title: 'Alamat Tinggal',
+                        align: 'center'
+                    }, {
+                        field: 'kelamin',
+                        title: 'Kelamin',
                         align: 'center'
                     }, {
                         field: 'nama_pendeta',
@@ -225,6 +241,18 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="alamat_jemaat">Alamat *</label>
+                                <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="kelamin">Kelamin *</label>
+                                <select id="kelamin" class="form-control" required>
+                                    <option value="" disabled selected>Pilih Kelamin</option>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="nama_pendeta">Nama Pendeta *</label>
                                 <select id="nama_pendeta" class="form-control" required style="width: 100%;">
                                     <option value="">Pilih Nama Pendeta</option>
@@ -300,8 +328,8 @@
                                 });
                             }
                         });
-                         // Load Nama Wilayah
-                         $.ajax({
+                        // Load Nama Wilayah
+                        $.ajax({
                             url: "{{ route('api.get.wilayah') }}",
                             type: "POST",
                             data: {
@@ -325,6 +353,8 @@
                         const data = {
                             id_wilayah: $('#nama_wilayah').val(),
                             id_pendeta: $('#nama_pendeta').val(),
+                            kelamin: $('#kelamin').val(),
+                            alamat: $('#alamat_jemaat').val(),
                             nama: $('#nama').val(),
                             nomor: $('#nomor').val(),
                             tempat_lahir: $('#tempat_lahir').val(),
@@ -392,14 +422,26 @@
                         var id_pendeta = response.rows[0].id_pendeta;
                         var id_wilayah = response.rows[0].id_wilayah;
 
-                    Swal.fire({
-                    title: 'Edit Baptis Dewasa',
-                    html: `
+                        Swal.fire({
+                            title: 'Edit Baptis Dewasa',
+                            html: `
                         <form id="addWilayahForm">
                             <div class="form-group">
                                 <label for="nama_wilayah">Nama Wilayah *</label>
                                 <select id="nama_wilayah" class="form-control" required style="width: 100%;">
                                     <option value="">Pilih Nama Wilayah</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="alamat_jemaat">Alamat *</label>
+                                <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" value="${response.rows[0].alamat}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="kelamin">Kelamin *</label>
+                                <select id="kelamin" class="form-control" required>
+                                    <option value="" disabled selected>Pilih Kelamin</option>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -446,114 +488,133 @@
                             </div>
                         </form>
                     `,
-                    showCancelButton: true,
-                    confirmButtonText: 'Simpan',
-                    cancelButtonText: 'Batal',
-                    didOpen: () => {
-                        $('#nama_wilayah, #nama_pendeta').select2({
-                            placeholder: "Pilih atau cari",
-                            allowClear: true,
-                            dropdownParent: $(
-                                '.swal2-container')
-                        });
+                            showCancelButton: true,
+                            confirmButtonText: 'Simpan',
+                            cancelButtonText: 'Batal',
+                            didOpen: () => {
+                                $('#nama_wilayah, #nama_pendeta').select2({
+                                    placeholder: "Pilih atau cari",
+                                    allowClear: true,
+                                    dropdownParent: $(
+                                        '.swal2-container')
+                                });
 
-                        // Load Nama Pendeta
-                        $.ajax({
-                            url: "{{ route('api.get.pendeta') }}",
-                            type: "POST",
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                onlyName: true
-                            },
-                            dataType: "json",
-                            success: function(response) {
-                                const $pendetaSelect = $('#nama_pendeta');
-                                $pendetaSelect.empty().append(
-                                    '<option value="">Pilih Nama Pendeta</option>'
-                                );
-                                $.each(response.rows, function(key, value) {
-                                    $pendetaSelect.append(new Option(value
-                                        .nama_pendeta,
-                                        value.id_pendeta));
+                                // Load Nama Pendeta
+                                $.ajax({
+                                    url: "{{ route('api.get.pendeta') }}",
+                                    type: "POST",
+                                    data: {
+                                        _token: '{{ csrf_token() }}',
+                                        onlyName: true
+                                    },
+                                    dataType: "json",
+                                    success: function(response) {
+                                        const $pendetaSelect = $(
+                                            '#nama_pendeta');
+                                        $pendetaSelect.empty().append(
+                                            '<option value="">Pilih Nama Pendeta</option>'
+                                        );
+                                        $.each(response.rows, function(
+                                            key, value) {
+                                            $pendetaSelect
+                                                .append(
+                                                    new Option(
+                                                        value
+                                                        .nama_pendeta,
+                                                        value
+                                                        .id_pendeta
+                                                        ));
+                                        });
+                                        $pendetaSelect.val(id_pendeta);
+                                    }
                                 });
-                                $pendetaSelect.val(id_pendeta);
-                            }
-                        });
-                         // Load Nama Wilayah
-                         $.ajax({
-                            url: "{{ route('api.get.wilayah') }}",
-                            type: "POST",
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            dataType: "json",
-                            success: function(response) {
-                                const $wilayahSelect = $('#nama_wilayah');
-                                $wilayahSelect.empty().append(
-                                    '<option value="">Pilih Nama Wilayah</option>'
-                                );
-                                $.each(response, function(key, value) {
-                                    $wilayahSelect.append(new Option(value
-                                        .nama_wilayah,
-                                        value.id_wilayah));
+                                // Load Nama Wilayah
+                                $.ajax({
+                                    url: "{{ route('api.get.wilayah') }}",
+                                    type: "POST",
+                                    data: {
+                                        _token: '{{ csrf_token() }}'
+                                    },
+                                    dataType: "json",
+                                    success: function(response) {
+                                        const $wilayahSelect = $(
+                                            '#nama_wilayah');
+                                        $wilayahSelect.empty().append(
+                                            '<option value="">Pilih Nama Wilayah</option>'
+                                        );
+                                        $.each(response, function(key,
+                                            value) {
+                                            $wilayahSelect
+                                                .append(
+                                                    new Option(
+                                                        value
+                                                        .nama_wilayah,
+                                                        value
+                                                        .id_wilayah
+                                                        ));
+                                        });
+                                        $wilayahSelect.val(id_wilayah);
+                                    }
                                 });
-                                $wilayahSelect.val(id_wilayah);
-                            }
-                        });
-                    },
-                    preConfirm: () => {
-                        const data = {
-                            id_wilayah: $('#nama_wilayah').val(),
-                            id_pendeta: $('#nama_pendeta').val(),
-                            nama: $('#nama').val(),
-                            nomor: $('#nomor').val(),
-                            tempat_lahir: $('#tempat_lahir').val(),
-                            tanggal_lahir: $('#tanggal_lahir').val(),
-                            ayah: $('#ayah').val(),
-                            ibu: $('#ibu').val(),
-                            tanggal_baptis: $('#tanggal_baptis').val(),
-                            ketua_majelis: $('#ketua_majelis').val(),
-                            sekretaris_majelis: $('#sekretaris_majelis').val()
-                        };
+                                $('#kelamin').val(response.rows[0].kelamin);
+                            },
+                            preConfirm: () => {
+                                const data = {
+                                    id_wilayah: $('#nama_wilayah').val(),
+                                    alamat: $('#alamat_jemaat').val(),
+                                    kelamin: $('#kelamin').val(),
+                                    id_pendeta: $('#nama_pendeta').val(),
+                                    nama: $('#nama').val(),
+                                    nomor: $('#nomor').val(),
+                                    tempat_lahir: $('#tempat_lahir').val(),
+                                    tanggal_lahir: $('#tanggal_lahir').val(),
+                                    ayah: $('#ayah').val(),
+                                    ibu: $('#ibu').val(),
+                                    tanggal_baptis: $('#tanggal_baptis').val(),
+                                    ketua_majelis: $('#ketua_majelis').val(),
+                                    sekretaris_majelis: $('#sekretaris_majelis')
+                                        .val()
+                                };
 
-                        // Validasi semua input, pastikan tidak ada yang kosong
-                        for (const key in data) {
-                            if (!data[key]) {
-                                Swal.showValidationMessage(
-                                    `Harap isi kolom ${key.replace('_', ' ')} terlebih dahulu!`
-                                );
-                                return false;
-                            }
-                        }
+                                // Validasi semua input, pastikan tidak ada yang kosong
+                                for (const key in data) {
+                                    if (!data[key]) {
+                                        Swal.showValidationMessage(
+                                            `Harap isi kolom ${key.replace('_', ' ')} terlebih dahulu!`
+                                        );
+                                        return false;
+                                    }
+                                }
 
-                        return data;
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('api.update.baptisdewasa') }}",
-                            type: "POST",
-                            data: {
-                                ...result.value,
-                                old_id_bd: old_id_bd,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function() {
-                                alert.fire({
-                                    icon: 'success',
-                                    title: 'Data baptis dewasa berhasil diupdate!'
-                                });
-                                $table.bootstrapTable('refresh');
-                            },
-                            error: function() {
-                                alert.fire({
-                                    icon: 'error',
-                                    title: 'Data baptis dewasa gagal diupdate!'
+                                return data;
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    url: "{{ route('api.update.baptisdewasa') }}",
+                                    type: "POST",
+                                    data: {
+                                        ...result.value,
+                                        old_id_bd: old_id_bd,
+                                        id_jemaat: response.rows[0].id_jemaat,
+                                        _token: '{{ csrf_token() }}'
+                                    },
+                                    success: function() {
+                                        alert.fire({
+                                            icon: 'success',
+                                            title: 'Data baptis dewasa berhasil diupdate!'
+                                        });
+                                        $table.bootstrapTable('refresh');
+                                    },
+                                    error: function() {
+                                        alert.fire({
+                                            icon: 'error',
+                                            title: 'Data baptis dewasa gagal diupdate!'
+                                        });
+                                    }
                                 });
                             }
                         });
-                    }
-                });
                     },
                     error: function(xhr, status, error) {
                         reject('Terjadi kesalahan saat memuat data baptis anak.');

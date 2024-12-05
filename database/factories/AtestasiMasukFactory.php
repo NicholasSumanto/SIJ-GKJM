@@ -23,9 +23,10 @@ class AtestasiMasukFactory extends Factory
         return [
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
             'nama_gereja' => $this->churches[array_rand($this->churches)],
+            'nama_masuk' => $this->faker->name(),
             'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
             'no_surat' => $this->faker->unique()->numerify('SM-####'),
-            'tanggal' => $this->faker->date(),
+            'tanggal_masuk' => $this->faker->date(),
             'surat' => $this->faker->sentence,
         ];
     }

@@ -59,20 +59,40 @@
                     title: 'Nama',
                     align: 'center'
                 }, {
+                    field: 'alamat_jemaat',
+                    title: 'Alamat Jemaat',
+                    align: 'center'
+                },{
+                    field: 'titipan',
+                    title: 'Titipan',
+                    align: 'center'
+                },{
                     field: 'kelamin',
                     title: 'Kelamin',
                     align: 'center'
                 }, {
-                    field: 'nama_gereja',
+                    field: 'nama_gereja_asal',
                     title: 'Gereja Asal',
                     align: 'center'
                 }, {
+                    field: 'nama_gereja_tujuan',
+                    title: 'Gereja Tujuan',
+                    align: 'center'
+                },{
+                    field: 'tanggal_titipan',
+                    title: 'Tanggal Titipan',
+                    align: 'center'
+                },{
+                    field: 'status_titipan',
+                    title: 'Status Titipan',
+                    align: 'center'
+                },{
+                    field: 'tanggal_selesai',
+                    title: 'Tanggal Selesai',
+                    align: 'center'
+                },{
                     field: 'alamat_jemaat',
                     title: 'Alamat',
-                    align: 'center'
-                }, {
-                    field: 'titipan',
-                    title: 'Titipan',
                     align: 'center'
                 }, {
                     field: 'surat',
@@ -114,31 +134,47 @@
                     exportDataType: exportDataType,
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
-                        field: 'no',
-                        title: 'No',
-                        align: 'center',
-                        formatter: function(value, row, index) {
-                            return index + 1;
-                        }
+                    field: 'no',
+                    title: 'No',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return index + 1;
+                    }
                     }, {
                         field: 'nama_jemaat',
-                        title: 'nama',
+                        title: 'Nama',
                         align: 'center'
-                    }, {
+                    },  {
+                        field: 'alamat_jemaat',
+                        title: 'Alamat Jemaat',
+                        align: 'center'
+                    },{
+                        field: 'titipan',
+                        title: 'Titipan',
+                        align: 'center'
+                    },{
                         field: 'kelamin',
                         title: 'Kelamin',
                         align: 'center'
                     }, {
-                        field: 'nama_gereja',
+                        field: 'nama_gereja_asal',
                         title: 'Gereja Asal',
                         align: 'center'
                     }, {
-                        field: 'alamat_jemaat',
-                        title: 'Alamat',
+                        field: 'nama_gereja_tujuan',
+                        title: 'Gereja Tujuan',
                         align: 'center'
-                    }, {
-                        field: 'titipan',
-                        title: 'Titipan',
+                    },{
+                        field: 'tanggal_titipan',
+                        title: 'Tanggal Titipan',
+                        align: 'center'
+                    },{
+                        field: 'status_titipan',
+                        title: 'Status Titipan',
+                        align: 'center'
+                    },{
+                        field: 'tanggal_selesai',
+                        title: 'Tanggal Selesai',
                         align: 'center'
                     }, {
                         field: 'surat',
@@ -147,10 +183,10 @@
                             const fileUrl = `/storage/${value}`;
 
                             return `
-                                <button class="btn btn-primary">
-                                    <a href="${fileUrl}" target="_blank" style="color:white; text-decoration:none;">Lihat Surat</a>
-                                </button>
-                            `;
+                                    <button class="btn btn-primary">
+                                        <a href="${fileUrl}" target="_blank" style="color:white; text-decoration:none;">Lihat Surat</a>
+                                    </button>
+                                `;
                         },
                         align: 'center'
                     }, {
@@ -167,7 +203,7 @@
                             return `<button class="btn btn-danger btn-delete" data-id="${row.id_titipan}">Delete</button>`;
                         },
                         align: 'center'
-                    }]
+                    }],
                 });
             }).trigger('change');
 
@@ -207,9 +243,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="nama_gereja">Nama Gereja *</label>
+                            <label for="nama_gereja">Nama Gereja Asal*</label>
                             <select id="nama_gereja" class="form-control" required>
-                                <option value="">Pilih Nama Gereja</option>
+                                <option value="">Pilih Nama Gereja Asal</option>
                                 <!-- AJAX -->
                             </select>
                             <div id="new-gereja-container" style="margin-top: 10px; display: none;">
@@ -464,7 +500,7 @@
                             didOpen: () => {
                                 $('#nama_keluar').select2({
                                     placeholder: "Pilih atau cari",
-                                    allowClear: true,
+                                    // allowClear: true,
                                     dropdownParent: $(
                                         '.swal2-container')
                                 });

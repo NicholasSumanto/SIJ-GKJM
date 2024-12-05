@@ -51,6 +51,15 @@
         <div class="card p-3 shadow-sm">
             <div class="form-row align-items-center">
                 <div class="col-auto">
+                    <label for="Wilayah" class="mr-2 font-weight-bold">Pilih Wilayah:</label>
+                    <select id="Wilayah" name="Wilayah" class="custom-select" onchange="this.form.submit()">
+                        <option value="" {{ request('Wilayah') == '' ? 'selected' : '' }}>All</option>
+                        @foreach($dropWilayah as $id_wilayah => $wilayahName)
+                            <option value="{{ $id_wilayah }}" {{ request('Wilayah') == $id_wilayah ? 'selected' : '' }}>{{ $wilayahName }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-auto">
                     <label for="Kelamin" class="mr-2 font-weight-bold">Pilih Gender:</label>
                     <select id="Kelamin" name="Kelamin" class="custom-select" onchange="this.form.submit()">
                         <option value="">All</option>
@@ -60,6 +69,12 @@
                 </div>
                 <div class="card shadow h-100 py-4 ml-3" style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                     Total: {{ $totalJemaat }}
+                </div>
+                <div class="card shadow h-100 py-4 ml-3" style="background-color: #f9cafcaf; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                    Jemaat Perempuan: {{ $perempuan }}
+                </div>
+                <div class="card shadow h-100 py-4 ml-3" style="background-color: #bdd9f5a9; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                    Jemaat Laki-laki: {{ $laki }}
                 </div>
             </div>
         </div>

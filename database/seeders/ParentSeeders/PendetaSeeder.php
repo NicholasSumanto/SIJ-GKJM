@@ -22,7 +22,10 @@ class PendetaSeeder extends Seeder
                 'sekolah' => 'Universitas Kristen',
                 'tahun_lulus' => 2015,
                 'keterangan' => 'pelayanan di Gereja X',
+                'tanggal_mulai' => '2015-01-01',
+                'tanggal_selesai' => '2018-01-01',
                 'ijazah' => 'Ijazah S1',
+                'id_status' => 2,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
@@ -32,7 +35,10 @@ class PendetaSeeder extends Seeder
                 'sekolah' => 'Sekolah Tinggi Teologi',
                 'tahun_lulus' => 2018,
                 'keterangan' => 'Pelayanan di Gereja X',
+                'tanggal_mulai' => '2018-01-01',
+                'tanggal_selesai' => '2021-01-01',
                 'ijazah' => 'Ijazah S2',
+                'id_status' => 2,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
@@ -42,7 +48,10 @@ class PendetaSeeder extends Seeder
                 'sekolah' => 'Universitas Kristen',
                 'tahun_lulus' => 2018,
                 'keterangan' => 'Pelayanan di Gereja X',
+                'tanggal_mulai' => '2018-01-01',
+                'tanggal_selesai' => '2021-01-01',
                 'ijazah' => 'Ijazah S2',
+                'id_status' => 2,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],

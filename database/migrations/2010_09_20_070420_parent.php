@@ -34,13 +34,18 @@ return new class extends Migration
         Schema::create('pendeta', function (Blueprint $table) {
             $table->id('id_pendeta');
             $table->string("nama_pendeta");
-            $table->string("jenjang",50);
+            $table->string("jenjang", 50);
             $table->string("sekolah");
-            $table->integer("tahun_lulus");
-            $table->string("keterangan");
-            $table->string("ijazah");
+            $table->integer("tahun_lulus")->nullable();;
+            $table->string("keterangan")->nullable();
+            $table->date('tanggal_mulai')->nullable();
+            $table->date('tanggal_selesai')->nullable();
+            $table->string("ijazah")->nullable();
+            $table->bigInteger('id_status')->unsigned()->nullable();
             $table->timestamps();
+            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
         });
+
         Schema::create('pendeta_didik', function (Blueprint $table) {
             $table->id('id_didik');
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
@@ -54,7 +59,6 @@ return new class extends Migration
             $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
 
         });
-
         Schema::create('wilayah', function (Blueprint $table) {
             $table->id('id_wilayah');
             $table->string("nama_wilayah");

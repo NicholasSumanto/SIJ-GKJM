@@ -13,8 +13,12 @@ class BaptisDewasa extends Model
     protected $primaryKey = 'id_bd';
 
     protected $fillable = [
+        'status',
+        'id_jemaat',
         'id_wilayah',
         'id_pendeta',
+        'alamat',
+        'kelamin',
         'nomor_bd',
         'nama',
         'tempat_lahir',

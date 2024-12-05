@@ -289,23 +289,26 @@
                         tempat_pemakaman: $('#tempat').val(),
                         keterangan: $('#keterangan').val()
                     };
+
+                    // Jika opsi tambah gereja baru dipilih
                     if (data.nama_gereja === 'add-new-gereja') {
-                        data.nama_gereja = data.new_gereja;
-                    } else {
-                        data.nama_gereja = '';
-                    }
-
-                    if (data.new_gereja === '') {
-                        '';
-                    } else {
-                        data.new_gereja = data.new_gereja;
-                    }
-
-                    if (!data.id_jemaat || !data.id_pendeta || !data.nama_gereja || !data
-                        .tanggal_meninggal || !data.tanggal_pemakaman || !data.tempat_pemakaman) {
-                        Swal.showValidationMessage('Data tidak boleh kosong!');
+                        if (!data.new_gereja) {
+                            Swal.showValidationMessage('Nama gereja baru harus diisi!');
+                            return false;
+                        }
+                        data.nama_gereja = data.new_gereja; // Gunakan gereja baru
+                    } else if (!data.nama_gereja) {
+                        Swal.showValidationMessage('Nama gereja harus dipilih!');
                         return false;
                     }
+
+                    // Validasi data lainnya
+                    if (!data.id_jemaat || !data.id_pendeta || !data.tanggal_meninggal ||
+                        !data.tanggal_pemakaman || !data.tempat_pemakaman) {
+                        Swal.showValidationMessage('Semua field bertanda * wajib diisi!');
+                        return false;
+                    }
+
 
                     return new Promise((resolve, reject) => {
                         $.ajax({

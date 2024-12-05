@@ -20,9 +20,7 @@ class AnggotaKeluargaFactory extends Factory
         $isFromJemaat = $this->faker->boolean(70);
         $idKeluarga = random_int(1, 20);
 
-
         $kepalaKeluarga = Keluarga::where('id_keluarga', $idKeluarga)->first();
-
 
         if (!isset(self::$familyMembers[$idKeluarga])) {
             self::$familyMembers[$idKeluarga] = [
@@ -41,17 +39,22 @@ class AnggotaKeluargaFactory extends Factory
             $keteranganHubungan = 'Anak';
         }
 
+        // Tambahkan definisi untuk $namaAnggota
+        $namaAnggota = $this->faker->name;
+
         if ($isFromJemaat) {
             $jemaat = Jemaat::inRandomOrder()->first();
             return [
                 'id_jemaat' => $jemaat ? $jemaat->id_jemaat : null,
                 'id_keluarga' => $idKeluarga,
+                'nama_anggota' => $namaAnggota,
                 'keterangan_hubungan' => $keteranganHubungan,
             ];
         } else {
             return [
                 'id_jemaat' => null,
                 'id_keluarga' => $idKeluarga,
+                'nama_anggota' => $namaAnggota,
                 'keterangan_hubungan' => $keteranganHubungan,
             ];
         }

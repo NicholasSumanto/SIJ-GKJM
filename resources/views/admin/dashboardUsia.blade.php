@@ -258,8 +258,16 @@
             datasets: @json($baptisChartData).map(dataset => ({
                 label: dataset.label, 
                 data: dataset.data, 
-                backgroundColor: 'rgba(0, 0, 0, 0)',
-                borderColor: getRandomColor(),
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 160, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)'],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 160, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)'],
                 borderWidth: 2, 
                 tension: 0.4,
             }))
@@ -283,18 +291,11 @@
                 x: {
                     title: {
                         display: true,
-                        text: 'Tahun',
+                        text: 'Bulan',
                     }
                 }
             }
         }
     });
-    
-    function getRandomColor() {
-    const r = Math.floor(Math.random() * 255);
-    const g = Math.floor(Math.random() * 255);
-    const b = Math.floor(Math.random() * 255);
-    return `rgba(${r}, ${g}, ${b}, 1)`;
-    }
 </script>
 @endpush

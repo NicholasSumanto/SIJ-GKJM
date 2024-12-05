@@ -18,6 +18,14 @@ class Pendeta extends Model
         'sekolah',
         'tahun_lulus',
         'keterangan',
+        'tanggal_mulai',
+        'tanggal_selesai',
+        'id_status',
         'ijazah',
     ];
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'id_status');
+    }
 }

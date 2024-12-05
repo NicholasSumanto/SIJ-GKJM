@@ -13,8 +13,12 @@ class BaptisAnak extends Model
     protected $primaryKey = 'id_ba';
 
     protected $fillable = [
+        'status',
+        'id_jemaat',
         'id_wilayah',
         'id_pendeta',
+        'alamat',
+        'kelamin',
         'nomor_ba',
         'nama',
         'tempat_lahir',

@@ -9,7 +9,7 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.anggota-jemaat*') && !Nav::isRoute('admin.data.anggota-jemaat-keluarga*') ? 'active' : '' }}"
+                    <a class="nav-link {{ request()->routeIs('admin.data.anggota-jemaat', 'admin.data.anggota-jemaat-keluarga-detail') ? 'active' : '' }}"
                         href="{{ route('admin.data.anggota-jemaat') }}">DATA JEMAAT</a>
                 </li>
                 <li class="nav-item">

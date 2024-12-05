@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('baptis_anak', function (Blueprint $table) {
             $table->id('id_ba');
+            $table->unsignedInteger('id_jemaat')->nullable();
+            $table->bigInteger('id_status')->unsigned()->nullable();
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('kelamin', 10)->nullable();
             $table->string('nomor');
             $table->string('nama');
             $table->string('tempat_lahir');
@@ -24,14 +28,21 @@ return new class extends Migration
             $table->date('tanggal_baptis');
             $table->string('ketua_majelis');
             $table->string('sekretaris_majelis');
+            $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
+
             $table->timestamps();
         });
         Schema::create('baptis_dewasa', function (Blueprint $table) {
             $table->id('id_bd');
+            $table->unsignedInteger('id_jemaat')->nullable();
+            $table->bigInteger('id_status')->unsigned()->nullable();
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('kelamin', 10)->nullable();
             $table->string('nomor');
             $table->string('nama');
             $table->string('tempat_lahir');
@@ -41,14 +52,20 @@ return new class extends Migration
             $table->date('tanggal_baptis');
             $table->string('ketua_majelis');
             $table->string('sekretaris_majelis');
-            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade');
+            $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
         Schema::create('baptis_sidi', function (Blueprint $table) {
             $table->id('id_sidi');
+            $table->unsignedInteger('id_jemaat')->nullable();
+            $table->bigInteger('id_status')->unsigned()->nullable();
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('kelamin', 10)->nullable();
             $table->string('nomor');
             $table->string('nama');
             $table->string('tempat_lahir');
@@ -58,6 +75,8 @@ return new class extends Migration
             $table->date('tanggal_baptis');
             $table->string('ketua_majelis');
             $table->string('sekretaris_majelis');
+            $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_status')->references('id_status')->on('status')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
