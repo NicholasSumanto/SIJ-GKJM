@@ -188,7 +188,9 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        @if (date('Y') == 2024)
+                        @if (Route::currentRouteName() === 'admin-wilayah.dashboard')
+                            <span>Copyright &copy; 2024 - {{ date('Y') }} UKDW Kezia Trifena</span>
+                        @elseif (date('Y') == 2024)
                             <span>Copyright &copy; 2024 UKDW Nicholas Sumanto</span>
                         @else
                             <span>Copyright &copy; 2024 - {{ date('Y') }} UKDW Nicholas Sumanto</span>
@@ -196,6 +198,7 @@
                     </div>
                 </div>
             </footer>
+            
             <!-- End of Footer -->
 
         </div>

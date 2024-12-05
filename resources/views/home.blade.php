@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+{{-- @extends('layouts.admin')
 
 @section('main-content')
 
@@ -280,4 +280,4 @@
     }
 
 </script>
-@endpush
+@endpush --}}
