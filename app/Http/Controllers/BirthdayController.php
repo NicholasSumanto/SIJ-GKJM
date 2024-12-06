@@ -57,9 +57,8 @@ class BirthdayController extends Controller
             ->orderBy('wilayah.nama_wilayah')
             ->get();
 
-        $weddingsByWilayah = Pernikahan::select(DB::raw('count(*) as total_weddings, jemaat.id_wilayah, wilayah.nama_wilayah'))
-            ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah')
-            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
+        $weddingsByWilayah = Pernikahan::select(DB::raw('count(*) as total_weddings, pernikahan.id_wilayah, wilayah.nama_wilayah'))
+            ->join('wilayah', 'pernikahan.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                 $startMonthDay = date('m-d', strtotime($startDate));
                 $endMonthDay = date('m-d', strtotime($endDate));
@@ -73,7 +72,7 @@ class BirthdayController extends Controller
                     return $query->whereBetween(DB::raw('DATE_FORMAT(tanggal_nikah, "%m-%d")'), [$startMonthDay, $endMonthDay]);
                 }
             })
-            ->groupBy('jemaat.id_wilayah', 'wilayah.nama_wilayah')
+            ->groupBy('pernikahan.id_wilayah', 'wilayah.nama_wilayah')
             ->orderBy('wilayah.nama_wilayah')
             ->get();
 
@@ -98,8 +97,7 @@ class BirthdayController extends Controller
             ->withQueryString();
         
         $paginationMarried = Pernikahan::select('pernikahan.tanggal_nikah', 'pernikahan.pengantin_pria', 'pernikahan.pengantin_wanita', 'wilayah.nama_wilayah')
-            ->join('jemaat', 'pernikahan.id_nikah', '=', 'jemaat.id_nikah')
-            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
+            ->join('wilayah', 'pernikahan.id_wilayah', '=', 'wilayah.id_wilayah')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                 $startMonthDay = date('m-d', strtotime($startDate));
                 $endMonthDay = date('m-d', strtotime($endDate));

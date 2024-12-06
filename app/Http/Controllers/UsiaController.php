@@ -66,17 +66,18 @@ class UsiaController extends Controller
             ->get();
         $baptisData = Jemaat::selectRaw("
             CASE 
-                WHEN ($year - YEAR(tanggal_lahir)) >= 17 AND id_bd IS NOT NULL THEN 'Dewasa Baptis'
-                WHEN ($year - YEAR(tanggal_lahir)) >= 17 AND id_bd IS NULL THEN 'Dewasa Belum Baptis'
-                WHEN ($year - YEAR(tanggal_lahir)) < 17 AND id_ba IS NOT NULL THEN 'Anak Baptis'
-                WHEN ($year - YEAR(tanggal_lahir)) < 17 AND id_ba IS NULL THEN 'Anak Belum Baptis'
+                WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND baptis_dewasa.id_jemaat IS NOT NULL THEN 'Dewasa Baptis'
+                WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND baptis_dewasa.id_jemaat IS NULL THEN 'Dewasa Belum Baptis'
+                WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND baptis_anak.id_jemaat IS NOT NULL THEN 'Anak Baptis'
+                WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND baptis_anak.id_jemaat IS NULL THEN 'Anak Belum Baptis'
             END as kategori,
-            MONTH(created_at) as bulan,
+            MONTH(jemaat.created_at) as bulan,
             COUNT(*) as jumlah")
+            ->leftJoin('baptis_dewasa', 'jemaat.id_jemaat', '=', 'baptis_dewasa.id_jemaat')
+            ->leftJoin('baptis_anak', 'jemaat.id_jemaat', '=', 'baptis_anak.id_jemaat')
             ->groupBy('kategori', 'bulan')
             ->orderBy('bulan')
             ->get();
-
 
         $avgUsia = Jemaat::selectRaw('wilayah.nama_wilayah, AVG(? - YEAR(jemaat.tanggal_lahir)) as rata_rata_usia', [$year])
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')

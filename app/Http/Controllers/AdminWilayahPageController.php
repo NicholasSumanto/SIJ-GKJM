@@ -12,6 +12,9 @@ use App\Models\Kematian;
 use App\Models\Wilayah;
 use App\Models\AtestasiKeluarDtl;
 use App\Models\AtestasiMasuk;
+use App\Models\BaptisAnak;
+use App\Models\BaptisDewasa;
+use App\Models\BaptisSidi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use Illuminate\Support\Facades\DB;
@@ -81,8 +84,8 @@ class AdminWilayahPageController extends Controller
             })
             ->groupBy('bulan')
             ->get();
-        $baptisSidi = Jemaat::select(DB::raw('MONTH(baptis_sidi.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_sidi) as total'))
-            ->join('baptis_sidi', 'jemaat.id_sidi', '=', 'baptis_sidi.id_sidi')
+        $baptisSidi = BaptisSidi::selectRaw('MONTH(baptis_sidi.tanggal_baptis) as bulan, COUNT(*) as total')
+            ->join('jemaat', 'baptis_sidi.id_sidi', '=', 'jemaat.id_sidi')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') // Join with wilayah table
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
@@ -92,8 +95,8 @@ class AdminWilayahPageController extends Controller
             })
             ->groupBy('bulan')
             ->get();
-        $baptisDewasa = Jemaat::select(DB::raw('MONTH(baptis_dewasa.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_bd) as total'))
-            ->join('baptis_dewasa', 'jemaat.id_bd', '=', 'baptis_dewasa.id_bd')
+        $baptisDewasa = BaptisDewasa::selectRaw('MONTH(baptis_dewasa.tanggal_baptis) as bulan, COUNT(*) as total')
+            ->join('jemaat', 'jemaat.id_bd', '=', 'baptis_dewasa.id_bd')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') // Join with wilayah table
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
@@ -103,8 +106,8 @@ class AdminWilayahPageController extends Controller
             })
             ->groupBy('bulan')
             ->get();
-        $baptisAnak = Jemaat::select(DB::raw('MONTH(baptis_anak.tanggal_baptis) as bulan'), DB::raw('COUNT(jemaat.id_ba) as total'))
-            ->join('baptis_anak', 'jemaat.id_ba', '=', 'baptis_anak.id_ba')
+        $baptisAnak = BaptisAnak::selectRaw('MONTH(baptis_anak.tanggal_baptis) as bulan, COUNT(*) as total')
+            ->join('jemaat', 'jemaat.id_ba', '=', 'baptis_anak.id_ba')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') // Join with wilayah table
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
@@ -114,7 +117,7 @@ class AdminWilayahPageController extends Controller
             })
             ->groupBy('bulan')
             ->get();
-        $atestasiMasuk = AtestasiMasuk::selectRaw('MONTH(tanggal) as bulan, COUNT(*) as jumlah')
+        $atestasiMasuk = AtestasiMasuk::selectRaw('MONTH(tanggal_masuk) as bulan, COUNT(*) as jumlah')
             ->join('jemaat', 'atestasi_masuk.id_jemaat', '=', 'jemaat.id_jemaat')
             ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah') // Join with wilayah table
             ->when($gender, function ($query, $gender) {
