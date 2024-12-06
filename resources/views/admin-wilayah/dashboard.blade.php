@@ -143,7 +143,7 @@
     const Baptis = new Chart(chart3, {
         type: 'line',
         data: {
-            labels: @json($labelBaptis),
+            labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sept','Okt','Nov','Des'],
             datasets: [{
                 label: 'Baptis Anak',
                 data: @json($isiBA),
@@ -186,7 +186,7 @@
         const keluarMasuk = new Chart(chart4, {
         type: 'bar',
         data: {
-            labels: @json($labelBulan),
+            labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sept','Okt','Nov','Des'],
             datasets: [{
                 label: 'Atestasi Masuk',
                 data: @json($isiMasuk),
@@ -221,7 +221,7 @@
         const keluarMasuk = new Chart(chart4, {
         type: 'bar',
         data: {
-            labels: @json($labelBulan),
+            labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sept','Okt','Nov','Des'],
             datasets: [{
                 label: 'Jemaat Meninggal',
                 data: @json($isiKematian),
@@ -250,7 +250,7 @@
         const keluarMasuk = new Chart(chart4, {
         type: 'bar',
         data: {
-            labels: @json($labelBulan),
+            labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sept','Okt','Nov','Des'],
             datasets: [{
                 label: 'Atestasi Masuk',
                 data: @json($isiMasuk),
