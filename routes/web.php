@@ -44,7 +44,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/pengaturan/jabatan-majelis', AdminPageController::class . '@adminPengaturanJabatanMajelis')->name('admin.pengaturan.jabatan-majelis');
     Route::get('/admin/pengaturan/jabatan-non-majelis', AdminPageController::class . '@adminPengaturanJabatanNonMajelis')->name('admin.pengaturan.jabatan-non-majelis');
     Route::get('/admin/pengaturan/user-admin', AdminPageController::class . '@adminPengaturanUserAdmin')->name('admin.pengaturan.user-admin');
-    Route::get('/admin/pengaturan/referensi-pekerjaan', AdminPageController::class . '@adminReferensiPekerjaan')->name('admin.pengaturan.referensi-pekerjaan');
+    // Route::get('/admin/pengaturan/referensi-pekerjaan', AdminPageController::class . '@adminReferensiPekerjaan')->name('admin.pengaturan.referensi-pekerjaan');
     Route::get('/admin/pengaturan/referensi-daerah/provinsi', AdminPageController::class . '@adminReferensiDaerah')->name('admin.pengaturan.referensi-daerah');
     Route::get('/admin/pengaturan/referensi-daerah/kabupaten/{id_provinsi}', AdminPageController::class . '@adminReferensiDaerahKabupaten')->name('admin.pengaturan.referensi-daerah-kabupaten');
     Route::get('/admin/pengaturan/referensi-daerah/kecamatan/{id_kabupaten}', AdminPageController::class . '@adminReferensiDaerahKecamatan')->name('admin.pengaturan.referensi-daerah-kecamatan');

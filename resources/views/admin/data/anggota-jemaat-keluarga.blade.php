@@ -361,7 +361,6 @@
                             return false;
                         }
 
-                        // Validasi 1: Cek apakah anggota keluarga sama dengan kepala keluarga
                         const kepalaResponse = await $.ajax({
                             type: "POST",
                             url: "{{ route('api.get.keluarga') }}",
@@ -372,15 +371,6 @@
                             dataType: "json"
                         });
 
-                        const keluargaData = kepalaResponse[0];
-                        if (keluargaData && keluargaData.kepala_keluarga && keluargaData
-                            .kepala_keluarga.id_jemaat == data.id_jemaat) {
-                            Swal.showValidationMessage(
-                                'Anggota keluarga tidak boleh sama dengan kepala keluarga!');
-                            return false;
-                        }
-
-                        // Validasi 2: Cek apakah anggota keluarga sudah ada atau hubungan duplikat
                         const anggotaResponse = await $.ajax({
                             type: "POST",
                             url: "{{ route('api.get.anggotakeluarga') }}",
@@ -391,6 +381,23 @@
                             dataType: "json"
                         });
 
+                        // Validasi 1: Cek apakah anggota keluarga sama dengan kepala keluarga
+                        const keluargaData = kepalaResponse.rows[0];
+                        if (keluargaData && keluargaData.kepala_keluarga && keluargaData
+                            .kepala_keluarga.id_jemaat == data.id_jemaat) {
+                            Swal.showValidationMessage(
+                                'Anggota keluarga tidak boleh sama dengan kepala keluarga!');
+                            return false;
+                        }
+
+                        if (keluargaData && keluargaData.keterangan_hubungan == data.keterangan_hubungan) {
+                            Swal.showValidationMessage(
+                                'Anggota keluarga tidak boleh memiliki hubungan yang sama dengan kepala keluarga!'
+                            );
+                            return false;
+                        }
+
+                        // Validasi 2: Cek apakah anggota keluarga sudah ada atau hubungan duplikat
                         for (const anggota of anggotaResponse) {
                             if (anggota.id_jemaat == data.id_jemaat) {
                                 Swal.showValidationMessage('Anggota keluarga sudah ada!');

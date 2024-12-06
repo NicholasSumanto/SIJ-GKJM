@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pernikahan', function (Blueprint $table) {
             $table->id('id_nikah');
+            $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->enum('status_pernikahan', ['Menikah', 'Cerai']);
             $table->string('nomor', 50);
             $table->string('nama_gereja');
@@ -26,11 +27,11 @@ return new class extends Migration
             $table->string('ibu_wanita', 100);
             $table->string('saksi1', 100);
             $table->string('saksi2', 100);
-            $table->enum('warga',['Warga Jemaat','Bukan Warga']);
             $table->string('tempat', 250);
             $table->string('ketua_majelis', 100);
             $table->string('sekretaris_majelis', 100);
             $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });
         Schema::create('jemaat', function (Blueprint $table) {
@@ -96,9 +97,9 @@ return new class extends Migration
             $table->string('validasi')->nullable();
             $table->date('tanggal_baptis')->nullable();
             $table->string('golongan_darah', 3);
-            $table->bigInteger('id_pendidikan')->unsigned()->nullable();
-            $table->bigInteger('id_ilmu')->unsigned()->nullable();
-            $table->bigInteger('id_pekerjaan')->unsigned()->nullable();
+            $table->string('pendidikan')->nullable();
+            $table->string('ilmu')->nullable();
+            $table->string('pekerjaan')->nullable();
             $table->string('instansi', 250)->nullable();
             $table->string('penghasilan', 50)->nullable();
             $table->string('gereja_baptis', 250)->nullable();
@@ -110,7 +111,6 @@ return new class extends Migration
             $table->foreign('id_kecamatan')->references('id_kecamatan')->on('kecamatan')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_kabupaten')->references('id_kabupaten')->on('kabupaten')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_provinsi')->references('id_provinsi')->on('provinsi')->onUpdate('cascade')->onDelete('set null');
-            $table->foreign('id_pendidikan')->references('id_pendidikan')->on('pendidikan')->onUpdate('cascade')->onDelete('set null');
         });
 
         Schema::create('jemaat_titipan', function (Blueprint $table) {
@@ -118,14 +118,14 @@ return new class extends Migration
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->string('nama_jemaat')->nullable();
             $table->date('tanggal_titipan');
-            $table->date('tanggal_selesai');
+            $table->date('tanggal_selesai')->nullable();
             $table->string('nama_gereja_asal');
             $table->string('nama_gereja_tujuan');
             $table->string('kelamin');
             $table->text('alamat_jemaat');
             $table->string('titipan');
             $table->string('surat');
-            $table->enum('status_titipan', ['Selesai', 'Belum Selesai']);
+            $table->string('status_titipan');
             $table->foreign('id_jemaat')->references('id_jemaat')->on('jemaat')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
         });

@@ -153,7 +153,6 @@
                         @if ($jemaat->photo_url !== null)
                             <a href="{{ $jemaat->photo_url }}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat
                                 Detail Foto</a>
-
                         @endif
                     </th>
                     <td>
@@ -241,25 +240,25 @@
                                         <!-- AJAX -->
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group kabupaten_container" style="display: none;">
                                     <label for="id_kabupaten">Kabupaten</label>
                                     <select id="id_kabupaten" class="form-control">
                                         <option value="">Pilih Nama Kabupaten</option>
-                                        <!-- AJAX -->
+                                                <!-- AJAX -->
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group kecamatan_container" style="display: none;">
                                     <label for="id_kecamatan">Kecamatan</label>
                                     <select id="id_kecamatan" class="form-control">
                                         <option value="">Pilih Nama Kecamatan</option>
-                                        <!-- AJAX -->
+                                                <!-- AJAX -->
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group kelurahan_container" style="display: none;">
                                     <label for="id_kelurahan">Kelurahan</label>
                                     <select id="id_kelurahan" class="form-control">
                                         <option value="">Pilih Nama Kelurahan</option>
-                                        <!-- AJAX -->
+                                                <!-- AJAX -->
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -317,7 +316,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="pekerjaan">Pekerjaan</label>
-                                    <input type="text" id="pekerjaan" class="form-control" placeholder="Masukkan Pekerjaan" value="${data.pekerjaan ?? ''}>
+                                    <input type="text" id="pekerjaan" class="form-control" placeholder="Masukkan Pekerjaan" value="${data.pekerjaan ?? ''}">
                                 </div>
                                 <div class="form-group">
                                     <label for="penghasilan">Penghasilan</label>
@@ -372,18 +371,27 @@
                                     },
                                     dataType: "json",
                                     success: function(response) {
-                                        const $statusDropdown = $('#keterangan_status');
+                                        const $statusDropdown = $(
+                                            '#keterangan_status');
                                         $statusDropdown.empty().append(
-                                            '<option value="">Pilih Status</option>');
-
-                                        (response.rows || response).forEach(item => {
-                                            $statusDropdown.append(
-                                                `<option value="${item.id_status}">${item.keterangan_status}</option>`
+                                            '<option value="">Pilih Status</option>'
                                             );
+
+                                        (response.rows || response)
+                                        .forEach(item => {
+                                            $statusDropdown
+                                                .append(
+                                                    `<option value="${item.id_status}">${item.keterangan_status}</option>`
+                                                );
                                         });
+
+                                        $('#keterangan_status').val(data
+                                            .id_status);
                                     },
                                     error: function(xhr, status, error) {
-                                        console.error("Error loading status data:", error);
+                                        console.error(
+                                            "Error loading status data:",
+                                            error);
                                     }
                                 });
 
@@ -444,7 +452,7 @@
                                     $('.kabupaten_container').show();
 
                                     if (!idProvinsi) {
-                                        $('.kabupaten_container, .kecamatan_container, .kelurahan_container')
+                                        $('.kabupaten_container, .kabupaten_container, .kelurahan_container')
                                             .hide();
                                         return;
                                     }
@@ -603,13 +611,15 @@
                                     instansi: $('#instansi').val(),
                                     penghasilan: $('#penghasilan').val(),
                                     gereja_baptis: $('#gereja_baptis').val(),
-                                    alat_transportasi: $('#alat_transportasi').val(),
-                                    keterangan_status: $('#keterangan_status').val(),
+                                    alat_transportasi: $('#alat_transportasi')
+                                        .val(),
+                                    keterangan_status: $('#keterangan_status')
+                                        .val(),
                                     photo: $('#photo')[0].files[0]
                                 };
 
                                 const photo = $('#photo')[0].files[0];
-                                    data.photo = photo;
+                                data.photo = photo;
 
 
                                 // Validasi input
@@ -621,6 +631,8 @@
                                         'nik' && key !==
                                         'no_kk' && key !== 'stamboek' && key !==
                                         'tempat_lahir' &&
+                                        key !== 'kodepos' && key !== 'pendidikan' &&
+                                        key !== 'pekerjaan' &&
                                         key !== 'tanggal_baptis' && key !==
                                         'instansi' && key !==
                                         'gereja_baptis' && key !==
@@ -628,7 +640,8 @@
                                         'penghasilan' && key !== 'golongan_darah' &&
                                         key !== 'id_kelurahan' && key !==
                                         'id_kecamatan' && key !==
-                                        'id_kabupaten' && key !== 'id_provinsi' && key !== foto) {
+                                        'id_kabupaten' && key !== 'id_provinsi' &&
+                                        key !== photo) {
                                         Swal.showValidationMessage(
                                             `${key.replace(/_/g, ' ')} tidak boleh kosong!`
                                         );
@@ -656,8 +669,10 @@
                                         success: function(
                                             response) {
                                             if (response.total >
-                                                0 &&  data
-                                                .nama_jemaat != old_nama_jemaat) {
+                                                0 && data
+                                                .nama_jemaat !=
+                                                old_nama_jemaat
+                                                ) {
                                                 reject(
                                                     'NIK sudah ada, silahkan gunakan NIK lain!'
                                                 );
@@ -711,13 +726,16 @@
 
                                 const formData = new FormData();
                                 formData.append('_token', '{{ csrf_token() }}');
+                                formData.append('id_jemaat', id_jemaat);
                                 formData.append('nama_jemaat', nama_jemaat);
                                 formData.append('id_wilayah', id_wilayah);
                                 formData.append('kelamin', kelamin);
+                                formData.append('kodepos', kodepos);
                                 formData.append('tanggal_lahir', tanggal_lahir);
                                 formData.append('id_kelurahan', id_kelurahan);
                                 formData.append('id_kecamatan', id_kecamatan);
-                                formData.append('id_kabupaten', id_kabupaten);
+                                if (id_kabupaten) formData.append('id_kabupaten',
+                                    id_kabupaten);
                                 formData.append('id_provinsi', id_provinsi);
                                 formData.append('alamat_jemaat', alamat_jemaat);
                                 formData.append('telepon', telepon);
@@ -731,14 +749,14 @@
                                 formData.append('golongan_darah', golongan_darah);
                                 formData.append('pekerjaan', pekerjaan);
                                 formData.append('ilmu', ilmu);
-                                formData.append('pendidikan',pendidikan);
+                                formData.append('pendidikan', pendidikan);
                                 formData.append('instansi', instansi);
                                 formData.append('penghasilan', penghasilan);
                                 formData.append('gereja_baptis', gereja_baptis);
                                 formData.append('alat_transportasi', alat_transportasi);
-                                formData.append('id_status', result.value.keterangan_status);
+                                formData.append('id_status', result.value
+                                    .keterangan_status);
                                 if (foto) formData.append('photo', foto);
-
 
                                 $.ajax({
                                     url: "{{ route('api.update.jemaat') }}",
@@ -747,16 +765,61 @@
                                     contentType: false,
                                     processData: false,
                                     success: function(response) {
-                                        alert.fire({
+                                        Swal.fire({
+                                            toast: true,
                                             icon: 'success',
-                                            title: 'Data jemaat berhasil diupdate'
+                                            title: 'Data jemaat berhasil diupdate',
+                                            position: 'top-right',
+                                            showConfirmButton: false,
+                                            timer: 3500,
+                                            allowOutsideClick: true,
+                                            allowEscapeKey: true,
+                                            timerProgressBar: true,
+                                            didOpen: (toast) => {
+                                                toast
+                                                    .addEventListener(
+                                                        'mouseenter',
+                                                        Swal
+                                                        .stopTimer
+                                                        )
+                                                toast
+                                                    .addEventListener(
+                                                        'mouseleave',
+                                                        Swal
+                                                        .resumeTimer
+                                                        )
+                                            }
+                                        }).then(() => {
+                                            location
+                                        .reload();
                                         });
                                         $table.bootstrapTable('refresh');
                                     },
                                     error: function(xhr) {
-                                        alert.fire({
+                                        Swal.fire({
+                                            toast: true,
                                             icon: 'error',
-                                            title: 'Data jemaat gagal diupdate'
+                                            title: 'Data jemaat gagal diupdate',
+                                            position: 'top-right',
+                                            showConfirmButton: false,
+                                            timer: 3500,
+                                            allowOutsideClick: true,
+                                            allowEscapeKey: true,
+                                            timerProgressBar: true,
+                                            didOpen: (toast) => {
+                                                toast
+                                                    .addEventListener(
+                                                        'mouseenter',
+                                                        Swal
+                                                        .stopTimer
+                                                        )
+                                                toast
+                                                    .addEventListener(
+                                                        'mouseleave',
+                                                        Swal
+                                                        .resumeTimer
+                                                        )
+                                            }
                                         });
                                     }
                                 });
@@ -772,7 +835,8 @@
                     url: "{{ route('api.get.jemaat.by.id', ['id_jemaat' => '__ID__']) }}".replace('__ID__',
                         id_jemaat),
                     data: {
-                        _token: '{{ csrf_token() }}'
+                        _token: '{{ csrf_token() }}',
+                        validasi: 'valid'
                     },
                     dataType: "json",
                     success: function(data) {

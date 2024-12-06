@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Pernikahan;
 use App\Models\Pendeta;
+use App\Models\Wilayah;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,6 +24,7 @@ class PernikahanFactory extends Factory
     {
         return [
             'nomor' => $this->faker->unique()->numerify('PNK###'),
+            'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
             'nama_gereja' =>$this->churches[array_rand($this->churches)],
             'tanggal_nikah' => $this->faker->date(),
             'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,
@@ -34,7 +36,6 @@ class PernikahanFactory extends Factory
             'ibu_wanita' => $this->faker->name(),
             'saksi1' => $this->faker->name(),
             'saksi2' => $this->faker->name(),
-            'warga' => $this->faker->randomElement(['Warga Jemaat', 'Bukan Warga']),
             'tempat' => $this->faker->address(),
             'ketua_majelis' => $this->faker->name(),
             'sekretaris_majelis' => $this->faker->name(),

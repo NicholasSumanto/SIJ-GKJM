@@ -42,7 +42,6 @@ class JemaatFactory extends Factory
             'photo' => $this->faker->imageUrl(640, 480, 'people'),
             'tanggal_baptis' => $this->faker->date(),
             'golongan_darah' => $this->faker->randomElement(['A', 'B', 'AB', 'O']),
-            'pendidikan' => Pendidikan::inRandomOrder()->first()->id_pendidikan,
             'ilmu' => $this->faker->jobTitle,
             'pekerjaan' => $this->faker->jobTitle,
             'instansi' => $this->faker->company(),

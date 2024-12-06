@@ -15,6 +15,7 @@ class Pernikahan extends Model
     protected $fillable = [
         'nomor',
         'nama_gereja',
+        'id_wilayah',
         'tanggal_nikah',
         'id_pendeta',
         'pengantin_pria',
@@ -25,7 +26,6 @@ class Pernikahan extends Model
         'ibu_wanita',
         'saksi1',
         'saksi2',
-        'warga',
         'tempat',
         'ketua_majelis',
         'sekretaris_majelis',
@@ -34,5 +34,10 @@ class Pernikahan extends Model
     public function pendeta()
     {
         return $this->belongsTo(Pendeta::class, 'id_pendeta');
+    }
+    
+    public function wilayah()
+    {
+        return $this->belongsTo(Wilayah::class, 'id_wilayah');
     }
 }

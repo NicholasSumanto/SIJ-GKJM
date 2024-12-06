@@ -61,6 +61,11 @@
                     title: 'Tgl Pernikahan',
                     align: 'center'
                 }, {
+                    field: 'nama_wilayah',
+                    title: 'Wilayah',
+                    filterControl: 'select',
+                    align: 'center'
+                },{
                     field: 'pengantin_pria',
                     title: 'Pria',
                     align: 'center'
@@ -126,6 +131,11 @@
                         title: 'Tgl Pernikahan',
                         align: 'center'
                     }, {
+                        field: 'nama_wilayah',
+                        title: 'Wilayah',
+                        filterControl: 'select',
+                        align: 'center'
+                    },{
                         field: 'pengantin_pria',
                         title: 'Pria',
                         align: 'center'
@@ -209,6 +219,13 @@
                             <label for="tanggal_nikah">Tanggal Menikah *</label>
                             <input type="date" id="tanggal_nikah" class="form-control" required>
                         </div>
+                         <div class="form-group">
+                            <label for="id_wilayah">Warga Wilayah *</label>
+                            <select id="id_wilayah" class="form-control" required>
+                                <option value="">Pilih Wilayah</option>
+                                <!-- AJAX -->
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="nama_pendeta">Nama Pendeta *</label>
                             <select id="nama_pendeta" class="form-control" required>
@@ -247,14 +264,6 @@
                         <div class="form-group">
                             <label for="saksi2">Nama Saksi 2 *</label>
                             <input type="text" id="saksi2" class="form-control" placeholder="Masukkan Nama Saksi 2" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="warga">Jenis Warga *</label>
-                            <select id="warga" class="form-control" required>
-                                <option value="">Pilih Jenis Warga</option>
-                                <option value="Warga Jemaat">Warga Jemaat</option>
-                                <option value="Bukan Warga">Bukan Warga</option>
-                            </select>
                         </div>
                         <div class="form-group">
                             <label for="tempat">Nama Lokasi *</label>
@@ -296,6 +305,23 @@
                     });
 
                     $.ajax({
+                            url: "{{ route('api.get.wilayah') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $idWilayah = $('#id_wilayah');
+                                Object.entries(response).forEach(([key, value]) => {
+                                    $idWilayah.append(
+                                        `<option value="${value.id_wilayah}">${value.nama_wilayah}</option>`
+                                    );
+                                });
+                            }
+                        });
+
+                    $.ajax({
                         url: "{{ route('api.get.pendeta') }}",
                         type: "POST",
                         data: {
@@ -330,6 +356,7 @@
                 preConfirm: () => {
                     const nomor = $('#nomor').val();
                     const nama_gereja = $('#nama_gereja').val();
+                    const nama_wilayah = $('#id_wilayah').val();
                     const new_gereja = $('#new_gereja').val();
                     const tanggal_nikah = $('#tanggal_nikah').val();
                     const nama_pendeta = $('#nama_pendeta').val();
@@ -341,15 +368,14 @@
                     const ibu_wanita = $('#ibu_wanita').val();
                     const saksi1 = $('#saksi1').val();
                     const saksi2 = $('#saksi2').val();
-                    const warga = $('#warga').val();
                     const tempat = $('#tempat').val();
                     const ketua_majelis = $('#ketua_majelis').val();
                     const sekretaris_majelis = $('#sekretaris_majelis').val();
 
-                    if (nomor === '' || nama_gereja === '' || tanggal_nikah === '' || nama_pendeta ===
+                    if (nomor === '' || nama_wilayah === ''|| nama_gereja === '' || tanggal_nikah === '' || nama_pendeta ===
                         '' || pengantin_pria === '' || pengantin_wanita === '' || ayah_pria === '' ||
                         ibu_pria === '' || ayah_wanita === '' || ibu_wanita === '' || saksi1 === '' ||
-                        saksi2 === '' || warga === '' || tempat === '' || ketua_majelis === '' ||
+                        saksi2 === '' || tempat === '' || ketua_majelis === '' ||
                         sekretaris_majelis === '') {
                         Swal.showValidationMessage('Data tidak boleh kosong!');
                     }
@@ -377,6 +403,7 @@
                                         new_gereja: new_gereja === '' ? '' :
                                             new_gereja,
                                         tanggal_nikah: tanggal_nikah,
+                                        nama_wilayah: nama_wilayah,
                                         nama_pendeta: nama_pendeta,
                                         pengantin_pria: pengantin_pria,
                                         pengantin_wanita: pengantin_wanita,
@@ -386,7 +413,6 @@
                                         ibu_wanita: ibu_wanita,
                                         saksi1: saksi1,
                                         saksi2: saksi2,
-                                        warga: warga,
                                         tempat: tempat,
                                         ketua_majelis: ketua_majelis,
                                         sekretaris_majelis: sekretaris_majelis
@@ -409,6 +435,7 @@
                         nomor,
                         nama_gereja,
                         new_gereja,
+                        nama_wilayah,
                         tanggal_nikah,
                         nama_pendeta,
                         pengantin_pria,
@@ -419,7 +446,6 @@
                         ibu_wanita,
                         saksi1,
                         saksi2,
-                        warga,
                         tempat,
                         ketua_majelis,
                         sekretaris_majelis
@@ -433,6 +459,7 @@
                             nomor: nomor,
                             nama_gereja: nama_gereja,
                             new_gereja: new_gereja,
+                            id_wilayah: nama_wilayah,
                             tanggal_nikah: tanggal_nikah,
                             id_pendeta: nama_pendeta,
                             pengantin_pria: pengantin_pria,
@@ -443,7 +470,6 @@
                             ibu_wanita: ibu_wanita,
                             saksi1: saksi1,
                             saksi2: saksi2,
-                            warga: warga,
                             tempat: tempat,
                             ketua_majelis: ketua_majelis,
                             sekretaris_majelis: sekretaris_majelis
@@ -481,6 +507,7 @@
                 dataType: "json",
                 success: function(response) {
                     var nomor = response.rows[0].nomor;
+                    var id_wilayah = response.rows[0].id_wilayah;
                     var nama_gereja = response.rows[0].nama_gereja;
                     var tanggal_nikah = response.rows[0].tanggal_nikah;
                     var id_pendeta = response.rows[0].id_pendeta;
@@ -492,7 +519,6 @@
                     var ibu_wanita = response.rows[0].ibu_wanita;
                     var saksi1 = response.rows[0].saksi1;
                     var saksi2 = response.rows[0].saksi2;
-                    var warga = response.rows[0].warga;
                     var tempat = response.rows[0].tempat;
                     var ketua_majelis = response.rows[0].ketua_majelis;
                     var sekretaris_majelis = response.rows[0].sekretaris_majelis;
@@ -514,6 +540,13 @@
                                 <div id="new-gereja-container" style="margin-top: 10px; display: none;">
                                     <input type="text" id="new_gereja" class="form-control" placeholder="Masukkan Gereja Baru">
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="id_wilayah">Warga Wilayah *</label>
+                                <select id="id_wilayah" class="form-control" required>
+                                    <option value="">Pilih Wilayah</option>
+                                    <!-- AJAX -->
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="tanggal_nikah">Tanggal Menikah *</label>
@@ -557,14 +590,6 @@
                             <div class="form-group">
                                 <label for="saksi2">Nama Saksi 2 *</label>
                                 <input type="text" id="saksi2" class="form-control" placeholder="Masukkan Nama Saksi 2" value="${saksi2}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="warga">Jenis Warga *</label>
-                                <select id="warga" class="form-control" required>
-                                    <option value="">Pilih Jenis Warga</option>
-                                    <option value="Warga Jemaat">Warga Jemaat</option>
-                                    <option value="Bukan Warga">Bukan Warga</option>
-                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="tempat">Nama Lokasi *</label>
@@ -613,6 +638,24 @@
                             });
 
                             $.ajax({
+                            url: "{{ route('api.get.wilayah') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $idWilayah = $('#id_wilayah');
+                                Object.entries(response).forEach(([key, value]) => {
+                                    $idWilayah.append(
+                                        `<option value="${value.id_wilayah}">${value.nama_wilayah}</option>`
+                                    );
+                                });
+                                $idWilayah.val(id_wilayah);
+                            }
+                        });
+
+                            $.ajax({
                                 url: "{{ route('api.get.pendeta') }}",
                                 type: "POST",
                                 data: {
@@ -651,35 +694,31 @@
                                     $('#new_gereja').val('');
                                 }
                             });
-
-                            $('#warga').val(warga);
                         },
                         preConfirm: () => {
                             const nomor = $('#nomor').val();
                             const nama_gereja = $('#nama_gereja').val();
+                            const nama_wilayah = $('#id_wilayah').val();
                             const new_gereja = $('#new_gereja').val();
                             const tanggal_nikah = $('#tanggal_nikah').val();
                             const nama_pendeta = $('#nama_pendeta').val();
                             const pengantin_pria = $('#pengantin_pria').val();
-                            const pengantin_wanita = $('#pengantin_wanita')
-                                .val();
+                            const pengantin_wanita = $('#pengantin_wanita').val();
                             const ayah_pria = $('#ayah_pria').val();
                             const ibu_pria = $('#ibu_pria').val();
                             const ayah_wanita = $('#ayah_wanita').val();
                             const ibu_wanita = $('#ibu_wanita').val();
                             const saksi1 = $('#saksi1').val();
                             const saksi2 = $('#saksi2').val();
-                            const warga = $('#warga').val();
                             const tempat = $('#tempat').val();
                             const ketua_majelis = $('#ketua_majelis').val();
-                            const sekretaris_majelis = $('#sekretaris_majelis')
-                                .val();
+                            const sekretaris_majelis = $('#sekretaris_majelis').val();
 
                             if (nomor === '' || nama_gereja === '' || tanggal_nikah ===
                                 '' || nama_pendeta === '' || pengantin_pria === '' ||
                                 pengantin_wanita === '' || ayah_pria === '' || ibu_pria ===
                                 '' || ayah_wanita === '' || ibu_wanita === '' || saksi1 ===
-                                '' || saksi2 === '' || warga === '' || tempat === '' ||
+                                '' || saksi2 === '' || tempat === '' ||
                                 ketua_majelis === '' || sekretaris_majelis === '') {
                                 Swal.showValidationMessage('Data tidak boleh kosong!');
                             }
@@ -712,6 +751,7 @@
                                                     '' ?
                                                     '' :
                                                     new_gereja,
+                                                nama_wilayah: nama_wilayah,
                                                 tanggal_nikah: tanggal_nikah,
                                                 nama_pendeta: nama_pendeta,
                                                 pengantin_pria: pengantin_pria,
@@ -722,7 +762,6 @@
                                                 ibu_wanita: ibu_wanita,
                                                 saksi1: saksi1,
                                                 saksi2: saksi2,
-                                                warga: warga,
                                                 tempat: tempat,
                                                 ketua_majelis: ketua_majelis,
                                                 sekretaris_majelis: sekretaris_majelis
@@ -747,6 +786,7 @@
                                 nama_gereja,
                                 new_gereja,
                                 tanggal_nikah,
+                                nama_wilayah,
                                 nama_pendeta,
                                 pengantin_pria,
                                 pengantin_wanita,
@@ -756,7 +796,6 @@
                                 ibu_wanita,
                                 saksi1,
                                 saksi2,
-                                warga,
                                 tempat,
                                 ketua_majelis,
                                 sekretaris_majelis
@@ -770,6 +809,7 @@
                                     nomor: nomor,
                                     old_nomor: old_nomor,
                                     nama_gereja: nama_gereja,
+                                    id_wilayah: nama_wilayah,
                                     new_gereja: new_gereja,
                                     tanggal_nikah: tanggal_nikah,
                                     id_pendeta: nama_pendeta,
@@ -781,7 +821,6 @@
                                     ibu_wanita: ibu_wanita,
                                     saksi1: saksi1,
                                     saksi2: saksi2,
-                                    warga: warga,
                                     tempat: tempat,
                                     ketua_majelis: ketua_majelis,
                                     sekretaris_majelis: sekretaris_majelis

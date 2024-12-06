@@ -13,11 +13,12 @@ use App\Models\Kecamatan;
 use App\Models\AtestasiMasuk;
 use App\Models\AtestasiKeluar;
 use App\Models\BaptisAnak;
+use App\Models\JemaatBaru;
 use App\Models\Provinsi;
 use App\Models\Wilayah;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class AdminPageController extends Controller
 {
@@ -41,8 +42,8 @@ class AdminPageController extends Controller
         $gender = $request->input('Kelamin');
         $kecamatan = $request->input('kecamatan');
         $kabupaten = $request->input('kabupaten');
-        $perempuan = Jemaat::where('kelamin','=', 'Perempuan')->count();
-        $laki = Jemaat::where('kelamin','=', 'Laki-laki')->count();
+        $perempuan = Jemaat::where('kelamin', '=', 'Perempuan')->count();
+        $laki = Jemaat::where('kelamin', '=', 'Laki-laki')->count();
         $wilayah = $request->input('Wilayah');
         $totalJemaatWilayah = Jemaat::selectRaw('id_wilayah')
             ->when($kabupaten, function ($query, $kabupaten) {
@@ -145,7 +146,7 @@ class AdminPageController extends Controller
             ->groupBy('wil')
             ->get();
         $pendidikan = Jemaat::selectRaw('pendidikan.nama_pendidikan as tingkatan, COUNT(jemaat.id_pendidikan) as jumlah')
-            ->join('pendidikan', 'jemaat.id_pendidikan','=','pendidikan.id_pendidikan' )
+            ->join('pendidikan', 'jemaat.id_pendidikan', '=', 'pendidikan.id_pendidikan')
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
@@ -156,9 +157,18 @@ class AdminPageController extends Controller
             ->get();
 
         $allMonths = collect([
-            1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
-            5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ags',
-            9 => 'Sept', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'
+            1 => 'Jan',
+            2 => 'Feb',
+            3 => 'Mar',
+            4 => 'Apr',
+            5 => 'Mei',
+            6 => 'Jun',
+            7 => 'Jul',
+            8 => 'Ags',
+            9 => 'Sept',
+            10 => 'Okt',
+            11 => 'Nov',
+            12 => 'Des'
         ]);
 
         $atestasiMasuk = $allMonths->map(function ($month, $key) use ($atestasiMasuk) {
@@ -211,7 +221,7 @@ class AdminPageController extends Controller
         });
 
         $status = Jemaat::selectRaw('status.keterangan_status as stat, COUNT(jemaat.id_status) as jumlah')
-            ->join('status', 'jemaat.id_status','=','status.id_status' )
+            ->join('status', 'jemaat.id_status', '=', 'status.id_status')
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
@@ -219,8 +229,8 @@ class AdminPageController extends Controller
             ->get();
 
         $dropWilayah = Wilayah::pluck('nama_wilayah', 'id_wilayah');
-        $dropKab = Kabupaten::pluck('kabupaten','id_kabupaten');
-        $dropKec = Kecamatan::pluck('kecamatan','id_kecamatan');
+        $dropKab = Kabupaten::pluck('kabupaten', 'id_kabupaten');
+        $dropKec = Kecamatan::pluck('kecamatan', 'id_kecamatan');
         $labelWilayah = $jumlahJemaat->pluck('wil');
         $isiJemaat = $jumlahJemaat->pluck('jumlah');
         $labelBulan = $jemaatMeninggal->pluck('bulan');
@@ -237,24 +247,24 @@ class AdminPageController extends Controller
         $isiMasuk = $atestasiMasuk->pluck('jumlah');
         $isiKeluar = $atestasiKeluar->pluck('jumlah');;
         $isiPendidikan = $pendidikan->pluck('jumlah');
-        $labelPendidikan =$pendidikan->pluck('tingkatan');
-        $labelStatus =$status->pluck('stat');
+        $labelPendidikan = $pendidikan->pluck('tingkatan');
+        $labelStatus = $status->pluck('stat');
         $jumlahStatus = $status->pluck('jumlah');
 
 
         $data = [
             'widget' => $widget,
-            'jumlahJemaat' => $jumlahJemaat ->toArray(),
-            'jemaatMeninggal' => $jemaatMeninggal ->toArray(),
+            'jumlahJemaat' => $jumlahJemaat->toArray(),
+            'jemaatMeninggal' => $jemaatMeninggal->toArray(),
             'baptisAnak' => $baptisAnak->toArray(),
             'baptisSidi' => $baptisSidi->toArray(),
             'baptisDewasa' => $baptisDewasa->toArray(),
             'atestasiMasuk' => $atestasiMasuk->toArray(),
             'atestasiKeluar' => $atestasiKeluar->toArray(),
-            'pendidikan' => $pendidikan ->toArray(),
-            'status' => $status ->toArray(),
+            'pendidikan' => $pendidikan->toArray(),
+            'status' => $status->toArray(),
         ];
-        return view('admin.dashboard',compact('tahun', 'perempuan', 'laki', 'isiBoy','isiGirl','totalJemaat','dropWilayah', 'dropKab','dropKec','totalJemaatWilayah','labelWilayah','isiJemaat','labelBulan', 'labelAt', 'isiKematian','labelBaptis','labelBD','labelBS','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','isiPendidikan','labelPendidikan','labelStatus','jumlahStatus'), $data);
+        return view('admin.dashboard', compact('tahun', 'perempuan', 'laki', 'isiBoy', 'isiGirl', 'totalJemaat', 'dropWilayah', 'dropKab', 'dropKec', 'totalJemaatWilayah', 'labelWilayah', 'isiJemaat', 'labelBulan', 'labelAt', 'isiKematian', 'labelBaptis', 'labelBD', 'labelBS', 'isiBA', 'isiBS', 'isiBD', 'isiMasuk', 'isiKeluar', 'isiPendidikan', 'labelPendidikan', 'labelStatus', 'jumlahStatus'), $data);
     }
 
     // admin pengaturan start
@@ -355,6 +365,31 @@ class AdminPageController extends Controller
         return view('admin.data.jemaat-baru');
     }
 
+    public function adminDataAnggotaJemaatBaruDetail($id)
+    {
+        $jemaat = JemaatBaru::find($id);
+
+        if ($jemaat->id_kelurahan != null) {
+            $jemaat->nama_kelurahan = Kelurahan::find($jemaat->id_kelurahan)->kelurahan;
+        }
+
+        if ($jemaat->id_kecamatan != null) {
+            $jemaat->nama_kecamatan = Kecamatan::find($jemaat->id_kecamatan)->kecamatan;
+        }
+
+        if ($jemaat->id_kabupaten != null) {
+            $jemaat->nama_kabupaten = Kabupaten::find($jemaat->id_kabupaten)->kabupaten;
+        }
+
+        if ($jemaat->id_provinsi != null) {
+            $jemaat->nama_provinsi = Provinsi::find($jemaat->id_provinsi)->nama_provinsi;
+        }
+
+        $jemaat->photo_url = $jemaat->photo ? Storage::url($jemaat->photo) : null;
+
+        return view('admin.data.jemaat-baru-detail', compact('jemaat'));
+    }
+
     public function adminDataPendeta()
     {
         return view('admin.data.pendeta');
@@ -386,35 +421,45 @@ class AdminPageController extends Controller
     // admin data end
 
     // admin transaksi start
-    public function adminTransaksiPernikahan() {
+    public function adminTransaksiPernikahan()
+    {
         return view('admin.transaksi.pernikahan');
     }
 
-    public function adminTransaksiKematian() {
+    public function adminTransaksiKematian()
+    {
         return view('admin.transaksi.kematian');
     }
 
-    public function adminTransaksiAtestasiKeluar() {
+    public function adminTransaksiAtestasiKeluar()
+    {
         return view('admin.transaksi.atestasi-keluar');
     }
-    public function adminTransaksiAtestasiKeluarDetail($id) {
+    public function adminTransaksiAtestasiKeluarDetail($id)
+    {
         $atestasiKeluarDetail = AtestasiKeluarDtl::find($id);
-        return view('admin.transaksi.atestasi-keluar-detail', compact('atestasiKeluarDetail'));
+        $id_keluar = AtestasiKeluar::find($id)->id_keluar;
+
+        return view('admin.transaksi.atestasi-keluar-detail', compact('atestasiKeluarDetail', 'id_keluar'));
     }
 
-    public function adminTransaksiAtestasiMasuk() {
+    public function adminTransaksiAtestasiMasuk()
+    {
         return view('admin.transaksi.atestasi-masuk');
     }
 
-    public function adminTransaksiBaptisAnak() {
+    public function adminTransaksiBaptisAnak()
+    {
         return view('admin.transaksi.baptis-anak');
     }
 
-    public function adminTransaksiBaptisDewasa() {
+    public function adminTransaksiBaptisDewasa()
+    {
         return view('admin.transaksi.baptis-dewasa');
     }
 
-    public function adminTransaksiBaptisSidi() {
+    public function adminTransaksiBaptisSidi()
+    {
         return view('admin.transaksi.baptis-sidi');
     }
 }

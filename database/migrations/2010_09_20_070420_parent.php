@@ -16,21 +16,6 @@ return new class extends Migration
             $table->string("keterangan_status",100);
             $table->timestamps();
         });
-        Schema::create('bidangilmu', function (Blueprint $table) {
-            $table->id('id_ilmu');
-            $table->string("bidangilmu",100);
-            $table->timestamps();
-        });
-        Schema::create('pendidikan', function (Blueprint $table) {
-            $table->id('id_pendidikan');
-            $table->string("nama_pendidikan");
-            $table->timestamps();
-        });
-        Schema::create('pekerjaan', function (Blueprint $table) {
-            $table->id('id_pekerjaan');
-            $table->string("pekerjaan");
-            $table->timestamps();
-        });
         Schema::create('pendeta', function (Blueprint $table) {
             $table->id('id_pendeta');
             $table->string("nama_pendeta");
@@ -94,9 +79,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('status');
         Schema::dropIfExists('gereja');
-        Schema::dropIfExists('bidangilmu');
-        Schema::dropIfExists('pendidikan');
-        Schema::dropIfExists('pekerjaan');
         Schema::dropIfExists('pendeta');
         Schema::dropIfExists('pendeta_didik');
         Schema::dropIfExists('wilayah');

@@ -30,7 +30,7 @@ Route::post('/get/jabatan-majelis', [ApiController::class, 'ApiGetJabatanMajelis
 Route::post('/get/jabatan-non-majelis', [ApiController::class, 'ApiGetJabatanNonMajelis'])-> name('api.get.jabatan-non-majelis');
 Route::post('/get/user', [ApiController::class, 'ApiGetUser'])-> name('api.get.user-admin');
 Route::post('/get/role', [ApiController::class, 'ApiGetRole'])-> name('api.get.roles');
-Route::post('/get/pekerjaan', [ApiController::class, 'ApiGetPekerjaan'])-> name('api.get.pekerjaan');
+// Route::post('/get/pekerjaan', [ApiController::class, 'ApiGetPekerjaan'])-> name('api.get.pekerjaan');
 Route::post('/get/provinsi', [ApiController::class, 'ApiGetDaerahProvinsi'])-> name('api.get.provinsi');
 Route::post('/get/kabupaten', [ApiController::class, 'ApiGetDaerahKabupaten'])-> name('api.get.kabupaten');
 Route::post('/get/kecamatan', [ApiController::class, 'ApiGetDaerahKecamatan'])-> name('api.get.kecamatan');

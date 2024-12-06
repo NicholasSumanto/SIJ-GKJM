@@ -77,7 +77,7 @@
                     field: 'tanggal_selesai',
                     title: 'Tanggal Selesai',
                     align: 'center'
-                },{
+                }, {
                     field: 'ijazah',
                     title: 'Ijazah',
                     formatter: function(value, row, index) {
@@ -94,7 +94,7 @@
                     field: 'keterangan_status',
                     title: 'Status',
                     align: 'center'
-                },{
+                }, {
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
@@ -148,7 +148,7 @@
                         field: 'tanggal_selesai',
                         title: 'Tanggal Selesai',
                         align: 'center'
-                    },{
+                    }, {
                         field: 'ijazah',
                         title: 'Ijazah',
                         formatter: function(value, row, index) {
@@ -165,7 +165,7 @@
                         field: 'keterangan_status',
                         title: 'Status',
                         align: 'center'
-                    },{
+                    }, {
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
@@ -187,7 +187,7 @@
             }).trigger('change');
 
             // Event listener untuk tombol tambah Pendeta
-            $('.tambah-pendeta').on('click', function (event) {
+            $('.tambah-pendeta').on('click', function(event) {
                 event.preventDefault();
                 Swal.fire({
                     title: 'Tambah Pendeta Baru',
@@ -242,18 +242,21 @@
                         $.ajax({
                             url: "{{ route('api.get.status') }}",
                             type: "POST",
-                            data: { _token: '{{ csrf_token() }}' },
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
                             dataType: "json",
-                            success: function (response) {
+                            success: function(response) {
                                 const $statusDropdown = $('#keterangan_status');
-                                $statusDropdown.empty().append('<option value="">Pilih Status</option>');
+                                $statusDropdown.empty().append(
+                                    '<option value="">Pilih Status</option>');
                                 (response.rows || response).forEach(item => {
                                     $statusDropdown.append(
                                         `<option value="${item.id_status}">${item.keterangan_status}</option>`
                                     );
                                 });
                             },
-                            error: function (xhr, status, error) {
+                            error: function(xhr, status, error) {
                                 console.error("Error loading status data:", error);
                             }
                         });
@@ -276,7 +279,7 @@
                             !data.namaPendeta ||
                             !data.jenjang ||
                             !data.sekolah ||
-                            !data.tanggal_mulai||
+                            !data.tanggal_mulai ||
                             !data.keterangan_status
                         ) {
                             Swal.showValidationMessage('Semua field yang wajib harus diisi!');
@@ -307,23 +310,22 @@
                             data: formData,
                             contentType: false,
                             processData: false,
-                            success: function (response) {
+                            success: function(response) {
                                 if (response.message === 'Data already exists') {
-                                    Swal.fire({
+                                    alert.fire({
                                         icon: 'error',
-                                        title: 'Gagal',
-                                        text: 'Data pendeta sudah ada!'
+                                        title: 'Data pendeta sudah ada!'
                                     });
                                 } else {
-                                    Swal.fire({
+
+                                    alert.fire({
                                         icon: 'success',
-                                        title: 'Berhasil',
-                                        text: 'Pendeta berhasil ditambahkan!'
+                                        title: 'Pendeta berhasil ditambahkan!'
                                     });
                                     $table.bootstrapTable('refresh');
                                 }
                             },
-                            error: function (xhr, status, error) {
+                            error: function(xhr, status, error) {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal',
@@ -337,23 +339,23 @@
 
             // Event listener untuk tombol edit
             $(document).on('click', '.btn-edit', function() {
-            event.preventDefault();
-            var id_pendeta = $(this).data('id');
+                event.preventDefault();
+                var id_pendeta = $(this).data('id');
 
-            $.ajax({
-                type: "POST",
-                url: "{{ route('api.get.pendeta') }}",
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: id_pendeta
-                },
-                dataType: "json",
-                success: function(response) {
-                    var pendeta = response.rows[0];
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('api.get.pendeta') }}",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id_pendeta
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        var pendeta = response.rows[0];
 
-                    Swal.fire({
-                        title: 'Edit Pendeta',
-                        html: `
+                        Swal.fire({
+                            title: 'Edit Pendeta',
+                            html: `
                         <form id="addPendetaForm">
                             <div class="form-group">
                                 <label for="namaPendeta">Nama Pendeta *</label>
@@ -378,7 +380,7 @@
                             </div>
                             <div class="form-group mb-0">
                                 <label for="keterangan">Keterangan</label>
-                                <textarea id="keterangan" class="form-control" value="${pendeta.keterangan}" placeholder="Masukkan Keterangan"></textarea>
+                                <textarea id="keterangan" class="form-control" placeholder="Masukkan Keterangan">${pendeta.keterangan}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="tanggal_mulai">Tanggal Mulai *</label>
@@ -397,119 +399,133 @@
                             </div>
                         </form>
                     `,
-                        showCancelButton: true,
-                        confirmButtonText: 'Save',
-                        cancelButtonText: 'Cancel',
-                        didOpen: () => {
-                        // Load status options via AJAX
-                        $.ajax({
-                            url: "{{ route('api.get.status') }}",
-                            type: "POST",
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            dataType: "json",
-                            success: function(response) {
-                                const $statusDropdown = $('#keterangan_status');
-                                $statusDropdown.empty().append(
-                                    '<option value="">Pilih Status</option>');
+                            showCancelButton: true,
+                            confirmButtonText: 'Save',
+                            cancelButtonText: 'Cancel',
+                            didOpen: () => {
+                                // Load status options via AJAX
+                                $.ajax({
+                                    url: "{{ route('api.get.status') }}",
+                                    type: "POST",
+                                    data: {
+                                        _token: '{{ csrf_token() }}'
+                                    },
+                                    dataType: "json",
+                                    success: function(response) {
+                                        const $statusDropdown = $(
+                                            '#keterangan_status');
+                                        $statusDropdown.empty().append(
+                                            '<option value="">Pilih Status</option>'
+                                            );
 
-                                (response.rows || response).forEach(item => {
-                                    $statusDropdown.append(
-                                        `<option value="${item.id_status}">${item.keterangan_status}</option>`
-                                    );
+                                        (response.rows || response)
+                                        .forEach(item => {
+                                            $statusDropdown
+                                                .append(
+                                                    `<option value="${item.id_status}">${item.keterangan_status}</option>`
+                                                );
+                                        });
+                                        $('#keterangan_status').val(
+                                            pendeta.id_status);
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error(
+                                            "Error loading status data:",
+                                            error);
+                                    }
                                 });
-                                $('#keterangan_status').val(pendeta.id_status);
                             },
-                            error: function(xhr, status, error) {
-                                console.error("Error loading status data:", error);
+                            preConfirm: () => {
+                                const data = {
+                                    nama_pendeta: $('#namaPendeta').val(),
+                                    id_pendeta: id_pendeta,
+                                    jenjang: $('#jenjang').val(),
+                                    sekolah: $('#sekolah').val(),
+                                    tahun_lulus: $('#tahunLulus').val(),
+                                    ijazah: $('#ijazah')[0].files[0],
+                                    tanggal_mulai: $('#tanggal_mulai').val(),
+                                    tanggal_selesai: $('#tanggal_selesai')
+                                    .val(),
+                                    keterangan_status: $('#keterangan_status')
+                                        .val(),
+                                    keterangan: $('#keterangan').val()
+                                };
+
+                                // Validate required fields
+                                if (
+                                    !data.nama_pendeta ||
+                                    !data.jenjang ||
+                                    !data.sekolah ||
+                                    !data.tanggal_mulai ||
+                                    !data.keterangan_status
+                                ) {
+                                    Swal.showValidationMessage(
+                                        'Semua field yang wajib harus diisi!');
+                                    return false;
+                                }
+
+                                return data;
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed && result.value) {
+                                const {
+                                    id_pendeta,
+                                    nama_pendeta,
+                                    jenjang,
+                                    sekolah,
+                                    tahun_lulus,
+                                    ijazah,
+                                    tanggal_mulai,
+                                    tanggal_selesai,
+                                    keterangan_status,
+                                    keterangan
+                                } = result.value;
+
+                                const formData = new FormData();
+                                formData.append('_token', '{{ csrf_token() }}');
+                                formData.append('id_pendeta', id_pendeta);
+                                formData.append('nama_pendeta', nama_pendeta);
+                                formData.append('jenjang', jenjang);
+                                formData.append('sekolah', sekolah);
+                                formData.append('tahun_lulus', tahun_lulus);
+                                if(ijazah) formData.append('ijazah', ijazah);
+                                formData.append('tanggal_mulai', tanggal_mulai);
+                                formData.append('tanggal_selesai', tanggal_selesai);
+                                formData.append('id_status', keterangan_status);
+                                formData.append('keterangan', keterangan);
+
+                                // Send AJAX request to update the Pendeta
+                                $.ajax({
+                                    url: "{{ route('api.update.pendeta') }}",
+                                    type: 'POST',
+                                    data: formData,
+                                    contentType: false,
+                                    processData: false,
+                                    success: function(response) {
+                                        alert.fire({
+                                            icon: 'success',
+                                            title: 'Pendeta berhasil diubah!',
+                                        });
+                                        $table.bootstrapTable('refresh');
+                                    },
+                                    error: function(xhr, status, error) {
+                                        alert.fire({
+                                            icon: 'error',
+                                            title: 'Pendeta gagal diubah!',
+                                        });
+                                    }
+                                });
                             }
                         });
                     },
-                        preConfirm: () => {
-                            const data = {
-                            namaPendeta: $('#namaPendeta').val(),
-                            jenjang: $('#jenjang').val(),
-                            sekolah: $('#sekolah').val(),
-                            tahunLulus: $('#tahunLulus').val(),
-                            ijazah: $('#ijazah')[0].files[0],
-                            tanggal_mulai: $('#tanggal_mulai').val(),
-                            tanggal_selesai: $('#tanggal_selesai').val(),
-                            keterangan_status: $('#keterangan_status').val(),
-                            keterangan: $('#keterangan').val()
-                        };
-
-                        // Validate required fields
-                        if (
-                            !data.namaPendeta ||
-                            !data.jenjang ||
-                            !data.sekolah ||
-                            !data.tanggal_mulai||
-                            !data.keterangan_status
-                        ) {
-                            Swal.showValidationMessage('Semua field yang wajib harus diisi!');
-                            return false;
-                        }
-
-                        return data;
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed && result.value) {
-                            const {
-                                id_pendeta,
-                                nama_pendeta,
-                                jenjang,
-                                sekolah,
-                                tahun_lulus,
-                                ijazah,
-                                tanggal_mulai,
-                                tanggal_selesai,
-                                keterangan_status,
-                                keterangan
-                            } = result.value;
-
-                            // Send AJAX request to update the Pendeta
-                            $.ajax({
-                                url: "{{ route('api.update.pendeta') }}",
-                                type: 'POST',
-                                data: {
-                                    _token: '{{ csrf_token() }}',
-                                    id_pendeta: id_pendeta,
-                                    nama_pendeta: nama_pendeta,
-                                    jenjang: jenjang,
-                                    sekolah: sekolah,
-                                    tahun_lulus: tahun_lulus,
-                                    ijazah: ijazah,
-                                    tanggal_mulai: tanggal_mulai,
-                                    tanggal_selesai: tanggal_selesai,
-                                    keterangan_status: keterangan_status,
-                                    keterangan: keterangan
-                                },
-                                success: function(response) {
-                                    alert.fire({
-                                        icon: 'success',
-                                        title: 'Pendeta berhasil diubah!',
-                                    });
-                                    $table.bootstrapTable('refresh');
-                                },
-                            error: function(xhr, status, error) {
-                                alert.fire({
-                                    icon: 'error',
-                                    title: 'Pendeta gagal diubah!',
-                                });
-                            }
-                        });
+                    error: function(xhr, status, error) {
+                        console.error("Error: " + error);
+                        console.error("Status: " + status);
+                        console.dir(xhr);
                     }
                 });
-            },
-            error: function(xhr, status, error) {
-                console.error("Error: " + error);
-                console.error("Status: " + status);
-                console.dir(xhr);
-            }
+            });
         });
-    });
-});
 
         $(document).on('click', '.btn-delete', function() {
             event.preventDefault();

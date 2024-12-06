@@ -24,7 +24,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item" aria-current="page"><a
                         href="{{ route('admin.transaksi.atestasi-keluar') }}">Atestasi Keluar</a></li>
-                <li class="breadcrumb-item active">Detail Atestasi Keluar ({{ $atestasiKeluarDetail->id_keluar }})</li>
+                <li class="breadcrumb-item active">Detail Atestasi Keluar ({{ $id_keluar ??  ''}})</li>
             </ol>
         </nav>
         <a href="" class="btn btn-success tambah-atestasi-keluar">Tambah Detail Atestasi Keluar</a>
@@ -187,7 +187,7 @@
                                 method: "POST",
                                 data: {
                                     _token: '{{ csrf_token() }}',
-                                    id_keluar: '{{ $atestasiKeluarDetail->id_keluar }}',
+                                    id_keluar: '{{ $id_keluar }}',
                                     id_jemaat: data.id_jemaat
                                 },
                                 dataType: "json",
@@ -215,7 +215,7 @@
                             type: "POST",
                             data: {
                                 ...result.value,
-                                id_keluar: {{ $atestasiKeluarDetail->id_keluar }},
+                                id_keluar: {{ $id_keluar }},
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function() {
@@ -284,7 +284,7 @@
                 url: "{{ route('api.get.atestasikeluardetail') }}",
                 data: {
                     _token: '{{ csrf_token() }}',
-                    id_keluar: {{ $atestasiKeluarDetail->id_keluar }}
+                    id_keluar: {{ $id_keluar }}
                 },
                 dataType: "json",
                 success: function(data) {

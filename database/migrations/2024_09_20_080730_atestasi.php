@@ -33,7 +33,6 @@ return new class extends Migration
 
         Schema::create('atestasi_masuk', function (Blueprint $table) {
             $table->id('id_masuk');
-            $table->string('nama_masuk');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
             $table->string('nama_gereja');
             $table->unsignedInteger('id_jemaat')->nullable();

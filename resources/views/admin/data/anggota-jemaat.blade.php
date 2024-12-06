@@ -85,11 +85,6 @@
                     filterControl: 'select',
                     align: 'center'
                 }, {
-                    field: 'keterangan_status',
-                    title: 'Status',
-                    filterControl: 'select',
-                    align: 'center'
-                },{
                     field: 'view',
                     title: 'View',
                     formatter: function(value, row, index) {
@@ -150,12 +145,7 @@
                         title: 'Darah',
                         filterControl: 'select',
                         align: 'center'
-                    }, {
-                        field: 'keterangan_status',
-                        title: 'Status',
-                        filterControl: 'select',
-                        align: 'center'
-                    }, {
+                    },{
                         field: 'view',
                         title: 'View',
                         formatter: function(value, row, index) {
@@ -553,7 +543,6 @@
                             gereja_baptis: $('#gereja_baptis').val(),
                             alat_transportasi: $('#alat_transportasi').val(),
                             keterangan_status: $('#keterangan_status').val()
-
                         };
 
                         const photo = $('#photo')[0].files[0];
@@ -562,6 +551,11 @@
                         }
 
                         // Validasi input
+                        if(data['nik'].length > 16){
+                            Swal.showValidationMessage('NIK tidak boleh lebih dari 16 karakter!');
+                            return false;
+                        }
+
                         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         for (const key in data) {
                             if (data[key] === '' && key !== 'photo' && key !== 'telepon' &&

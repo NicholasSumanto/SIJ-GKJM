@@ -18,7 +18,7 @@
                 </li>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Nav::isRoute('admin.data.jemaat-baru') }}" aria-current="true"
+                    <a class="nav-link {{ request()->routeIs('admin.data.anggota-jemaat-baru-keluarga-detail', 'admin.data.jemaat-baru') ? 'active' : '' }}" aria-current="true"
                         href="{{ route('admin.data.jemaat-baru') }}">JEMAAT BARU</a>
                 </li>
                 <li class="nav-item">
