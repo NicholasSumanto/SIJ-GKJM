@@ -674,7 +674,7 @@
                                                 old_nama_jemaat
                                                 ) {
                                                 reject(
-                                                    'NIK sudah ada, silahkan gunakan NIK lain!'
+                                                    'Nama Jemaat sudah ada, silahkan gunakan NIK lain!'
                                                 );
                                             } else {
                                                 resolve(data);
@@ -754,8 +754,7 @@
                                 formData.append('penghasilan', penghasilan);
                                 formData.append('gereja_baptis', gereja_baptis);
                                 formData.append('alat_transportasi', alat_transportasi);
-                                formData.append('id_status', result.value
-                                    .keterangan_status);
+                                formData.append('id_status', result.value.keterangan_status);
                                 if (foto) formData.append('photo', foto);
 
                                 $.ajax({

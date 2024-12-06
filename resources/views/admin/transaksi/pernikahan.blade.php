@@ -84,6 +84,7 @@
                 }, {
                     field: 'pendeta',
                     title: 'Pendeta',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'tempat',
@@ -160,6 +161,7 @@
                     }, {
                         field: 'pendeta',
                         title: 'Pendeta',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'tempat',

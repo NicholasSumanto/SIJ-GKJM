@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/bootstrap-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-table-filter-control.css') }}">
     <style>
         .btn-keluarga {
             color: white;
@@ -30,7 +31,7 @@
         </div>
         <table id="table" data-show-export="true" data-pagination="true" data-click-to-select="true"
             data-toolbar="#toolbar" data-search="true" data-show-toggle="true" data-show-columns="true"
-            data-ajax="ApiGetAtestasiMasuk">
+            data-filter-control="true" data-ajax="ApiGetAtestasiMasuk">
         </table>
     </div>
 @endsection
@@ -46,6 +47,8 @@
     <script src="{{ asset('js/table-export/FileSaver/FileSaver.min.js') }}"></script>
     <script src="{{ asset('js/table-export/js-xlsx/xlsx.core.min.js') }}"></script>
     <script src="{{ asset('js/table-export/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('js/table-export/filter-control/bootstrap-table-filter-control.js') }}"></script>
+    <script src="{{ asset('js/table-export/filter-control/utils.js') }}"></script>
     <script>
         var $table = $('#table');
         $(document).ready(function() {
@@ -53,22 +56,29 @@
             $table.bootstrapTable({
                 columns: [{
                     field: 'id_masuk',
-                    title: 'ID Masuk'
+                    title: 'ID Masuk',
+                    align: 'center'
                 }, {
                     field: 'nama_jemaat',
-                    title: 'Nama'
+                    title: 'Nama',
+                    align: 'center'
                 }, {
                     field: 'no_surat',
-                    title: 'Nomor Surat'
+                    title: 'Nomor Surat',
+                    align: 'center'
                 }, {
                     field: 'nama_wilayah',
-                    title: 'Nama Wilayah'
+                    title: 'Nama Wilayah',
+                    filterControl: 'select',
+                    align: 'center'
                 }, {
                     field: 'nama_gereja',
-                    title: 'Nama Gereja Asal'
+                    title: 'Nama Gereja Asal',
+                    align: 'center'
                 }, {
                     field: 'tanggal_masuk',
-                    title: 'Tanggal Masuk'
+                    title: 'Tanggal Masuk',
+                    align: 'center'
                 }, {
                     field: 'surat',
                     title: 'Surat',
@@ -110,22 +120,29 @@
                     exportTypes: ['excel', 'pdf'],
                     columns: [{
                         field: 'id_masuk',
-                        title: 'ID Masuk'
+                        title: 'ID Masuk',
+                        align: 'center'
                     }, {
                         field: 'nama_jemaat',
-                        title: 'Nama'
+                        title: 'Nama',
+                        align: 'center'
                     }, {
                         field: 'no_surat',
-                        title: 'Nomor Surat'
+                        title: 'Nomor Surat',
+                        align: 'center'
                     }, {
                         field: 'nama_wilayah',
-                        title: 'Nama Wilayah'
+                        title: 'Nama Wilayah',
+                        filterControl: 'select',
+                        align: 'center'
                     }, {
                         field: 'nama_gereja',
-                        title: 'Nama Gereja Asal'
+                        title: 'Nama Gereja Asal',
+                        align: 'center'
                     }, {
                         field: 'tanggal_masuk',
-                        title: 'Tanggal_Masuk'
+                        title: 'Tanggal_Masuk',
+                        align: 'center'
                     }, {
                         field: 'surat',
                         title: 'Surat',

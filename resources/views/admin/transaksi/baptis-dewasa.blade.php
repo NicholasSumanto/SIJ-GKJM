@@ -65,18 +65,17 @@
                 }, {
                     field: 'nama_wilayah',
                     title: 'Nama Wilayah',
-                    align: 'center'
-                }, {
-                    field: 'alamat',
-                    title: 'Alamat Tinggal',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'kelamin',
                     title: 'Kelamin',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'nama_pendeta',
                     title: 'Nama Pendeta',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'nomor',
@@ -114,7 +113,7 @@
                     field: 'edit',
                     title: 'Edit',
                     formatter: function(value, row, index) {
-                        return `<button class="btn btn-warning btn-edit" data-id="${row.id_ba}">Edit</button>`;
+                        return `<button class="btn btn-warning btn-edit" data-id="${row.id_ba}" data-nama="${row.nama}">Edit</button>`;
                     },
                     align: 'center'
                 }, {
@@ -154,18 +153,17 @@
                     }, {
                         field: 'nama_wilayah',
                         title: 'Nama Wilayah',
-                        align: 'center'
-                    }, {
-                        field: 'alamat',
-                        title: 'Alamat Tinggal',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'kelamin',
                         title: 'Kelamin',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'nama_pendeta',
                         title: 'Nama Pendeta',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'nomor',
@@ -203,7 +201,7 @@
                         field: 'edit',
                         title: 'Edit',
                         formatter: function(value, row, index) {
-                            return `<button class="btn btn-warning btn-edit" data-id="${row.id_bd}">Edit</button>`;
+                            return `<button class="btn btn-warning btn-edit" data-id="${row.id_bd}" data-nama="${row.nama}">Edit</button>`;
                         },
                         align: 'center'
                     }, {
@@ -235,16 +233,25 @@
                     html: `
                         <form id="addWilayahForm">
                             <div class="form-group">
+                                <label for="nama">Nama *</label>
+                                <select id="nama" class="form-control" required style="width: 100%;">
+                                    <option value="">Pilih Nama</option>
+                                </select>
+                                    <div id="new-nama-container" style="margin-top: 10px; display: none;">
+                                    <input type="text" id="new_nama" class="form-control" placeholder="Masukkan Nama Baru">
+                            </div>
+                            </div>
+                            <div class="form-group nama-wilayah-container">
                                 <label for="nama_wilayah">Nama Wilayah *</label>
                                 <select id="nama_wilayah" class="form-control" required style="width: 100%;">
                                     <option value="">Pilih Nama Wilayah</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group alamaat-jemaat-container">
                                 <label for="alamat_jemaat">Alamat *</label>
                                 <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group kelamin-container">
                                 <label for="kelamin">Kelamin *</label>
                                 <select id="kelamin" class="form-control" required>
                                     <option value="" disabled selected>Pilih Kelamin</option>
@@ -252,45 +259,41 @@
                                     <option value="Perempuan">Perempuan</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group nama-pendeta-container">
                                 <label for="nama_pendeta">Nama Pendeta *</label>
                                 <select id="nama_pendeta" class="form-control" required style="width: 100%;">
                                     <option value="">Pilih Nama Pendeta</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group nomor-container">
                                 <label for="nomor">Nomor *</label>
                                 <input type="number" id="nomor" class="form-control" placeholder="Nomor *" required>
                             </div>
-                            <div class="form-group">
-                                <label for="tempat_lahit">Tempat Lahir *</label>
+                            <div class="form-group tempat-lahir-container">
+                                <label for="tempat_lahir">Tempat Lahir *</label>
                                 <input type="text" id="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir *" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group tanggal-lahir-container">
                                 <label for="tanggal_lahir">Tanggal Lahir *</label>
                                 <input type="date" id="tanggal_lahir" class="form-control" required>
                             </div>
-                            <div class="form-group">
-                                <label for="nama">Nama *</label>
-                                <input type="text" id="nama" class="form-control" placeholder="Masukkan Nama *" required>
-                            </div>
-                            <div class="form-group">
+                            <div class="form-group ayah-container">
                                 <label for="ayah">Ayah *</label>
                                 <input type="text" id="ayah" class="form-control" placeholder="Masukkan Nama Ayah *" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group ibu-container">
                                 <label for="ibu">Ibu *</label>
                                 <input type="text" id="ibu" class="form-control" placeholder="Masukkan Nama Ibu *" required>
                             </div>
-                             <div class="form-group">
+                            <div class="form-group tanggal-baptis-container">
                                 <label for="tanggal_baptis">Tanggal Baptis *</label>
                                 <input type="date" id="tanggal_baptis" class="form-control" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group ketua-majelis-container">
                                 <label for="ketua_majelis">Ketua Majelis *</label>
                                 <input type="text" id="ketua_majelis" class="form-control" placeholder="Masukkan Nama Ketua Majelis *" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group sekretaris-majelis-container">
                                 <label for="sekretaris_majelis">Sekretaris Majelis *</label>
                                 <input type="text" id="sekretaris_majelis" class="form-control" placeholder="Masukkan Nama Sekretaris Majelis *" required>
                             </div>
@@ -300,11 +303,73 @@
                     confirmButtonText: 'Simpan',
                     cancelButtonText: 'Batal',
                     didOpen: () => {
-                        $('#nama_wilayah, #nama_pendeta').select2({
+                        $('#nama_wilayah, #nama_pendeta, #nama').select2({
                             placeholder: "Pilih atau cari",
                             allowClear: true,
                             dropdownParent: $(
                                 '.swal2-container')
+                        });
+
+                        // Load Nama
+                        $.ajax({
+                            url: "{{ route('api.get.jemaat') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                onlyName: true
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $namaSelect = $('#nama');
+                                $namaSelect.empty().append(
+                                    '<option value="">Pilih Nama Jemaat</option>'
+                                );
+                                $namaSelect.append(new Option(
+                                    '+ Tambah Nama Baru',
+                                    'add-new-nama'));
+                                $.each(response.rows, function(
+                                    key, value) {
+                                    $namaSelect.append(
+                                        new Option(
+                                            value
+                                            .nama_jemaat,
+                                            value
+                                            .id_jemaat
+                                        ));
+                                });
+                            }
+                        });
+
+                        $('#new-nama-container').hide();
+                        $('#new_nama').val('');
+                        $('.alamaat-jemaat-container').hide();
+                        $('.kelamin-container').hide();
+                        $('.tempat-lahir-container').hide();
+                        $('.tanggal-lahir-container').hide();
+                        $('.nama-wilayah-container').hide();
+
+                        $('#nama').change(function() {
+                            const selectedValue = $(this).val();
+                            if (selectedValue ===
+                                'add-new-nama') {
+                                $('#new-nama-container').show();
+                                $('#new_nama').val('');
+                                $('.alamaat-jemaat-container')
+                                    .show();
+                                $('.kelamin-container').show();
+                                $('.tempat-lahir-container').show();
+                                $('.tanggal-lahir-container').show();
+                                $('.nama-wilayah-container').show();
+                            } else {
+                                $('#new-nama-container').hide();
+                                $('#new_nama').val('');
+                                $('.alamaat-jemaat-container')
+                                    .hide();
+                                $('.kelamin-container').hide();
+                                $('.tempat-lahir-container').hide();
+                                $('.tanggal-lahir-container').hide();
+                                $('.nama-wilayah-container').hide();
+                            }
                         });
 
                         // Load Nama Pendeta
@@ -352,10 +417,9 @@
                     preConfirm: () => {
                         const data = {
                             id_wilayah: $('#nama_wilayah').val(),
-                            id_pendeta: $('#nama_pendeta').val(),
-                            kelamin: $('#kelamin').val(),
                             alamat: $('#alamat_jemaat').val(),
-                            nama: $('#nama').val(),
+                            kelamin: $('#kelamin').val(),
+                            id_pendeta: $('#nama_pendeta').val(),
                             nomor: $('#nomor').val(),
                             tempat_lahir: $('#tempat_lahir').val(),
                             tanggal_lahir: $('#tanggal_lahir').val(),
@@ -367,16 +431,61 @@
                         };
 
                         // Validasi semua input, pastikan tidak ada yang kosong
-                        for (const key in data) {
-                            if (!data[key]) {
+                        const nama = $('#nama').val();
+                        const new_name = $('#new_nama').val();
+
+                        if (nama === 'add-new-nama') {
+                            for (const key in data) {
+                                if (!data[key]) {
+                                    Swal.showValidationMessage(
+                                        `Harap isi kolom ${key.replace('_', ' ')} terlebih dahulu!`
+                                    );
+                                    return false;
+                                }
+                            }
+                        } else {
+                            if (!nama || !data['tanggal_baptis'] || !data['ketua_majelis'] || !
+                                data['sekretaris_majelis'] || !data['ayah'] || !data['ibu'] || !
+                                data['nomor'] || !data['id_pendeta']) {
                                 Swal.showValidationMessage(
-                                    `Harap isi kolom ${key.replace('_', ' ')} terlebih dahulu!`
+                                    `Harap isi semua kolom terlebih dahulu!`
                                 );
                                 return false;
                             }
                         }
 
-                        return data;
+                        if (nama === 'add-new-nama' && !new_name) {
+                            Swal.showValidationMessage(
+                                `Harap isi kolom Nama Anak terlebih dahulu!`
+                            );
+                            return false;
+                        }
+
+                        data.nama = nama;
+                        data.new_name = new_name;
+
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ route('api.get.baptisanak') }}",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    id_jemaat: data.nama
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.total > 0) {
+                                        reject(
+                                            'Nama anak sudah terdaftar dalam data baptis anak!'
+                                        );
+                                    } else {
+                                        resolve(data);
+                                    }
+                                }
+                            });
+                        }).catch(error => {
+                            Swal.showValidationMessage(error);
+                        });
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -390,14 +499,14 @@
                             success: function() {
                                 alert.fire({
                                     icon: 'success',
-                                    title: 'Data baptis dewasa berhasil ditambahkan!'
+                                    title: 'Data baptis anak berhasil ditambahkan!'
                                 });
                                 $table.bootstrapTable('refresh');
                             },
                             error: function() {
                                 alert.fire({
                                     icon: 'error',
-                                    title: 'Data baptis dewasa gagal ditambahkan!'
+                                    title: 'Data baptis anak gagal ditambahkan!'
                                 });
                             }
                         });
@@ -409,6 +518,7 @@
             $(document).on('click', '.btn-edit', function() {
                 event.preventDefault();
                 var old_id_bd = $(this).data('id');
+                var nama = $(this).data('nama');
 
                 $.ajax({
                     url: "{{ route('api.get.baptisdewasa') }}",
@@ -425,74 +535,48 @@
                         Swal.fire({
                             title: 'Edit Baptis Dewasa',
                             html: `
-                        <form id="addWilayahForm">
-                            <div class="form-group">
-                                <label for="nama_wilayah">Nama Wilayah *</label>
-                                <select id="nama_wilayah" class="form-control" required style="width: 100%;">
-                                    <option value="">Pilih Nama Wilayah</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="alamat_jemaat">Alamat *</label>
-                                <input type="text" id="alamat_jemaat" class="form-control" placeholder="Masukkan Alamat" value="${response.rows[0].alamat}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="kelamin">Kelamin *</label>
-                                <select id="kelamin" class="form-control" required>
-                                    <option value="" disabled selected>Pilih Kelamin</option>
-                                    <option value="Laki-laki">Laki-laki</option>
-                                    <option value="Perempuan">Perempuan</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="nama_pendeta">Nama Pendeta *</label>
-                                <select id="nama_pendeta" class="form-control" required style="width: 100%;">
-                                    <option value="">Pilih Nama Pendeta</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="nomor">Nomor *</label>
-                                <input type="number" id="nomor" class="form-control" placeholder="Nomor *" value="${response.rows[0].nomor}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="tempat_lahit">Tempat Lahir *</label>
-                                <input type="text" id="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir *" value="${response.rows[0].tempat_lahir}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="tanggal_lahir">Tanggal Lahir *</label>
-                                <input type="date" id="tanggal_lahir" class="form-control" value="${response.rows[0].tanggal_lahir}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="nama">Nama *</label>
-                                <input type="text" id="nama" class="form-control" placeholder="Masukkan Nama *" value="${response.rows[0].nama}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ayah">Ayah *</label>
-                                <input type="text" id="ayah" class="form-control" placeholder="Masukkan Nama Ayah *" value="${response.rows[0].ayah}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ibu">Ibu *</label>
-                                <input type="text" id="ibu" class="form-control" placeholder="Masukkan Nama Ibu *" value="${response.rows[0].ibu}" required>
-                            </div>
-                             <div class="form-group">
-                                <label for="tanggal_baptis">Tanggal Baptis *</label>
-                                <input type="date" id="tanggal_baptis" class="form-control" value="${response.rows[0].tanggal_baptis}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ketua_majelis">Ketua Majelis *</label>
-                                <input type="text" id="ketua_majelis" class="form-control" placeholder="Masukkan Nama Ketua Majelis *" value="${response.rows[0].ketua_majelis}" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="sekretaris_majelis">Sekretaris Majelis *</label>
-                                <input type="text" id="sekretaris_majelis" class="form-control" placeholder="Masukkan Nama Sekretaris Majelis *" value="${response.rows[0].sekretaris_majelis}" required>
-                            </div>
-                        </form>
-                    `,
+                                <form id="addWilayahForm">
+                                    <div class="form-group">
+                                        <label for="nama">Nama Jemaat</label>
+                                        <input type="text" id="alamat_jemaat" class="form-control" value="${nama}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nama_pendeta">Nama Pendeta *</label>
+                                        <select id="nama_pendeta" class="form-control" required style="width: 100%;">
+                                            <option value="">Pilih Nama Pendeta</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nomor">Nomor *</label>
+                                        <input type="number" id="nomor" class="form-control" placeholder="Nomor *" value="${response.rows[0].nomor}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ayah">Ayah *</label>
+                                        <input type="text" id="ayah" class="form-control" placeholder="Masukkan Nama Ayah *" value="${response.rows[0].ayah}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ibu">Ibu *</label>
+                                        <input type="text" id="ibu" class="form-control" placeholder="Masukkan Nama Ibu *" value="${response.rows[0].ibu}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tanggal_baptis">Tanggal Baptis *</label>
+                                        <input type="date" id="tanggal_baptis" class="form-control" value="${response.rows[0].tanggal_baptis}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ketua_majelis">Ketua Majelis *</label>
+                                        <input type="text" id="ketua_majelis" class="form-control" placeholder="Masukkan Nama Ketua Majelis *" value="${response.rows[0].ketua_majelis}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sekretaris_majelis">Sekretaris Majelis *</label>
+                                        <input type="text" id="sekretaris_majelis" class="form-control" placeholder="Masukkan Nama Sekretaris Majelis *" value="${response.rows[0].sekretaris_majelis}" required>
+                                    </div>
+                                </form>
+                            `,
                             showCancelButton: true,
                             confirmButtonText: 'Simpan',
                             cancelButtonText: 'Batal',
                             didOpen: () => {
-                                $('#nama_wilayah, #nama_pendeta').select2({
+                                $('#nama_pendeta').select2({
                                     placeholder: "Pilih atau cari",
                                     allowClear: true,
                                     dropdownParent: $(
@@ -528,46 +612,11 @@
                                         $pendetaSelect.val(id_pendeta);
                                     }
                                 });
-                                // Load Nama Wilayah
-                                $.ajax({
-                                    url: "{{ route('api.get.wilayah') }}",
-                                    type: "POST",
-                                    data: {
-                                        _token: '{{ csrf_token() }}'
-                                    },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        const $wilayahSelect = $(
-                                            '#nama_wilayah');
-                                        $wilayahSelect.empty().append(
-                                            '<option value="">Pilih Nama Wilayah</option>'
-                                        );
-                                        $.each(response, function(key,
-                                            value) {
-                                            $wilayahSelect
-                                                .append(
-                                                    new Option(
-                                                        value
-                                                        .nama_wilayah,
-                                                        value
-                                                        .id_wilayah
-                                                        ));
-                                        });
-                                        $wilayahSelect.val(id_wilayah);
-                                    }
-                                });
-                                $('#kelamin').val(response.rows[0].kelamin);
                             },
                             preConfirm: () => {
                                 const data = {
-                                    id_wilayah: $('#nama_wilayah').val(),
-                                    alamat: $('#alamat_jemaat').val(),
-                                    kelamin: $('#kelamin').val(),
                                     id_pendeta: $('#nama_pendeta').val(),
-                                    nama: $('#nama').val(),
                                     nomor: $('#nomor').val(),
-                                    tempat_lahir: $('#tempat_lahir').val(),
-                                    tanggal_lahir: $('#tanggal_lahir').val(),
                                     ayah: $('#ayah').val(),
                                     ibu: $('#ibu').val(),
                                     tanggal_baptis: $('#tanggal_baptis').val(),

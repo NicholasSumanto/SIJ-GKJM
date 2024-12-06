@@ -43,6 +43,8 @@
     <script src="{{ asset('js/table-export/FileSaver/FileSaver.min.js') }}"></script>
     <script src="{{ asset('js/table-export/js-xlsx/xlsx.core.min.js') }}"></script>
     <script src="{{ asset('js/table-export/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('js/table-export/filter-control/bootstrap-table-filter-control.js') }}"></script>
+    <script src="{{ asset('js/table-export/filter-control/utils.js') }}"></script>
     <script>
         var $table = $('#table');
         $(document).ready(function() {

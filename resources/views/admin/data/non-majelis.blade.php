@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/bootstrap-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-table-filter-control.css') }}">
     <style>
         .btn-keluarga {
             color: white;
@@ -42,6 +43,8 @@
     <script src="{{ asset('js/table-export/FileSaver/FileSaver.min.js') }}"></script>
     <script src="{{ asset('js/table-export/js-xlsx/xlsx.core.min.js') }}"></script>
     <script src="{{ asset('js/table-export/html2canvas/html2canvas.min.js') }}"></script>
+    <script src="{{ asset('js/table-export/filter-control/bootstrap-table-filter-control.js') }}"></script>
+    <script src="{{ asset('js/table-export/filter-control/utils.js') }}"></script>
     <script>
         var $table = $('#table');
         $(document).ready(function() {
@@ -61,6 +64,7 @@
                 }, {
                     field: 'jabatan_non',
                     title: 'Jabatan',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'tanggal_mulai',

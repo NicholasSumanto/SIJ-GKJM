@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             // PendidikanSeeder::class,
             // PekerjaanSeeder::class,
             PendetaSeeder::class,
-            PendetaDidikSeeder::class,
+            // PendetaDidikSeeder::class,
             WilayahSeeder::class,
             JabatanMajelisSeeder::class,
             JabatanNonMajelisSeeder::class,

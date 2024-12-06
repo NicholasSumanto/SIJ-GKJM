@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/bootstrap-table.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-table-filter-control.css') }}">
 @endpush
 
 @section('content')
@@ -50,9 +51,11 @@
                     title: 'Nama User'
                 }, {
                     field: 'role',
+                    filterControl: 'select',
                     title: 'Role Admin'
                 }, {
                     field: 'wilayah',
+                    filterControl: 'select',
                     title: 'Wilayah'
                 }, {
                     field: 'edit',
@@ -92,9 +95,11 @@
                         title: 'Nama User'
                     }, {
                         field: 'role',
+                        filterControl: 'select',
                         title: 'Role Admin'
                     }, {
                         field: 'wilayah',
+                        filterControl: 'select',
                         title: 'Wilayah'
                     }, {
                         field: 'edit',

@@ -28,7 +28,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png">
+    <link href="{{ asset('img/favicon.jpg') }}" rel="icon" type="image/png">
 
     @stack('css')
 </head>
@@ -198,7 +198,7 @@
                     </div>
                 </div>
             </footer>
-            
+
             <!-- End of Footer -->
 
         </div>

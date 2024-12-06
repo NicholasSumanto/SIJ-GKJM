@@ -119,8 +119,8 @@ return new class extends Migration
             $table->string('nama_jemaat')->nullable();
             $table->date('tanggal_titipan');
             $table->date('tanggal_selesai')->nullable();
-            $table->string('nama_gereja_asal');
-            $table->string('nama_gereja_tujuan');
+            $table->string('nama_gereja_asal')->nullable();
+            $table->string('nama_gereja_tujuan')->nullable();
             $table->string('kelamin');
             $table->text('alamat_jemaat');
             $table->string('titipan');

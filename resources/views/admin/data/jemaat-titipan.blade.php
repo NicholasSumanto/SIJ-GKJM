@@ -476,17 +476,18 @@
                 if (result.isConfirmed) {
                     const formData = new FormData();
                     formData.append('_token', '{{ csrf_token() }}');
-                    formData.append('nama_jemaat', result.value.nama_jemaat);
 
                     if (result.value.titipan === 'Keluar') {
                         formData.append('id_jemaat', result.value.id_jemaat);
-                        formData.append('nama_gereja', result.value.nama_gereja_asal);
+                        formData.append('nama_gereja_tujuan', result.value.nama_gereja_tujuan);
+                        formData.append('new_gereja_tujuan', result.value.new_gereja_tujuan);
                     } else if (result.value.titipan === 'Masuk') {
-                        formData.append('nama_gereja', result.value.nama_gereja_tujuan);
+                        formData.append('nama_jemaat', result.value.nama_jemaat);
+                        formData.append('nama_gereja_asal', result.value.nama_gereja_asal);
+                        formData.append('new_gereja_asal', result.value.new_gereja_asal);
                     }
 
                     formData.append('titipan', result.value.titipan);
-                    formData.append('new_gereja', result.value.new_gereja);
                     formData.append('tanggal_titipan', result.value.tanggal_titipan);
                     formData.append('kelamin', result.value.kelamin);
                     formData.append('alamat_jemaat', result.value.alamat_jemaat);

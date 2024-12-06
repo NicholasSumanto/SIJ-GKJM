@@ -54,7 +54,8 @@
                     align: 'center'
                 }, {
                     field: 'jenjang',
-                    title: 'Jenjang',
+                    title: 'Jenjang Pendidikan',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'sekolah',
@@ -93,6 +94,7 @@
                 }, {
                     field: 'keterangan_status',
                     title: 'Status',
+                    filterControl: 'select',
                     align: 'center'
                 }, {
                     field: 'edit',
@@ -126,7 +128,8 @@
                         align: 'center'
                     }, {
                         field: 'jenjang',
-                        title: 'Jenjang',
+                        title: 'Jenjang pendidikan',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'sekolah',
@@ -135,6 +138,7 @@
                     }, {
                         field: 'tahun_lulus',
                         title: 'Tahun Lulus',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'keterangan',
@@ -164,6 +168,7 @@
                     }, {
                         field: 'keterangan_status',
                         title: 'Status',
+                        filterControl: 'select',
                         align: 'center'
                     }, {
                         field: 'edit',
@@ -198,9 +203,20 @@
                                 <input type="text" id="namaPendeta" class="form-control" placeholder="Masukkan Nama Pendeta">
                             </div>
                             <div class="form-group">
-                                <label for="jenjang">Jenjang *</label>
-                                <input type="text" id="jenjang" class="form-control" placeholder="Masukkan Jenjang">
-                            </div>
+                            <label for="jenjang">jenjang Pendidikan</label>
+                            <select id="jenjang" class="form-control">
+                                <option value="-"selected>Pilih jenjang Pendidikan</option>
+                                <option value="SD">SD</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="D1">D1</option>
+                                <option value="D2">D2</option>
+                                <option value="D3">D3</option>
+                                <option value="S1">S1</option>
+                                <option value="S2">S2</option>
+                                <option value="S3">S3</option>
+                            </select>
+                        </div>
                             <div class="form-group">
                                 <label for="sekolah">Sekolah *</label>
                                 <input type="text" id="sekolah" class="form-control" placeholder="Masukkan Sekolah">
@@ -362,9 +378,20 @@
                                 <input type="text" id="namaPendeta" class="form-control" value="${pendeta.nama_pendeta}" placeholder="Masukkan Nama Pendeta">
                             </div>
                             <div class="form-group">
-                                <label for="jenjang">Jenjang *</label>
-                                <input type="text" id="jenjang" class="form-control" value="${pendeta.jenjang}" placeholder="Masukkan Jenjang">
-                            </div>
+                            <label for="jenjang"> Jenjang </label>
+                            <select id="jenjang" class="form-control">
+                                <option value="-"selected>Pilih Jenjang Pendidikan</option>
+                                <option value="SD">SD</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="D1">D1</option>
+                                <option value="D2">D2</option>
+                                <option value="D3">D3</option>
+                                <option value="S1">S1</option>
+                                <option value="S2">S2</option>
+                                <option value="S3">S3</option>
+                            </select>
+                        </div>
                             <div class="form-group">
                                 <label for="sekolah">Sekolah *</label>
                                 <input type="text" id="sekolah" class="form-control" value="${pendeta.sekolah}" placeholder="Masukkan Sekolah">

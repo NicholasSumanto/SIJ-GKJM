@@ -2,9 +2,9 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin-wilayah.dashboard') }}">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin.dashboard') }}">
             <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
+                <img src="{{ asset('img/logo.png') }}" alt="Logo" style="width: 60px; height: 60px;">
             </div>
             <div class="sidebar-brand-text mx-3">GKJ Mergangsan<sup>v2</sup></div>
         </a>
