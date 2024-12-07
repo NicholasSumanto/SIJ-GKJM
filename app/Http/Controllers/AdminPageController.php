@@ -47,14 +47,14 @@ class AdminPageController extends Controller
         $perempuan = Jemaat::where('kelamin', '=', 'Perempuan')->count();
         $laki = Jemaat::where('kelamin', '=', 'Laki-laki')->count();
         $wilayah = $request->input('Wilayah');
-        $totalJemaatWilayah = Jemaat::selectRaw('id_wilayah')
+        $totalJemaatWilayah = Jemaat::selectRaw('id_jemaat')
             ->when($kabupaten, function ($query, $kabupaten) {
                 return $query->where('jemaat.id_kabupaten', $kabupaten);
             })
             ->when($kecamatan, function ($query, $kecamatan) {
                 return $query->where('jemaat.id_kecamatan', $kecamatan);
             })
-            ->count('id_wilayah');
+            ->count('id_jemaat');
         $girl = Jemaat::selectRaw('MONTH(created_at) as bulan, COUNT(*) as jumlah')
             ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
                 return $query->where('jemaat.id_wilayah', $wilayah);
@@ -217,11 +217,16 @@ class AdminPageController extends Controller
             ->when($gender, function ($query, $gender) {
                 return $query->where('jemaat.kelamin', $gender);
             })
+            ->when($wilayah && $wilayah !== '', function ($query) use ($wilayah) {
+                return $query->where('jemaat.id_wilayah', $wilayah);
+            })
             ->groupBy('stat')
             ->get();
 
         $dropWilayah = Wilayah::pluck('nama_wilayah', 'id_wilayah');
         $dropKab = Kabupaten::pluck('kabupaten', 'id_kabupaten');
+        $kab = Kabupaten::all();
+        $kec = Kecamatan::all();
         $dropKec = Kecamatan::pluck('kecamatan', 'id_kecamatan');
         $labelWilayah = $jumlahJemaat->pluck('wil');
         $isiJemaat = $jumlahJemaat->pluck('jumlah');
@@ -253,7 +258,7 @@ class AdminPageController extends Controller
             'atestasiKeluar' => $atestasiKeluar->toArray(),
             'status' => $status ->toArray(),
         ];
-        return view('admin.dashboard',compact('tahun', 'perempuan', 'laki', 'isiBoy','isiGirl','totalJemaat','dropWilayah', 'dropKab','dropKec','totalJemaatWilayah','labelWilayah','isiJemaat','labelBulan', 'labelAt', 'isiKematian','labelBaptis','labelBD','labelBS','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','labelStatus','jumlahStatus'), $data);
+        return view('admin.dashboard',compact('tahun', 'perempuan', 'laki', 'isiBoy','isiGirl','totalJemaat','dropWilayah', 'dropKab','dropKec','kab','kec','totalJemaatWilayah','labelWilayah','isiJemaat','labelBulan', 'labelAt', 'isiKematian','labelBaptis','labelBD','labelBS','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','labelStatus','jumlahStatus'), $data);
     }
 
     // admin pengaturan start
