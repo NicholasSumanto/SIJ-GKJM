@@ -2776,14 +2776,16 @@ class ApiController extends Controller
         $data->no_kk = $request->no_kk;
 
         if ($request->hasFile('photo')) {
-            if ($data->photo && Storage::disk('photo')->exists($data->photo)) {
+            if ($data->photo && Storage::disk('public')->exists($data->photo)) {
                 Storage::disk('public')->delete($data->photo);
             }
 
             $file = $request->file('photo');
             $path = $file->store('photo', 'public');
             $data->photo = $path;
+            $data->save();
         }
+
 
         $data->tanggal_baptis = $request->tanggal_baptis;
         $data->golongan_darah = $request->golongan_darah;
@@ -2828,15 +2830,16 @@ class ApiController extends Controller
         $data->no_kk = $request->no_kk;
 
         if ($request->hasFile('photo')) {
-            if ($data->photo && Storage::disk('photo')->exists($data->photo)) {
+            if ($data->photo && Storage::disk('public')->exists($data->photo)) {
                 Storage::disk('public')->delete($data->photo);
             }
 
             $file = $request->file('photo');
             $path = $file->store('photo', 'public');
             $data->photo = $path;
+            $data->save();
         }
-
+        
         $data->tanggal_baptis = $request->tanggal_baptis;
         $data->golongan_darah = $request->golongan_darah;
         $data->pendidikan = $request->pendidikan;

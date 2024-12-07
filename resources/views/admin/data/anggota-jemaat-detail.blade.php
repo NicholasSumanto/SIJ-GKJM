@@ -634,7 +634,7 @@
                                         key !== 'kodepos' && key !== 'pendidikan' &&
                                         key !== 'pekerjaan' &&
                                         key !== 'tanggal_baptis' && key !==
-                                        'instansi' && key !==
+                                        'instansi' && key !== 'ilmu' && key !==
                                         'gereja_baptis' && key !==
                                         'alat_transportasi' && key !==
                                         'penghasilan' && key !== 'golongan_darah' &&
@@ -721,7 +721,7 @@
                                     gereja_baptis,
                                     alat_transportasi,
                                     keterangan_status,
-                                    foto
+                                    photo,
                                 } = result.value;
 
                                 const formData = new FormData();
@@ -755,7 +755,7 @@
                                 formData.append('gereja_baptis', gereja_baptis);
                                 formData.append('alat_transportasi', alat_transportasi);
                                 formData.append('id_status', result.value.keterangan_status);
-                                if (foto) formData.append('photo', foto);
+                                if (photo) formData.append('photo', photo);
 
                                 $.ajax({
                                     url: "{{ route('api.update.jemaat') }}",

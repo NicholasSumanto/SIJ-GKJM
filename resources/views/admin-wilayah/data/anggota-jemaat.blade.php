@@ -527,6 +527,7 @@
                             penghasilan: $('#penghasilan').val(),
                             gereja_baptis: $('#gereja_baptis').val(),
                             alat_transportasi: $('#alat_transportasi').val(),
+                            photo: $('#photo').val(),
                             keterangan_status: $('#keterangan_status').val()
 
                         };
@@ -546,7 +547,7 @@
                         for (const key in data) {
                             if (data[key] === '' && key !== 'photo' && key !== 'telepon' &&
                                 key !== 'hp' && key !== 'email' && key !== 'nik' && key !==
-                                'no_kk' && key !== 'stamboek' && key !== 'tempat_lahir' &&
+                                'no_kk'  && key !== 'stamboek' && key !== 'tempat_lahir' &&
                                 key !== 'tanggal_baptis' && key !== 'instansi' && key !==
                                 'gereja_baptis' && key !== 'alat_transportasi' && key !==
                                 'penghasilan' && key !== 'golongan_darah' && key !== 'pekerjaan'

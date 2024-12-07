@@ -637,7 +637,7 @@
                                         'instansi' && key !==
                                         'gereja_baptis' && key !==
                                         'alat_transportasi' && key !==
-                                        'penghasilan' && key !== 'golongan_darah' &&
+                                        'penghasilan' && key !== 'ilmu' && key !== 'golongan_darah' &&
                                         key !== 'id_kelurahan' && key !==
                                         'id_kecamatan' && key !==
                                         'id_kabupaten' && key !== 'id_provinsi' &&
@@ -720,7 +720,7 @@
                                     gereja_baptis,
                                     alat_transportasi,
                                     keterangan_status,
-                                    foto
+                                    photo
                                 } = result.value;
 
                                 const formData = new FormData();
@@ -754,7 +754,7 @@
                                 formData.append('gereja_baptis', gereja_baptis);
                                 formData.append('alat_transportasi', alat_transportasi);
                                 formData.append('id_status', result.value.keterangan_status);
-                                if (foto) formData.append('photo', foto);
+                                if (photo) formData.append('photo', photo);
 
 
                                 $.ajax({
