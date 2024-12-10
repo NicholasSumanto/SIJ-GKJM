@@ -25,97 +25,133 @@ class UsiaController extends Controller
 
     // admin
     public function usiaDashboard(Request $request)
-    {
-        $users = User::count();
+{
+    $users = User::count();
 
-        $widget = [
-            'users' => $users,
-        ];
+    $widget = [
+        'users' => $users,
+    ];
 
-        $cutoffDate = Carbon::now()->subYears(17)->toDateString();
-        $totalJemaat = Jemaat::count();
-        $year = date('Y');
-        $rataRataUsia = Jemaat::avg(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
-        $termuda = Jemaat::min(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
-        $tertua = Jemaat::max(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
-        $jumlahAnak = Jemaat::where('tanggal_lahir','<', $cutoffDate)->count();
-        $jumlahDewasa = Jemaat::where('tanggal_lahir', '>=', $cutoffDate)->count();
-        $ageGroups = Jemaat::select(
-            DB::raw('
-                CASE
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) < 7 THEN "<6th"
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 7 AND 15 THEN "7-15th"
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 16 AND 18 THEN "16-18th"
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 19 AND 30 THEN "19-30th"
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 31 AND 39 THEN "31-39th"
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 40 AND 59 THEN "40-59th"
-                    ELSE ">60th"
-                END as age_group
-            '),
-            DB::raw('COUNT(*) as total')
-            )
-            ->groupBy('age_group')
-            ->pluck('total', 'age_group')->toArray();
-        $wilayahData = Jemaat::select('wilayah.nama_wilayah',
-                DB::raw('SUM(CASE WHEN jemaat.tanggal_lahir > "' . $cutoffDate . '" THEN 1 ELSE 0 END) AS anak_count'),
-                DB::raw('SUM(CASE WHEN jemaat.tanggal_lahir <= "' . $cutoffDate . '" THEN 1 ELSE 0 END) AS dewasa_count')
-            )
-            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
-            ->groupBy('wilayah.nama_wilayah')
-            ->orderBy('wilayah.nama_wilayah')
-            ->get();
-        $baptisData = Jemaat::selectRaw("
-            CASE 
-                WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND baptis_dewasa.id_jemaat IS NOT NULL THEN 'Dewasa Baptis'
-                WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND baptis_dewasa.id_jemaat IS NULL THEN 'Dewasa Belum Baptis'
-                WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND baptis_anak.id_jemaat IS NOT NULL THEN 'Anak Baptis'
-                WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND baptis_anak.id_jemaat IS NULL THEN 'Anak Belum Baptis'
-            END as kategori,
-            MONTH(jemaat.created_at) as bulan,
-            COUNT(*) as jumlah")
-            ->leftJoin('baptis_dewasa', 'jemaat.id_jemaat', '=', 'baptis_dewasa.id_jemaat')
-            ->leftJoin('baptis_anak', 'jemaat.id_jemaat', '=', 'baptis_anak.id_jemaat')
-            ->groupBy('kategori', 'bulan')
-            ->orderBy('bulan')
-            ->get();
+    $cutoffDate = Carbon::now()->subYears(17)->toDateString();
+    $currentYear = date('Y');
+    $totalJemaat = Jemaat::count();
 
-        $avgUsia = Jemaat::selectRaw('wilayah.nama_wilayah, AVG(? - YEAR(jemaat.tanggal_lahir)) as rata_rata_usia', [$year])
-            ->join('wilayah', 'jemaat.id_wilayah', '=', 'wilayah.id_wilayah')
-            ->groupBy('wilayah.nama_wilayah')
-            ->pluck('rata_rata_usia', 'wilayah.nama_wilayah')
-            ->toArray();
-        $monthNames = [1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ags', 9 => 'Sept', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'];
+    // Calculate age statistics
+    $rataRataUsia = Jemaat::avg(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
+    $termuda = Jemaat::min(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
+    $tertua = Jemaat::max(DB::raw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE())'));
+    $jumlahAnak = Jemaat::where('tanggal_lahir', '>', $cutoffDate)->count();
+    $jumlahDewasa = Jemaat::where('tanggal_lahir', '<=', $cutoffDate)->count();
 
-        $jemaatMeninggal = $baptisData->map(function($item) use ($monthNames) {
-            $item->bulan = $monthNames[$item->bulan];
-            return $item;
-        });
-        $labels = array_keys($ageGroups);
-        $isiData = array_values($ageGroups);
-        $avgData = array_values($avgUsia);
-        $avgLabel = array_keys($avgUsia);
-        $baptisLabel = ['Dewasa Baptis', 'Dewasa Belum Baptis', 'Anak Baptis', 'Anak Belum Baptis'];
-        $isiBaptis = $baptisData->pluck('bulan')->unique()->values()->toArray();
-        $wilayahLabels = $wilayahData->pluck('nama_wilayah')->toArray();
-        $anakCounts = $wilayahData->pluck('anak_count')->toArray();
-        $dewasaCounts = $wilayahData->pluck('dewasa_count')->toArray();
+    // Age groups
+    $ageGroups = Jemaat::select(
+        DB::raw('
+            CASE
+                WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) < 7 THEN "<6th"
+                WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 7 AND 15 THEN "7-15th"
+                WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 16 AND 18 THEN "16-18th"
+                WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 19 AND 30 THEN "19-30th"
+                WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 31 AND 39 THEN "31-39th"
+                WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 40 AND 59 THEN "40-59th"
+                ELSE ">60th"
+            END as age_group
+        '),
+        DB::raw('COUNT(*) as total')
+    )
+    ->groupBy('age_group')
+    ->pluck('total', 'age_group')
+    ->toArray();
 
-        $baptisChartData = [];
-            foreach ($baptisLabel as $label) {
-                $data = [];
-                foreach ($isiBaptis as $year) {
-                    $count = $baptisData->first(function ($item) use ($label, $year) {
-                        return $item->kategori === $label && $item->bulan == $year;
-                    })?->jumlah ?? 0;
-                    $data[] = $count;
-                }
-                $baptisChartData[] = [
-                    'label' => $label,
-                    'data' => $data,
-                ];
-            }
-        return view('admin.dashboardUsia',compact('baptisChartData', 'wilayahLabels','avgData', 'avgLabel', 'baptisLabel', 'isiBaptis', 'anakCounts', 'dewasaCounts','labels','isiData','totalJemaat', 'rataRataUsia', 'termuda', 'tertua', 'jumlahAnak', 'jumlahDewasa'));
-    }
+    // Wilayah data
+    $wilayahData = Jemaat::select('w.nama_wilayah',
+            DB::raw('SUM(CASE WHEN jemaat.tanggal_lahir > "' . $cutoffDate . '" THEN 1 ELSE 0 END) AS anak_count'),
+            DB::raw('SUM(CASE WHEN jemaat.tanggal_lahir <= "' . $cutoffDate . '" THEN 1 ELSE 0 END) AS dewasa_count')
+        )
+        ->join('wilayah as w', 'jemaat.id_wilayah', '=', 'w.id_wilayah')
+        ->groupBy('w.nama_wilayah')
+        ->orderBy('w.nama_wilayah')
+        ->get();
+
+    // Baptism data
+    $bd = Jemaat::selectRaw("
+        CASE 
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND bd.id_jemaat IS NOT NULL THEN 'Dewasa Baptis'
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND bd.id_jemaat IS NULL THEN 'Dewasa Belum Baptis'
+        END as kategori,
+        MONTH(bd.updated_at) as bulan,
+        COUNT(*) as jumlah")
+        ->leftJoin('baptis_dewasa as bd', 'jemaat.id_jemaat', '=', 'bd.id_jemaat')
+        ->groupBy('kategori', 'bulan')
+        ->orderBy('bulan')
+        ->get();
+
+    $bs = Jemaat::selectRaw("
+        CASE 
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND bs.id_jemaat IS NOT NULL THEN 'Dewasa Sudah Baptis Sidi'
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND bs.id_jemaat IS NULL THEN 'Dewasa Belum Baptis Sidi'
+        END as kategori,
+        MONTH(bs.updated_at) as bulan,
+        COUNT(*) as jumlah")
+        ->leftJoin('baptis_sidi as bs', 'jemaat.id_jemaat', '=', 'bs.id_jemaat')
+        ->groupBy('kategori', 'bulan')
+        ->orderBy('bulan')
+        ->get();
+
+    $ba = Jemaat::selectRaw("
+        CASE 
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND ba.id_jemaat IS NOT NULL THEN 'Anak Baptis'
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND ba.id_jemaat IS NULL THEN 'Anak Belum Baptis'
+        END as kategori,
+        MONTH(ba.updated_at) as bulan,
+        COUNT(*) as jumlah")
+        ->leftJoin('baptis_anak as ba', 'jemaat.id_jemaat', '=', 'ba.id_jemaat')
+        ->groupBy('kategori', 'bulan')
+        ->orderBy('bulan')
+        ->get();
+
+    // Average age by wilayah
+    $avgUsia = Jemaat::selectRaw('w.nama_wilayah, AVG(? - YEAR(jemaat.tanggal_lahir)) as rata_rata_usia', [$currentYear])
+        ->join('wilayah as w', 'jemaat.id_wilayah', '=', 'w.id_wilayah')
+        ->groupBy('w.nama_wilayah')
+        ->pluck('rata_rata_usia', 'w.nama_wilayah')
+        ->toArray();
+
+    $labels = array_keys($ageGroups);
+    $isiData = array_values($ageGroups);
+    $avgData = array_values($avgUsia);
+    $avgLabel = array_keys($avgUsia);
+    $wilayahLabels = $wilayahData->pluck('nama_wilayah')->toArray();
+    $anakCounts = $wilayahData->pluck('anak_count')->toArray();
+    $dewasaCounts = $wilayahData->pluck('dewasa_count')->toArray();
+
+    // Map months
+    $allMonths = collect([
+        1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 5 => 'Mei', 6 => 'Jun',
+        7 => 'Jul', 8 => 'Ags', 9 => 'Sept', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'
+    ]);
+
+    $ba = $allMonths->map(function ($month, $key) use ($ba) {
+        $record = $ba->firstWhere('bulan', $key);
+        return ['bulan' => $month, 'jumlah' => $record ? $record->jumlah : 0];
+    });
+
+    $bd = $allMonths->map(function ($month, $key) use ($bd) {
+        $record = $bd->firstWhere('bulan', $key);
+        return ['bulan' => $month, 'jumlah' => $record ? $record->jumlah : 0];
+    });
+
+    $bs = $allMonths->map(function ($month, $key) use ($bs) {
+        $record = $bs->firstWhere('bulan', $key);
+        return ['bulan' => $month, 'jumlah' => $record ? $record->jumlah : 0];
+    });
+
+    return view('admin.dashboardUsia', compact(
+        'wilayahLabels', 'avgData', 'avgLabel', 'anakCounts', 'dewasaCounts',
+        'labels', 'isiData', 'totalJemaat', 'rataRataUsia', 'termuda', 'tertua',
+        'jumlahAnak', 'jumlahDewasa', 'bd', 'ba', 'bs'
+    ));
+}
+
 
 
     // admin pengaturan start
