@@ -464,7 +464,7 @@
                         const data = response.rows[0];
                         console.log(data);
                         Swal.fire({
-                            title: 'Tambah Keluarga Baru',
+                            title: 'Edit Kepala keluarga',
                             html: `
                                 <form id="addKeluargaForm">
                                     <div class="form-group">
