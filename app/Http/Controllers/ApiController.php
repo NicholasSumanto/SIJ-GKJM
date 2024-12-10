@@ -1414,12 +1414,14 @@ class ApiController extends Controller
                 'totalNotFiltered' => AtestasiMasuk::count(),
                 'rows' => $data
                     ->map(function ($item) {
+                        $item->surat_url = $item->surat ? Storage::url($item->surat) : null;
                         $nama_wilayah = Wilayah::where('id_wilayah', $item->id_wilayah)
                             ->select('nama_wilayah')
                             ->first();
                         $nama_jemaat = Jemaat::where('id_jemaat', $item->id_jemaat)
                             ->select('nama_jemaat')
                             ->first();
+
                         return [
                             'id_masuk' => $item->id_masuk,
                             'id_wilayah' => $item->id_wilayah,
@@ -1427,8 +1429,9 @@ class ApiController extends Controller
                             'nama_wilayah' => $nama_wilayah ? $nama_wilayah->nama_wilayah : null,
                             'nama_gereja' => $item->nama_gereja,
                             'no_surat' => $item->no_surat,
-                            'tanggal' => $item->tanggal,
+                            'tanggal_masuk' => $item->tanggal_masuk,
                             'surat' => $item->surat,
+                            'surat_url' => $item->surat_url,
                         ];
                     })
                     ->toArray(),
@@ -1443,6 +1446,7 @@ class ApiController extends Controller
                 'totalNotFiltered' => AtestasiMasuk::count(),
                 'rows' => $data
                     ->map(function ($item) {
+                        $item->surat_url = $item->surat ? Storage::url($item->surat) : null;
                         $nama_wilayah = Wilayah::where('id_wilayah', $item->id_wilayah)
                             ->select('nama_wilayah')
                             ->first();
@@ -1458,6 +1462,7 @@ class ApiController extends Controller
                             'no_surat' => $item->no_surat,
                             'tanggal_masuk' => $item->tanggal_masuk,
                             'surat' => $item->surat,
+                            'surat_url' => $item->surat_url,
                         ];
                     })
                     ->toArray(),
@@ -3123,35 +3128,38 @@ class ApiController extends Controller
 
     // UPDATE ATESTASI MASUK START
     public function ApiUpdateAtestasiMasuk(Request $request)
-    {
-        $data = AtestasiMasuk::find($request->old_id_masuk);
-        $jemaat = Jemaat::find($data->id_jemaat);
+{
+    $data = AtestasiMasuk::find($request->old_id_masuk);
+    $jemaat = Jemaat::find($data->id_jemaat);
 
-        $namaGereja = '';
+    $namaGereja = '';
 
-        if ($request->nama_gereja == null) {
-            $namaGereja = $request->new_gereja;
-        } else {
-            $namaGereja = $request->nama_gereja;
-        }
-
-        $data->id_wilayah = $request->id_wilayah;
-        $data->nama_gereja = $namaGereja;
-        $data->no_surat = $request->no_surat;
-        $data->tanggal = $request->tanggal;
-        if ($request->hasFile('surat')) {
-            if ($data->surat && Storage::disk('surat')->exists($data->surat)) {
-                Storage::disk('public')->delete($data->surat);
-            }
-
-            $file = $request->file('surat');
-            $path = $file->store('surat', 'public');
-            $data->surat = $path;
-        }
-        $data->save();
-
-        return response()->json($data);
+    if ($request->nama_gereja == null) {
+        $namaGereja = $request->new_gereja;
+    } else {
+        $namaGereja = $request->nama_gereja;
     }
+
+    $data->id_wilayah = $request->id_wilayah;
+    $data->nama_gereja = $namaGereja;
+    $data->no_surat = $request->no_surat;
+    $data->tanggal_masuk = $request->tanggal_masuk;
+
+    if ($request->hasFile('surat')) {
+        if ($data->surat && Storage::disk('public')->exists($data->surat)) {
+            Storage::disk('public')->delete($data->surat);
+        }
+        $file = $request->file('surat');
+        $path = $file->store('surat', 'public');
+        $data->surat = $path;
+    }
+
+    // Save the updated data
+    $data->save();
+
+    return response()->json($data);
+}
+
     // UPDATE ATESTASI MASUK END
 
     // UPDATE BAPTIS ANAK START

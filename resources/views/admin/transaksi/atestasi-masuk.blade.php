@@ -141,7 +141,7 @@
                         align: 'center'
                     }, {
                         field: 'tanggal_masuk',
-                        title: 'Tanggal_Masuk',
+                        title: 'Tanggal Masuk',
                         align: 'center'
                     }, {
                         field: 'surat',
@@ -785,6 +785,8 @@
                     success: function(response) {
                         var nama_gereja = response.rows[0].nama_gereja;
                         var id_wilayah = response.rows[0].id_wilayah;
+                        var nama_jemaat = response.rows[0].nama_jemaat;
+
 
                         Swal.fire({
                             title: 'Edit Atestasi Masuk',
@@ -795,8 +797,8 @@
                                         <input type="text" id="no_surat" class="form-control" placeholder="Masukkan Nomor Surat *" value="${response.rows[0].no_surat}" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="nama_masuk">Nama Jemaat Baru *</label>
-                                        <input type="text" id="nama_masuk" class="form-control" placeholder="Masukkan Nama Jemaat Baru *" value="${response.rows[0].nama_masuk}" required>
+                                        <label for="nama_jemaat">Nama Jemaat Baru *</label>
+                                        <input type="text" id="nama_jemaat" class="form-control" placeholder="Masukkan Nama Jemaat Baru *" value="${response.rows[0].nama_jemaat}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="nama_wilayah">Nama Wilayah *</label>
@@ -814,12 +816,14 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="tanggal">Tanggal *</label>
-                                        <input type="date" id="tanggal" class="form-control" value="${response.rows[0].tanggal}" required>
+                                        <label for="tanggal_masuk">Tanggal *</label>
+                                        <input type="date" id="tanggal_masuk" class="form-control" value="${response.rows[0].tanggal}" required>
                                     </div>
-                                    <div class="form-group mb-0">
-                                        <label for="surat">Surat *</label>
-                                        <textarea id="surat" name="surat" cols="50" style="width: 100%;">${response.rows[0].surat}</textarea>
+
+                                    <div class="form-group">
+                                        <label for="surat">Surat</label>
+                                        ${response.surat_url ? `<a href="${response.surat_url}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat File surat yang Sudah Ada</a>` : ''}
+                                        <input type="file" id="surat" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
                                     </div>
                                 </form>
                             `,
@@ -899,13 +903,14 @@
                             preConfirm: () => {
                                 const data = {
                                     no_surat: $('#no_surat').val(),
-                                    nama_masuk: $('#nama_masuk').val(),
+                                    nama_jemaat: $('#nama_jemaat').val(),
                                     id_wilayah: $('#nama_wilayah').val(),
                                     nama_gereja: $('#nama_gereja').val(),
                                     new_gereja: $('#new_gereja').val(),
                                     tanggal_masuk: $('#tanggal_masuk').val(),
-                                    surat: $('#surat').val()
+                                    surat: $('#surat')[0].files[0]
                                 };
+
 
                                 // Jika memilih "Tambah Gereja Baru", ganti nama_gereja dengan new_gereja jika terisi
                                 if (data.nama_gereja === 'add-new-gereja' && data
@@ -919,14 +924,11 @@
                                 }
 
                                 // Validasi semua input, pastikan tidak ada yang kosong
-                                if (!data.no_surat || !data.nama_gereja || !data
-                                    .id_wilayah || !data
-                                    .tanggal || !data
-                                    .surat) {
-                                    Swal.showValidationMessage(
-                                        'Data tidak boleh kosong!');
+                                if (!data.no_surat || !data.nama_gereja || !data.id_wilayah || !data.tanggal_masuk) {
+                                    Swal.showValidationMessage('Data tidak boleh kosong!');
                                     return false;
                                 }
+
 
                                 return data;
                             }
