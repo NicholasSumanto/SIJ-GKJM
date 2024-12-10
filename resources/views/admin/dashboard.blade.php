@@ -19,30 +19,43 @@
         </div>
     @endif
     <form id="form" method="GET" action="{{ route('admin.dashboard') }}" class="container mt-4">
-        <div class="card p-3 shadow-sm text-white" style="background-color: #2f56c8">
-            <div class="form-row align-items-center">
-                <div class="col-auto">
-                    <label for="kabupaten" class="mr-2 font-weight-bold">Pilih Kabupaten:</label>
-                    <select id="kabupaten" name="kabupaten" class="custom-select">
-                        <option value="" {{ request('kabupaten') == '' ? 'selected' : '' }}>All</option>
-                        @foreach ($dropKab as $id_kabupaten => $kabupatenName)
-                            <option value="{{ $id_kabupaten }}" {{ request('kabupaten') == $id_kabupaten ? 'selected' : '' }}>{{ $kabupatenName }}</option>
-                        @endforeach
-                    </select>
+        <div class="card p-3 shadow-sm text-white" style="background-color: #2f56c8; border-radius: 8px;">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="form-row d-flex align-items-center">
+                    <div class="col-auto mr-3">
+                        <label for="kabupaten" class="mr-2 font-weight-bold">Pilih Kabupaten:</label>
+                        <select id="kabupaten" name="kabupaten" class="custom-select" onchange="document.getElementById('form').submit();">
+                            <option value="" {{ request('kabupaten') == '' ? 'selected' : '' }}>All</option>
+                            @foreach ($dropKab as $id_kabupaten => $kabupatenName)
+                                <option value="{{ $id_kabupaten }}" {{ request('kabupaten') == $id_kabupaten ? 'selected' : '' }}>
+                                    {{ $kabupatenName }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+    
+                    <div class="col-auto">
+                        <label for="kecamatan" class="mr-2 font-weight-bold">Pilih Kecamatan:</label>
+                        <select id="kecamatan" name="kecamatan" class="custom-select" onchange="document.getElementById('form').submit();">
+                            <option value="" {{ request('kecamatan') == '' ? 'selected' : '' }}>Select Kecamatan</option>
+                            @if (request('kabupaten'))
+                                @foreach ($dropKec as $id_kecamatan => $kecamatanName)
+                                    <option value="{{ $id_kecamatan }}" {{ request('kecamatan') == $id_kecamatan ? 'selected' : '' }}>
+                                        {{ $kecamatanName }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
                 </div>
-                <div class="col-auto">
-                    <label for="kecamatan" class="mr-2 font-weight-bold">Pilih Kecamatan:</label>
-                    <select id="kecamatan" name="kecamatan" class="custom-select">
-                        <option value="" {{ request('kecamatan') == '' ? 'selected' : '' }}>Select Kecamatan</option>
-                    </select>
-                </div>                
-                <div class="card shadow h-100 py-4 ml-3"
-                    style="background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 8px 16px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
-                    Total Jemaat : {{ $totalJemaatWilayah }}
+    
+                <div class="card shadow py-3 px-4 text-dark font-weight-bold"
+                    style="background-color: #ffffff; border: none; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
+                    Total Jemaat: {{ $totalJemaatWilayah }}
                 </div>
             </div>
         </div>
-    </form>
+    </form>    
 
     <form id="form" method="GET" action="{{ route('admin.dashboard') }}" class="container mt-4">
         <div class="card p-3 shadow-sm">
@@ -147,30 +160,6 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const kabupatenDropdown = document.getElementById('kabupaten');
-            const kecamatanDropdown = document.getElementById('kecamatan');
-            const kecamatanData = @json($kec);
-
-            kabupatenDropdown.addEventListener('change', function () {
-                const selectedKabupaten = this.value;
-                kecamatanDropdown.innerHTML = '<option value="">Select Kecamatan</option>'; // Reset kecamatan dropdown
-
-                if (selectedKabupaten) {
-                    const filteredKecamatan = kecamatanData.filter(kecamatan =>
-                        kecamatan.id_kabupaten == selectedKabupaten
-                    );
-
-                    filteredKecamatan.forEach(kecamatan => {
-                        const option = document.createElement('option');
-                        option.value = kecamatan.id_kecamatan;
-                        option.textContent = kecamatan.kecamatan;
-                        kecamatanDropdown.appendChild(option);
-                    });
-                }
-            });
-        });
-
         const chart1 = document.getElementById('chartJemaatPerWilayah').getContext('2d');
         const jemaatChart = new Chart(chart1, {
             type: 'bar',

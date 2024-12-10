@@ -44,6 +44,12 @@ class AdminPageController extends Controller
         $gender = $request->input('Kelamin');
         $kecamatan = $request->input('kecamatan');
         $kabupaten = $request->input('kabupaten');
+        $dropKab = Kabupaten::pluck('kabupaten', 'id_kabupaten');
+        // $dropKec = Kecamatan::pluck('kecamatan', 'id_kecamatan');
+        $dropKec = $kabupaten
+        ? Kecamatan::where('id_kabupaten', $kabupaten)->pluck('kecamatan', 'id_kecamatan')
+        : [];
+        // dd($kabupaten);
         $perempuan = Jemaat::where('kelamin', '=', 'Perempuan')->count();
         $laki = Jemaat::where('kelamin', '=', 'Laki-laki')->count();
         $wilayah = $request->input('Wilayah');
@@ -225,9 +231,10 @@ class AdminPageController extends Controller
 
         $dropWilayah = Wilayah::pluck('nama_wilayah', 'id_wilayah');
         $dropKab = Kabupaten::pluck('kabupaten', 'id_kabupaten');
-        $kab = Kabupaten::all();
-        $kec = Kecamatan::all();
-        $dropKec = Kecamatan::pluck('kecamatan', 'id_kecamatan');
+        // $dropKec = Kecamatan::pluck('kecamatan', 'id_kecamatan');
+        $dropKec = $kabupaten
+        ? Kecamatan::where('id_kabupaten', $kabupaten)->pluck('kecamatan', 'id_kecamatan')
+        : [];
         $labelWilayah = $jumlahJemaat->pluck('wil');
         $isiJemaat = $jumlahJemaat->pluck('jumlah');
         $labelBulan = $jemaatMeninggal->pluck('bulan');
@@ -258,7 +265,7 @@ class AdminPageController extends Controller
             'atestasiKeluar' => $atestasiKeluar->toArray(),
             'status' => $status ->toArray(),
         ];
-        return view('admin.dashboard',compact('tahun', 'perempuan', 'laki', 'isiBoy','isiGirl','totalJemaat','dropWilayah', 'dropKab','dropKec','kab','kec','totalJemaatWilayah','labelWilayah','isiJemaat','labelBulan', 'labelAt', 'isiKematian','labelBaptis','labelBD','labelBS','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','labelStatus','jumlahStatus'), $data);
+        return view('admin.dashboard',compact('tahun', 'perempuan', 'laki', 'isiBoy','isiGirl','totalJemaat','dropWilayah', 'dropKab','dropKec','totalJemaatWilayah','labelWilayah','isiJemaat','labelBulan', 'labelAt', 'isiKematian','labelBaptis','labelBD','labelBS','isiBA','isiBS','isiBD','isiMasuk','isiKeluar','labelStatus','jumlahStatus'), $data);
     }
 
     // admin pengaturan start
