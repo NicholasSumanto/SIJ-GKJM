@@ -379,7 +379,7 @@
                             </div>
                             <div class="form-group">
                             <label for="jenjang"> Jenjang </label>
-                            <select id="jenjang" class="form-control">
+                            <select id="jenjang" class="form-control" value="${pendeta.jenjang}>
                                 <option value="-"selected>Pilih Jenjang Pendidikan</option>
                                 <option value="SD">SD</option>
                                 <option value="SMP">SMP</option>
@@ -430,6 +430,7 @@
                             confirmButtonText: 'Save',
                             cancelButtonText: 'Cancel',
                             didOpen: () => {
+
                                 // Load status options via AJAX
                                 $.ajax({
                                     url: "{{ route('api.get.status') }}",
