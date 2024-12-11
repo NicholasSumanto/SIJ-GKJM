@@ -27,7 +27,6 @@
                 <li class="breadcrumb-item active">Detail Jemaat ({{ $jemaat->nama_jemaat }})</li>
             </ol>
         </nav>
-        <a href="" class="btn btn-primary tambah-jemaat">Eksport Jemaat</a>
         <button class="btn btn-success btn-validasi" style="color: white;" data-id="{{ $jemaat->id_jemaat }}">Validasi
             Status
             Jemaat</button>

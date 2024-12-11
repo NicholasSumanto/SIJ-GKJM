@@ -990,14 +990,14 @@
                         success: function(response) {
                             alert.fire({
                                 icon: 'success',
-                                title: 'Data atestasi keluar berhasil dihapus!'
+                                title: 'Data atestasi Masuk berhasil dihapus!'
                             });
                             $table.bootstrapTable('refresh');
                         },
                         error: function(xhr, status, error) {
                             alert.fire({
                                 icon: 'error',
-                                title: 'Data atestasi keluar gagal dihapus!'
+                                title: 'Data atestasi Masuk gagal dihapus!'
                             });
                         }
                     });
