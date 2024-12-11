@@ -106,39 +106,6 @@
                     <h4>Kategori Usia</h4>
                     <canvas id="ageGroupChart" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
                 </div>
-                {{-- <div>
-                    <h4 class="mt-4">Table</h4>
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            @if($paginationMarried->isNotEmpty())
-                            <table class="table table-striped table-bordered" id='marriedTable'>
-                                <thead>
-                                    <tr>
-                                        <th>Nama</th>
-                                        <th>Umur</th>
-                                        <th>Wilayah</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($paginationMarried as $data)
-                                        <tr>
-                                            <td>{{ $data->pengantin_pria ?? 'N/A' }}</td>
-                                            <td>{{ $data->pengantin_wanita ?? 'N/A' }}</td>
-                                            <td>{{ $data->tanggal_nikah ?? 'N/A' }}</td>
-                                            <td class="wilayah">{{$data->nama_wilayah}}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <div class="d-flex justify-content-center">
-                                {{ $pagination->links('admin.custom-pagination') }}
-                            </div>
-                            @else
-                                <p class="text-danger">Data tidak ditemukan untuk rentang tanggal tersebut.</p>
-                            @endif
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="col-md-6">
                     <br>
                     <h4>Usia dan Wilayah</h4>
@@ -254,23 +221,51 @@
     const baptisChart = new Chart(chart4, {
         type: 'line',
         data: {
-            labels: @json($isiBaptis), 
-            datasets: @json($baptisChartData).map(dataset => ({
-                label: dataset.label, 
-                data: dataset.data, 
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 160, 192, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)'],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 160, 192, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)'],
-                borderWidth: 2, 
-                tension: 0.4,
-            }))
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sept', 'Okt', 'Nov', 'Des'], 
+            datasets: [
+                {
+                    label: 'Anak Sudah Baptis',
+                    data: @json($ba->pluck('jumlah')->toArray()),
+                    backgroundColor: 'rgba(255, 153, 153, 0.2)',
+                    borderColor: 'rgba(255, 153, 153, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Anak Belum Baptis',
+                    data: @json($ba->pluck('jumlah')->toArray()),
+                    backgroundColor: 'rgba(185, 0, 0, 0.2)',
+                    borderColor: 'rgba(155, 0, 0, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Dewasa Sudah Baptis Sidi',
+                    data: @json($bs->pluck('jumlah')->toArray()),
+                    backgroundColor: 'rgba(255, 222, 41, 0.2)',
+                    borderColor: 'rgba(255, 222, 41, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Dewasa Belum Baptis Sidi',
+                    data: @json($bs->pluck('jumlah')->toArray()),
+                    backgroundColor: 'rgba(220, 0, 0, 0.2)',
+                    borderColor: 'rgba(220, 0, 0, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Dewasa Baptis',
+                    data: @json($bd->pluck('jumlah')->toArray()),
+                    backgroundColor: 'rgba(153, 153, 255, 0.2)',
+                    borderColor: 'rgba(153, 153, 255, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Dewasa Belum Baptis',
+                    data: @json($bd->pluck('jumlah')->toArray()),
+                    backgroundColor: 'rgba(85, 0, 0, 0.2)',
+                    borderColor: 'rgba(85, 0, 0, 1)',
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
             responsive: true,

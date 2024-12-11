@@ -55,7 +55,8 @@
                 </div>
             </div>
         </div>
-    </form>    
+    </form>
+    
 
     <form id="form" method="GET" action="{{ route('admin.dashboard') }}" class="container mt-4">
         <div class="card p-3 shadow-sm">
