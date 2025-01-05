@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('pernikahan', function (Blueprint $table) {
             $table->id('id_nikah');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
-            $table->enum('status_pernikahan', ['Menikah', 'Cerai']);
             $table->string('nomor', 50);
             $table->string('nama_gereja');
             $table->date('tanggal_nikah');
@@ -26,10 +25,10 @@ return new class extends Migration
             $table->string('ayah_wanita', 100);
             $table->string('ibu_wanita', 100);
             $table->string('saksi1', 100);
-            $table->string('saksi2', 100);
-            $table->string('tempat', 250);
-            $table->string('ketua_majelis', 100);
-            $table->string('sekretaris_majelis', 100);
+            $table->string('saksi2', 100)->nullable();
+            $table->string('tempat', 250)->nullable();
+            $table->string('ketua_majelis', 100)->nullable();
+            $table->string('sekretaris_majelis', 100)->nullable();
             $table->foreign('id_pendeta')->references('id_pendeta')->on('pendeta')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('id_wilayah')->references('id_wilayah')->on('wilayah')->onUpdate('cascade')->onDelete('set null');
             $table->timestamps();
@@ -153,7 +152,6 @@ return new class extends Migration
         Schema::create('kematian', function (Blueprint $table) {
             $table->id('id_kematian');
             $table->unsignedInteger('id_jemaat')->nullable();
-            $table->string('nama_gereja');
             $table->bigInteger('id_pendeta')->unsigned()->nullable();
             $table->date('tanggal_meninggal');
             $table->date('tanggal_pemakaman');

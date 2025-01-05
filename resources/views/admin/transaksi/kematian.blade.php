@@ -163,15 +163,6 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="nama_gereja">Nama Gereja *</label>
-                            <select id="nama_gereja" class="form-control" required style="width: 100%;">
-                                <option value="">Pilih Nama Gereja</option>
-                            </select>
-                            <div id="new-gereja-container" style="margin-top: 10px; display: none;">
-                                <input type="text" id="new_gereja" class="form-control" placeholder="Masukkan Gereja Baru">
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label for="nama_pendeta">Nama Pendeta *</label>
                             <select id="nama_pendeta" class="form-control" required style="width: 100%;">
                                 <option value="">Pilih Nama Pendeta</option>
@@ -199,32 +190,11 @@
                 confirmButtonText: 'Simpan',
                 cancelButtonText: 'Batal',
                 didOpen: () => {
-                    $('#nama_jemaat, #nama_gereja, #nama_pendeta').select2({
+                    $('#nama_jemaat,  #nama_pendeta').select2({
                         placeholder: "Pilih atau cari",
                         allowClear: true,
                         dropdownParent: $(
                             '.swal2-container')
-                    });
-
-                    // Load Nama Gereja
-                    $.ajax({
-                        url: "{{ route('api.get.gereja') }}",
-                        type: "POST",
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        dataType: "json",
-                        success: function(response) {
-                            const $gerejaSelect = $('#nama_gereja');
-                            $gerejaSelect.empty().append(
-                                '<option value="">Pilih Nama Gereja</option>');
-                            $.each(response, function(key, value) {
-                                $gerejaSelect.append(new Option(value.nama_gereja,
-                                    value.nama_gereja));
-                            });
-                            $gerejaSelect.append(new Option('+ Tambah Gereja Baru',
-                                'add-new-gereja'));
-                        }
                     });
 
                     // Load Nama Pendeta
@@ -266,41 +236,17 @@
                             });
                         }
                     });
-
-                    // Tampilkan input untuk menambahkan Gereja baru jika opsi dipilih
-                    $('#nama_gereja').change(function() {
-                        const selectedValue = $(this).val();
-                        if (selectedValue === 'add-new-gereja') {
-                            $('#new-gereja-container').show();
-                            $('#new_gereja').val('');
-                        } else {
-                            $('#new-gereja-container').hide();
-                        }
-                    });
                 },
                 preConfirm: () => {
                     const data = {
                         id_jemaat: $('#nama_jemaat').val(),
                         id_pendeta: $('#nama_pendeta').val(),
-                        nama_gereja: $('#nama_gereja').val(),
-                        new_gereja: $('#new_gereja').val(),
                         tanggal_meninggal: $('#tanggal_meninggal').val(),
                         tanggal_pemakaman: $('#tanggal_pemakaman').val(),
                         tempat_pemakaman: $('#tempat').val(),
                         keterangan: $('#keterangan').val()
                     };
 
-                    // Jika opsi tambah gereja baru dipilih
-                    if (data.nama_gereja === 'add-new-gereja') {
-                        if (!data.new_gereja) {
-                            Swal.showValidationMessage('Nama gereja baru harus diisi!');
-                            return false;
-                        }
-                        data.nama_gereja = data.new_gereja; // Gunakan gereja baru
-                    } else if (!data.nama_gereja) {
-                        Swal.showValidationMessage('Nama gereja harus dipilih!');
-                        return false;
-                    }
 
                     // Validasi data lainnya
                     if (!data.id_jemaat || !data.id_pendeta || !data.tanggal_meninggal ||

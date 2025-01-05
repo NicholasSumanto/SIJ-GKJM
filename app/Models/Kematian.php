@@ -14,7 +14,6 @@ class Kematian extends Model
 
     protected $fillable = [
         'id_jemaat',
-        'nama_gereja',
         'id_pendeta',
         'tanggal_meninggal',
         'tanggal_pemakaman',

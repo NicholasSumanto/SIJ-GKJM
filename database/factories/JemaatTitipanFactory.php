@@ -28,7 +28,7 @@ class JemaatTitipanFactory extends Factory
             'kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
             'alamat_jemaat' => $this->faker->address,
             'titipan' => $this->faker->randomElement(['Masuk', 'Keluar']),
-            'status_titipan' => $this->faker->randomElement(['Selesai', 'Belum Selesai']),
+            'status_titipan' => $this->faker->randomElement(['Berproses', 'Selesai']),
             'surat' => 'titipan/' . uniqid() . '.pdf',
         ];
     }

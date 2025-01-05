@@ -978,10 +978,9 @@ class ApiController extends Controller
     {
         $gerejaFromAtestasiKeluar = AtestasiKeluar::select('nama_gereja')->distinct()->get();
         $gerejaFromAtestasiMasuk = AtestasiMasuk::select('nama_gereja')->distinct()->get();
-        $gerejaFromKematian = Kematian::select('nama_gereja')->distinct()->get();
         $gerejaFromPernikahan = Pernikahan::select('nama_gereja')->distinct()->get();
 
-        $gereja = collect($gerejaFromAtestasiKeluar)->merge($gerejaFromAtestasiMasuk)->merge($gerejaFromKematian)->merge($gerejaFromPernikahan)->unique('nama_gereja')->values();
+        $gereja = collect($gerejaFromAtestasiKeluar)->merge($gerejaFromAtestasiMasuk)->merge($gerejaFromPernikahan)->unique('nama_gereja')->values();
 
         return response()->json($gereja);
     }
@@ -1275,8 +1274,7 @@ class ApiController extends Controller
                         return [
                             'id_kematian' => $item->id_kematian,
                             'id_jemaat' => $item->id_jemaat,
-                            'nama_gereja' => $item->nama_gereja,
-                            'nama_jemaat' => $nama ? $nama->nama_jemaat : null, // pastikan untuk mengecek jika $nama null
+                            'nama_jemaat' => $nama ? $nama->nama_jemaat : null,
                             'id_pendeta' => $item->id_pendeta,
                             'tanggal_meninggal' => $item->tanggal_meninggal,
                             'tanggal_pemakaman' => $item->tanggal_pemakaman,
@@ -1302,7 +1300,6 @@ class ApiController extends Controller
                         return [
                             'id_kematian' => $item->id_kematian,
                             'id_jemaat' => $item->id_jemaat,
-                            'nama_gereja' => $item->nama_gereja,
                             'nama_jemaat' => $nama ? $nama->nama_jemaat : null,
                             'id_pendeta' => $item->id_pendeta,
                             'tanggal_meninggal' => $item->tanggal_meninggal,
@@ -2347,14 +2344,15 @@ class ApiController extends Controller
             'message' => 'Data already exists',
         ]);
     }
-
-    // Tentukan nama gereja
-    $namaGereja = $request->nama_gereja ?? $request->new_gereja;
+    if (Kematian::where('id_jemaat', $request->id_jemaat)->exists()) {
+        return response()->json([
+            'message' => 'Data already exists for the given id_jemaat.',
+        ]);
+    }
 
     // Tambahkan data kematian
     $data = new Kematian();
     $data->id_jemaat = $request->id_jemaat;
-    $data->nama_gereja = $namaGereja;
     $data->id_pendeta = $request->id_pendeta;
     $data->tanggal_meninggal = $request->tanggal_meninggal;
     $data->tanggal_pemakaman = $request->tanggal_pemakaman;
@@ -2430,7 +2428,7 @@ class ApiController extends Controller
         // Simpan data ke tabel Jemaat
         $jemaat = new Jemaat();
         $jemaat->id_wilayah = $request->id_wilayah;
-        $jemaat->id_status = $request->id_status;
+        $jemaat->id_status = $request->keterangan_status;
         $jemaat->nama_jemaat = $request->nama_jemaat;
         $jemaat->tempat_lahir = $request->tempat_lahir;
         $jemaat->tanggal_lahir = $request->tanggal_lahir;
@@ -2462,7 +2460,7 @@ class ApiController extends Controller
         $jemaat->penghasilan = $request->penghasilan;
         $jemaat->gereja_baptis = $request->gereja_baptis;
         $jemaat->alat_transportasi = $request->alat_transportasi;
-        $jemaat->save(); // Simpan data Jemaat
+        $jemaat->save();
 
         // Simpan data ke tabel AtestasiMasuk
         $namaGereja = '';
@@ -3005,42 +3003,71 @@ class ApiController extends Controller
 
     // UPDATE JEMAAT TITIPAN
     public function ApiUpdateJemaatTitipan(Request $request)
-    {
-        $data = JemaatTitipan::find($request->id_titipan);
+{
+    // Cek apakah data dengan id_titipan ada
+    $data = JemaatTitipan::find($request->id_titipan);
 
-        $namaGereja = '';
-
-        if ($request->nama_gereja == null) {
-            $namaGereja = $request->new_gereja;
-        } else {
-            $namaGereja = $request->nama_gereja;
-        }
-
-        if ($request->has('id_jemaat')) {
-            $data->id_jemaat = $request->id_jemaat;
-        } else {
-            $data->nama_jemaat = $request->nama_jemaat;
-        }
-
-        $data->nama_gereja = $namaGereja;
-        $data->kelamin = $request->kelamin;
-        $data->alamat_jemaat = $request->alamat_jemaat;
-        $data->titipan = $request->titipan;
-
-        if ($request->hasFile('surat')) {
-            if ($data->surat && Storage::disk('public')->exists($data->surat)) {
-                Storage::disk('public')->delete($data->surat);
-            }
-
-            $file = $request->file('surat');
-            $path = $file->store('surat', 'public');
-            $data->surat = $path;
-        }
-
-        $data->save();
-
-        return response()->json($data);
+    if (!$data) {
+        return response()->json([
+            'message' => 'Data not found',
+        ], 404);
     }
+
+    $namaGereja = '';
+
+    if ($request->titipan == 'Keluar') {
+        if ($request->nama_gereja_tujuan == null) {
+            $namaGereja = $request->new_gereja_tujuan;
+        } else {
+            $namaGereja = $request->nama_gereja_tujuan;
+        }
+        $data->nama_gereja_tujuan = $namaGereja;
+    } else {
+        if ($request->nama_gereja_asal == null) {
+            $namaGereja = $request->new_gereja_asal;
+        } else {
+            $namaGereja = $request->nama_gereja_asal;
+        }
+        $data->nama_gereja_asal = $namaGereja;
+    }
+
+    if ($request->has('id_jemaat')) {
+        $data->id_jemaat = $request->id_jemaat;
+    }
+
+    if ($request->titipan == 'Masuk') {
+        $data->nama_jemaat = $request->nama_jemaat;
+    }
+
+    // Perbarui field lainnya
+    $data->tanggal_titipan = $request->tanggal_titipan;
+    $data->tanggal_selesai = $request->tanggal_selesai;
+    $data->kelamin = $request->kelamin;
+    $data->alamat_jemaat = $request->alamat_jemaat;
+    $data->titipan = $request->titipan;
+    $data->status_titipan = $request->status_titipan;
+
+    // Periksa apakah ada file baru untuk surat
+    if ($request->hasFile('surat')) {
+        // Hapus file lama jika ada
+        if ($data->surat && Storage::disk('public')->exists($data->surat)) {
+            Storage::disk('public')->delete($data->surat);
+        }
+
+        // Simpan file baru
+        $file = $request->file('surat');
+        $path = $file->store('surat', 'public');
+        $data->surat = $path;
+    }
+
+    // Simpan perubahan ke database
+    $data->save();
+
+    return response()->json([
+        'message' => 'Data updated successfully',
+        'data' => $data,
+    ]);
+}
     // UPDATE JEMAAT TITIPAN END
 
     // UPDATE PERNIKAHAN
@@ -3082,26 +3109,6 @@ class ApiController extends Controller
         return response()->json($data);
     }
     // UPDATE PERNIKAHAN END
-
-    // UPDATE KEMATIAN
-    public function ApiUpdateKematian(Request $request)
-    {
-        $data = Kematian::find($request->id_kematian);
-
-        if ($request->id != $request->id_kematian && Kematian::where('id_kematian', $request->id_kematian)->first() != null) {
-            return response()->json([
-                'message' => 'Data already exists',
-            ]);
-        }
-
-        $data->id_jemaat = $request->id_jemaat;
-        $data->tanggal_kematian = $request->tanggal_kematian;
-        $data->tempat_kematian = $request->tempat_kematian;
-        $data->save();
-
-        return response()->json($data);
-    }
-    // UPDATE KEMATIAN END
 
     // UPDATE ATESTASI KELUAR
     public function ApiUpdateAtestasiKeluar(Request $request)
@@ -3585,18 +3592,28 @@ class ApiController extends Controller
     }
 
     public function ApiDeleteKematian(Request $request)
-    {
-        $data = Kematian::find($request->id_kematian);
-        if ($data) {
-            $data->delete();
-            return response()->json([
-                'message' => 'Kematian deleted successfully',
-                'data' => $data,
-            ]);
+{
+
+    $data = Kematian::find($request->id_kematian);
+
+    if ($data) {
+        $jemaat = Jemaat::find($data->id_jemaat);
+        if ($jemaat) {
+            $jemaat->id_status = 1;
+            $jemaat->save();
         }
 
-        return response()->json(['message' => 'Kematian not found'], 404);
+        $data->delete();
+
+        return response()->json([
+            'message' => 'Kematian deleted successfully, status updated to jemaat',
+            'data' => $data,
+        ]);
     }
+
+    return response()->json(['message' => 'Kematian not found'], 404);
+}
+
 
     public function ApiDeleteAtestasiKeluar(Request $request)
     {
@@ -3634,7 +3651,7 @@ class ApiController extends Controller
     {
         $data = AtestasiMasuk::find($request->id_masuk);
         if ($data) {
-            if ($data->surat && Storage::disk('surat')->exists($data->surat)) {
+            if ($data->surat && Storage::disk('public')->exists($data->surat)) {
                 Storage::disk('public')->delete($data->surat);
             }
 

@@ -547,235 +547,286 @@
                         // Menampilkan SweetAlert untuk Edit Jemaat Titipan
                         Swal.fire({
                             title: 'Edit Jemaat Titipan',
-                            html: `
-                            <form id="addJemaatTitipanForm">
-                                <div class="form-group">
-                                    <label for="titipan">Titipan *</label>
-                                    <select id="titipan" class="form-control">
-                                        <option value="Keluar">Keluar</option>
-                                        <option value="Masuk">Masuk</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Nama Jemaat *</label>
-                                    <div id="nama_keluar_container">
-                                        <select id="nama_keluar" class="form-control" required style="width: 100%;">
-                                            <option value="">Pilih Nama Jemaat</option>
-                                        </select>
-                                    </div>
-                                    <div id="nama_masuk_container" style="display: none;">
-                                        <input type="text" id="nama_masuk" class="form-control" placeholder="Masukkan Nama Jemaat *" value=${data.id_jemaat ? '' : data.nama_jemaat}>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="kelamin">Kelamin *</label>
-                                    <select id="kelamin" class="form-control">
-                                        <option value="">Pilih Kelamin</option>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nama_gereja">Nama Gereja *</label>
-                                    <select id="nama_gereja" class="form-control" required>
-                                        <option value="">Pilih Nama Gereja</option>
-                                        <!-- AJAX -->
-                                    </select>
-                                    <div id="new-gereja-container" style="margin-top: 10px; display: none;">
-                                        <input type="text" id="new_gereja" class="form-control" placeholder="Masukkan Gereja Baru *">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="alamat_jemaat">Alamat Jemaat *</label>
-                                    <textarea id="alamat_jemaat" class="form-control" placeholder="Alamat Jemaat">${data.alamat_jemaat}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="surat">Surat *</label>
-                                    ${data.berkas_url ? `<a href="${data.berkas_url}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat File Surat yang Sudah Ada</a>` : ''}
-                                    <input type="file" id="surat" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
-                                </div>
-                            </form>
-                            `,
+                            html:`
+                            <form id="editJemaatTitipanForm">
+                        <div class="form-group">
+                            <label for="titipan">Titipan *</label>
+                            <select id="titipan" class="form-control">
+                                <option value="Keluar" ${data.titipan === 'Keluar' ? 'selected' : ''}>Keluar</option>
+                                <option value="Masuk" ${data.titipan === 'Masuk' ? 'selected' : ''}>Masuk</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Jemaat *</label>
+                            <div id="nama_keluar_container">
+                                <select id="nama_keluar" class="form-control" required style="width: 100%;">
+                                    <option value="">Pilih Nama Jemaat</option>
+                                    <!-- Options will be populated by AJAX -->
+                                </select>
+                            </div>
+                            <div id="nama_masuk_container" style="display: none;">
+                                <input type="text" id="nama_masuk" class="form-control" placeholder="Masukkan Nama Jemaat *" value="${data.nama_jemaat}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="kelamin">Kelamin *</label>
+                            <select id="kelamin" class="form-control">
+                                <option value="">Pilih Kelamin</option>
+                                <option value="Laki-laki" ${data.kelamin === 'Laki-laki' ? 'selected' : ''}>Laki-laki</option>
+                                <option value="Perempuan" ${data.kelamin === 'Perempuan' ? 'selected' : ''}>Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div id="gereja_asal_container">
+                                <label for="nama_gereja_asal">Nama Gereja Asal*</label>
+                                <select id="nama_gereja_asal" class="form-control" required>
+                                    <option value="">Pilih Nama Gereja Asal</option>
+                                    <!-- Options will be populated by AJAX -->
+                                </select>
+                            </div>
+                            <div id="gereja_tujuan_container" style="margin-top: 20px;">
+                                <label for="nama_gereja_tujuan">Nama Gereja Tujuan*</label>
+                                <select id="nama_gereja_tujuan" class="form-control" required>
+                                    <option value="">Pilih Nama Gereja Tujuan</option>
+                                    <!-- Options will be populated by AJAX -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggal_titipan">Tanggal Titipan *</label>
+                            <input type="date" id="tanggal_titipan" class="form-control" value="${data.tanggal_titipan}">
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggal_selesai">Tanggal Selesai</label>
+                            <input type="date" id="tanggal_selesai" class="form-control" value="${data.tanggal_selesai}">
+                        </div>
+                        <div class="form-group">
+                            <label for="alamat_jemaat">Alamat Jemaat *</label>
+                            <textarea id="alamat_jemaat" class="form-control" placeholder="Alamat Jemaat">${data.alamat_jemaat}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="status_titipan">Status Titipan *</label>
+                            <select id="status_titipan" class="form-control">
+                                <option value="Berproses" ${data.status_titipan === 'Berproses' ? 'selected' : ''}>Berproses</option>
+                                <option value="Selesai" ${data.status_titipan === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="surat">Surat *</label>
+                            <input type="file" id="surat" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
+                        </div>
+                    </form>
+                    `,
                             showCancelButton: true,
                             confirmButtonText: 'Simpan',
                             cancelButtonText: 'Batal',
                             didOpen: () => {
                                 $('#nama_keluar').select2({
-                                    placeholder: "Pilih atau cari",
-                                    // allowClear: true,
-                                    dropdownParent: $(
-                                        '.swal2-container')
-                                });
+                            placeholder: "Pilih atau cari",
+                            allowClear: true,
+                            dropdownParent: $(
+                                '.swal2-container')
+                        });
 
-                                $('#titipan').val(data.titipan);
-                                if (data.titipan == 'Masuk') {
-                                    $('#nama_keluar_container').hide();
-                                    $('#nama_masuk_container').show();
-                                    $('#nama_masuk').val(data.nama_jemaat);
-                                } else {
-                                    $('#nama_keluar_container').show();
-                                    $('#nama_masuk_container').hide();
-                                    $('#nama_masuk').val('');
-                                }
-                                $('#kelamin').val(data.kelamin);
-
-                                $('#titipan').on('change', function() {
-                                    const status = $(this).val();
-                                    if (status == 'Masuk') {
-                                        $('#nama_keluar_container').hide();
-                                        $('#nama_masuk_container').show();
-                                        $('#nama_masuk').val('');
-                                    } else {
-                                        $('#nama_keluar_container').show();
-                                        $('#nama_masuk_container').hide();
-                                        $('#nama_keluar').val('');
-                                    }
-                                });
-
-                                $.ajax({
-                                    url: "{{ route('api.get.gereja') }}",
-                                    type: "POST",
-                                    data: {
-                                        _token: '{{ csrf_token() }}'
-                                    },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        const $gerejaSelect = $(
-                                            '#nama_gereja');
-                                        Object.entries(response)
-                                            .forEach(function([key,
-                                                value
-                                            ]) {
-                                                $gerejaSelect
-                                                    .append(
-                                                        `<option value="${value.nama_gereja}">${value.nama_gereja}</option>`
-                                                    );
-                                            });
-
-                                        $gerejaSelect.append(
-                                            '<option value="add-new-gereja">+ Tambah Gereja Baru</option>'
-                                        );
-                                        $gerejaSelect.val(data
-                                            .nama_gereja);
-                                    }
-                                });
-
-                                $('#nama_gereja').change(function() {
-                                    const selectedValue = $(this).val();
-                                    if (selectedValue ===
-                                        'add-new-gereja') {
-                                        $('#new-gereja-container').show();
-                                        $('#new_gereja').val('');
-                                    } else {
-                                        $('#new-gereja-container').hide();
-                                        $('#new_gereja').val('');
-                                    }
-                                });
-
-
-                                $.ajax({
-                                    url: "{{ route('api.get.jemaat') }}",
-                                    type: "POST",
-                                    data: {
-                                        _token: '{{ csrf_token() }}',
-                                        onlyName: true
-                                    },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        const $jemaatSelect = $(
-                                            '#nama_keluar');
-                                        $jemaatSelect.empty().append(
-                                            '<option value="">Pilih Nama Jemaat</option>'
-                                        );
-                                        $.each(response.rows, function(
-                                            key, value) {
-                                            $jemaatSelect
-                                                .append(
-                                                    new Option(
-                                                        value
-                                                        .nama_jemaat,
-                                                        value
-                                                        .id_jemaat
-                                                    ));
-                                        });
-                                        if (data
-                                            .id_jemaat) {
-                                            $jemaatSelect.val(data
-                                                .id_jemaat);
-                                        }
-                                    }
-                                });
-                            },
-                            preConfirm: () => {
-                                // Define titipanStatus correctly
-                                const data = {
-                                    nama_keluar: $('#nama_keluar').val(),
-                                    nama_masuk: $('#nama_masuk').val(),
-                                    kelamin: $('#kelamin').val(),
-                                    nama_gereja: $('#nama_gereja').val(),
-                                    new_gereja: $('#new_gereja').val(),
-                                    alamat_jemaat: $('#alamat_jemaat').val(),
-                                    titipan: $('#titipan').val(),
-                                    surat: $('#surat')[0].files[0],
-                                };
-
-                                // Validasi form
-                                if (data.titipan == 'Masuk' && !data.nama_masuk) {
-                                    Swal.showValidationMessage(
-                                        'Nama Jemaat Masuk harus diisi!');
-                                    return false;
-                                } else {
-                                    data.nama_jemaat = data.nama_masuk;
-                                }
-
-                                if (data.titipan == 'Keluar' && !data.nama_keluar) {
-                                    Swal.showValidationMessage(
-                                        'Nama Jemaat Keluar harus diisi!');
-                                    return false;
-                                } else {
-                                    data.id_jemaat = data.nama_keluar;
-                                }
-
-                                if (data.nama_gereja === 'add-new-gereja' && data
-                                    .new_gereja) {
-                                    data.nama_gereja = data.new_gereja;
-                                } else if (data.nama_gereja === 'add-new-gereja' &&
-                                    !data.new_gereja) {
-                                    Swal.showValidationMessage(
-                                        'Masukkan nama gereja baru');
-                                    return false;
-                                }
-
-                                if (!data.kelamin || !data.nama_gereja || !data
-                                    .alamat_jemaat || !data.titipan
-                                ) {
-                                    Swal.showValidationMessage(
-                                        'Semua kolom harus diisi!');
-                                    return false;
-                                }
-
-                                return data;
+                        $('#titipan').on('change', function() {
+                            const status = $(this).val();
+                            if (status == 'Masuk') {
+                                $('#nama_keluar_container').hide();
+                                $('#nama_masuk_container').show();
+                                $('#nama_masuk').val('');
+                            } else {
+                                $('#nama_keluar_container').show();
+                                $('#nama_masuk_container').hide();
+                                $('#nama_keluar').val('');
                             }
+                        });
+
+                        function setFormVisibility(status) {
+                            if (status == 'Masuk') {
+                                $('#gereja_asal_container').show();
+                                $('#gereja_tujuan_container').hide();
+                                $('#nama_gereja_tujuan').val('');
+                                $('#new-gereja-container-tujuan').hide();
+                            } else if (status == 'Keluar') {
+                                $('#gereja_asal_container').hide();
+                                $('#gereja_tujuan_container').show();
+                                $('#nama_gereja_asal').val('');
+                                $('#new-gereja-container-asal').hide();
+                            }
+                        }
+
+                        $('#titipan').on('change', function() {
+                            const status = $(this).val();
+                            setFormVisibility(status);
+                        });
+
+                        $(document).ready(function() {
+                            const initialStatus = $('#titipan').val();
+                            setFormVisibility(initialStatus);
+                        });
+
+
+                        $.ajax({
+                            url: "{{ route('api.get.gereja') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $gerejaAsalSelect = $('#nama_gereja_asal');
+                                const $gerejaTujuanSelect = $('#nama_gereja_tujuan');
+
+                                $gerejaAsalSelect.empty();
+                                $gerejaTujuanSelect.empty();
+
+                                $gerejaAsalSelect.append('<option value="">Pilih Nama Gereja Asal</option>');
+                                $gerejaTujuanSelect.append('<option value="">Pilih Nama Gereja Tujuan</option>');
+
+                                Object.entries(response).forEach(function([key, value]) {
+                                    const option = `<option value="${value.nama_gereja}">${value.nama_gereja}</option>`;
+                                    $gerejaAsalSelect.append(option);
+                                    $gerejaTujuanSelect.append(option);
+                                });
+
+                                const addNewOption = '<option value="add-new-gereja">+ Tambah Gereja Baru</option>';
+                                $gerejaAsalSelect.append(addNewOption);
+                                $gerejaTujuanSelect.append(addNewOption);
+                            }
+                        });
+
+                        $('#nama_gereja_asal').change(function() {
+                            const selectedValue = $(this).val();
+                            if (selectedValue === 'add-new-gereja') {
+                                $('#new-gereja-container-asal').show();
+                                $('#new_gereja_asal').val('');
+                            } else {
+                                $('#new-gereja-container-asal').hide();
+                                $('#new_gereja_asal').val('');
+                            }
+                        });
+
+                        $('#nama_gereja_tujuan').change(function() {
+                            const selectedValue = $(this).val();
+                            if (selectedValue === 'add-new-gereja') {
+                                $('#new-gereja-container-tujuan').show();
+                                $('#new_gereja_tujuan').val('');
+                            } else {
+                                $('#new-gereja-container-tujuan').hide();
+                                $('#new_gereja_tujuan').val('');
+                            }
+                        });
+
+
+
+                        $.ajax({
+                            url: "{{ route('api.get.jemaat') }}",
+                            type: "POST",
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                onlyName: true
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                const $jemaatSelect = $('#nama_keluar');
+                                $jemaatSelect.empty().append(
+                                    '<option value="">Pilih Nama Jemaat</option>'
+                                );
+                                $.each(response.rows, function(key, value) {
+                                    $jemaatSelect.append(new Option(value
+                                        .nama_jemaat, value
+                                        .id_jemaat));
+                                });
+                            }
+                        });
+                    },
+                    preConfirm: () => {
+                        // Define titipanStatus correctly
+                        const data = {
+                            nama_keluar: $('#nama_keluar').val(),
+                            nama_masuk: $('#nama_masuk').val(),
+                            kelamin: $('#kelamin').val(),
+                            nama_gereja_asal: $('#nama_gereja_asal').val(),
+                            tanggal_titipan: $('#tanggal_titipan').val(),
+                            tanggal_selesai: $('#tanggal_selesai').val(),
+                            new_gereja_asal: $('#new_gereja_asal').val(),
+                            nama_gereja_tujuan: $('#nama_gereja_tujuan').val(),
+                            new_gereja_tujuan: $('#new_gereja_tujuan').val(),
+                            alamat_jemaat: $('#alamat_jemaat').val(),
+                            status_titipan: $('#status_titipan').val(),
+                            titipan: $('#titipan').val(),
+                            surat: $('#surat')[0].files[0],
+                        };
+
+                        // Validasi form
+                        if (data.titipan == 'Masuk' && !data.nama_masuk) {
+                            Swal.showValidationMessage('Nama Jemaat Masuk harus diisi!');
+                            return false;
+                        } else {
+                            data.nama_jemaat = data.nama_masuk;
+                        }
+
+                        if (data.titipan == 'Keluar' && !data.nama_keluar) {
+                            Swal.showValidationMessage('Nama Jemaat Keluar harus diisi!');
+                            return false;
+                        } else  {
+                            data.id_jemaat = data.nama_keluar;
+                        }
+
+                        if (data.nama_gereja_asal === 'add-new-gereja' && !data.new_gereja_asal) {
+                            Swal.showValidationMessage('Masukkan nama gereja baru untuk Gereja Asal');
+                            return false;
+                        } else if (data.nama_gereja_asal === 'add-new-gereja') {
+                            data.nama_gereja_asal = data.new_gereja_asal;
+                        }
+
+                        // Validasi untuk nama gereja tujuan
+                        if (data.nama_gereja_tujuan === 'add-new-gereja' && !data.new_gereja_tujuan) {
+                            Swal.showValidationMessage('Masukkan nama gereja baru untuk Gereja Tujuan');
+                            return false;
+                        } else if (data.nama_gereja_tujuan === 'add-new-gereja') {
+                            data.nama_gereja_tujuan = data.new_gereja_tujuan;
+                        }
+
+
+                        if (!data.kelamin  || !data.titipan || !data.surat) {
+                            Swal.showValidationMessage('Semua kolom harus diisi!');
+                            return false;
+                        }
+
+                        return data;
+                    }
 
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                const formData = new FormData();
-                                formData.append('_token', '{{ csrf_token() }}');
-                                formData.append('id_titipan', id_titipan);
-                                formData.append('nama_jemaat', result.value
-                                    .nama_jemaat);
-                                if (result.value.titipan === 'Keluar') {
-                                    formData.append('id_jemaat', result.value
-                                        .id_jemaat);
-                                }
-                                formData.append('titipan', result.value.titipan);
-                                formData.append('new_gereja', result.value.new_gereja);
-                                formData.append('kelamin', result.value.kelamin);
-                                formData.append('nama_gereja', result.value
-                                    .nama_gereja);
-                                formData.append('alamat_jemaat', result.value
-                                    .alamat_jemaat);
-                                formData.append('surat', result.value.surat);
+                            const formData = new FormData();
+                            formData.append('_token', '{{ csrf_token() }}');
+
+                            if (result.value.titipan === 'Keluar') {
+                                formData.append('id_jemaat', result.value.id_jemaat);
+                                formData.append('nama_gereja_tujuan', result.value.nama_gereja_tujuan);
+                                formData.append('new_gereja_tujuan', result.value.new_gereja_tujuan);
+                            } else if (result.value.titipan === 'Masuk') {
+                                formData.append('nama_jemaat', result.value.nama_jemaat);
+                                formData.append('nama_gereja_asal', result.value.nama_gereja_asal);
+                                formData.append('new_gereja_asal', result.value.new_gereja_asal);
+                            }
+
+                            formData.append('titipan', result.value.titipan);
+                            formData.append('tanggal_titipan', result.value.tanggal_titipan);
+                            formData.append('kelamin', result.value.kelamin);
+                            formData.append('alamat_jemaat', result.value.alamat_jemaat);
+                            formData.append('status_titipan', result.value.status_titipan);
+                            formData.append('surat', result.value.surat);
+                            console.log (result.value.status_titipan);
+
+                            if (result.value.tanggal_selesai) {
+                                formData.append('tanggal_selesai', result.value.tanggal_selesai);
+                            }
+
+                            if (result.value.keterangan) {
+                                formData.append('keterangan', result.value.keterangan);
+                            }
 
 
                                 $.ajax({

@@ -193,7 +193,7 @@
                         <input type="date" id="tanggal_masuk" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="nama_gereja">Nama Gereja Asal *</label>
+                        <label for="nama_gereja">Nama Gereja Asal</label>
                         <select id="nama_gereja" class="form-control" required>
                             <option value="">Pilih Nama Gereja</option>
                             <!-- AJAX -->
@@ -382,7 +382,7 @@
                                 const $statusDropdown = $('#keterangan_status');
                                 $statusDropdown.empty().append(
                                     '<option value="" disabled selected>Pilih Status</option>'
-                                    );
+                                );
 
                                 (response.rows || response).forEach(item => {
                                     $statusDropdown.append(
@@ -446,7 +446,7 @@
                                 const $wilayahSelect = $('#id_wilayah');
                                 $wilayahSelect.empty().append(
                                     '<option value="">Pilih Nama Wilayah</option>'
-                                    );
+                                );
                                 $.each(response, function(key, value) {
                                     $wilayahSelect.append(new Option(value
                                         .nama_wilayah, value
@@ -632,7 +632,7 @@
                             return false;
                         }
 
-                        if (!data.nomor_surat || !data.tanggal_masuk || !data.nama_gereja || !
+                        if (!data.nomor_surat || !data.tanggal_masuk || !
                             data.nama_jemaat || !data.id_wilayah || !data.surat) {
                             Swal.showValidationMessage('Data tidak boleh kosong!');
                             return false;
@@ -668,7 +668,7 @@
                                 key !== 'pendidikan' && key !== 'ilmu' && key !== 'kodepos' &&
                                 key !== 'id_kelurahan' &&
                                 key !== 'id_kecamatan' && key !== 'id_kabupaten' && key !==
-                                'id_provinsi' && key !== 'new_gereja') {
+                                'id_provinsi' && key !== 'nama_gereja' && key !== 'new_gereja') {
                                 Swal.showValidationMessage(
                                     `${key.replace(/_/g, ' ')} tidak boleh kosong!`);
                                 return false;
@@ -807,7 +807,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="nama_gereja">Nama Gereja *</label>
+                                        <label for="nama_gereja">Nama Gereja</label>
                                         <select id="nama_gereja" class="form-control" required style="width: 100%;">
                                             <option value="">Pilih Nama Gereja</option>
                                         </select>
@@ -817,12 +817,12 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="tanggal_masuk">Tanggal *</label>
-                                        <input type="date" id="tanggal_masuk" class="form-control" value="${response.rows[0].tanggal}" required>
+                                        <input type="date" id="tanggal_masuk" class="form-control" value="${response.rows[0].tanggal_masuk}" required>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="surat">Surat</label>
-                                        ${response.surat_url ? `<a href="${response.surat_url}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat File surat yang Sudah Ada</a>` : ''}
+                                        ${response.rows[0].surat_url ? `<a href="${response.rows[0].surat_url}" target="_blank" class="btn btn-secondary mb-2 btn-sm">Lihat File surat yang Sudah Ada</a>` : ''}
                                         <input type="file" id="surat" class="form-control" accept=".pdf, .jpg, .jpeg, .png">
                                     </div>
                                 </form>
@@ -899,37 +899,58 @@
                                         $wilayahSelect.val(id_wilayah);
                                     }
                                 });
+
+                                // Tampilkan input untuk menambahkan Gereja baru jika opsi dipilih
+                                $('#nama_gereja').change(function() {
+                                    const selectedValue = $(this).val();
+                                    if (selectedValue ===
+                                        'add-new-gereja') {
+                                        $('#new-gereja-container').show();
+                                        $('#new_gereja').val('');
+                                    } else {
+                                        $('#new-gereja-container').hide();
+                                    }
+                                });
                             },
                             preConfirm: () => {
-                                const data = {
-                                    no_surat: $('#no_surat').val(),
-                                    nama_jemaat: $('#nama_jemaat').val(),
-                                    id_wilayah: $('#nama_wilayah').val(),
-                                    nama_gereja: $('#nama_gereja').val(),
-                                    new_gereja: $('#new_gereja').val(),
-                                    tanggal_masuk: $('#tanggal_masuk').val(),
-                                    surat: $('#surat')[0].files[0]
-                                };
+                                const data = new FormData();
+
+                                data.append('no_surat', $('#no_surat').val());
+                                data.append('nama_jemaat', $('#nama_jemaat').val());
+                                data.append('id_wilayah', $('#nama_wilayah').val());
+                                data.append('nama_gereja', $('#nama_gereja').val());
+                                data.append('new_gereja', $('#new_gereja').val());
+                                data.append('tanggal_masuk', $('#tanggal_masuk').val());
+                                const suratFile = $('#surat')[0].files[0];
+                                if (suratFile) {
+                                    data.append('surat', suratFile);
+                                }
+                                data.append('old_id_masuk', old_id_masuk);
+                                data.append('_token', '{{ csrf_token() }}');
 
 
-                                // Jika memilih "Tambah Gereja Baru", ganti nama_gereja dengan new_gereja jika terisi
-                                if (data.nama_gereja === 'add-new-gereja' && data
-                                    .new_gereja) {
-                                    data.nama_gereja = data.new_gereja;
-                                } else if (data.nama_gereja === 'add-new-gereja' &&
-                                    !data.new_gereja) {
+                                if ($('#nama_gereja').val() === 'add-new-gereja' &&
+                                    $('#new_gereja').val()) {
+                                    data.set('nama_gereja', $('#new_gereja').val());
+                                } else if ($('#nama_gereja').val() ===
+                                    'add-new-gereja' && !$('#new_gereja').val()) {
                                     Swal.showValidationMessage(
                                         'Masukkan nama gereja baru');
                                     return false;
                                 }
 
-                                // Validasi semua input, pastikan tidak ada yang kosong
-                                if (!data.no_surat || !data.nama_gereja || !data.id_wilayah || !data.tanggal_masuk) {
-                                    Swal.showValidationMessage('Data tidak boleh kosong!');
-                                    return false;
+                                for (let [key, value] of data.entries()) {
+                                    if (key === 'new_gereja' || key === 'nama_gereja') {
+                                        continue;
+                                    }
+
+                                    if (!value) {
+                                        Swal.showValidationMessage(
+                                            `Harap isi kolom ${key.replace('_', ' ')} terlebih dahulu!`
+                                        );
+                                        return false;
+                                    }
                                 }
-
-
                                 return data;
                             }
                         }).then((result) => {
@@ -937,11 +958,9 @@
                                 $.ajax({
                                     url: "{{ route('api.update.atestasimasuk') }}",
                                     type: "POST",
-                                    data: {
-                                        ...result.value,
-                                        old_id_masuk: old_id_masuk,
-                                        _token: '{{ csrf_token() }}'
-                                    },
+                                    processData: false,
+                                    contentType: false,
+                                    data: result.value,
                                     success: function() {
                                         alert.fire({
                                             icon: 'success',
@@ -949,7 +968,7 @@
                                         });
                                         $table.bootstrapTable('refresh');
                                     },
-                                    error: function() {
+                                    error: function(xhr) {
                                         alert.fire({
                                             icon: 'error',
                                             title: 'Data atestasi masuk gagal diupdate!'

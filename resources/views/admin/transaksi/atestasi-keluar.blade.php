@@ -373,7 +373,6 @@
                                         $('#new-gereja-container').hide();
                                     }
                                 });
-
                             },
                             preConfirm: () => {
                                 const data = {

@@ -34,7 +34,7 @@ return new class extends Migration
         Schema::create('atestasi_masuk', function (Blueprint $table) {
             $table->id('id_masuk');
             $table->bigInteger('id_wilayah')->unsigned()->nullable();
-            $table->string('nama_gereja');
+            $table->string('nama_gereja')->nullable();
             $table->unsignedInteger('id_jemaat')->nullable();
             $table->string('no_surat');
             $table->date('tanggal_masuk');

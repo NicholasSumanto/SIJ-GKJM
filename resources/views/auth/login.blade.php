@@ -31,9 +31,6 @@
 
                                     <form method="POST" action="{{ route('api.post.login') }}" class="user">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                       <p>
-                                        {{ Auth::check() ? Auth::user()->nama_user : 'Guest' }}
-                                       </p>
 
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user" name="username"

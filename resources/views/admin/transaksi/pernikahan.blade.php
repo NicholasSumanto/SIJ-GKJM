@@ -264,20 +264,20 @@
                             <input type="text" id="saksi1" class="form-control" placeholder="Masukkan Nama Saksi 1" required>
                         </div>
                         <div class="form-group">
-                            <label for="saksi2">Nama Saksi 2 *</label>
-                            <input type="text" id="saksi2" class="form-control" placeholder="Masukkan Nama Saksi 2" required>
+                            <label for="saksi2">Nama Saksi 2</label>
+                            <input type="text" id="saksi2" class="form-control" placeholder="Masukkan Nama Saksi 2">
                         </div>
                         <div class="form-group">
-                            <label for="tempat">Nama Lokasi *</label>
+                            <label for="tempat">Nama Lokasi</label>
                             <input type="text" id="tempat" class="form-control" placeholder="Masukkan Nama Lokasi" required>
                         </div>
                         <div class="form-group">
-                            <label for="ketua_majelis">Nama Ketua Majelis *</label>
-                            <input type="text" id="ketua_majelis" class="form-control" placeholder="Masukkan Nama Ketua Majelis" required>
+                            <label for="ketua_majelis">Nama Ketua Majelis</label>
+                            <input type="text" id="ketua_majelis" class="form-control" placeholder="Masukkan Nama Ketua Majelis">
                         </div>
                         <div class="form-group">
-                            <label for="sekretaris_majelis">Nama Sekretaris Majelis *</label>
-                            <input type="text" id="sekretaris_majelis" class="form-control" placeholder="Masukkan Nama Sekretaris Majelis" required>
+                            <label for="sekretaris_majelis">Nama Sekretaris Majelis</label>
+                            <input type="text" id="sekretaris_majelis" class="form-control" placeholder="Masukkan Nama Sekretaris Majelis">
                         </div>
                     </form>
                     `,
@@ -376,9 +376,7 @@
 
                     if (nomor === '' || nama_wilayah === ''|| nama_gereja === '' || tanggal_nikah === '' || nama_pendeta ===
                         '' || pengantin_pria === '' || pengantin_wanita === '' || ayah_pria === '' ||
-                        ibu_pria === '' || ayah_wanita === '' || ibu_wanita === '' || saksi1 === '' ||
-                        saksi2 === '' || tempat === '' || ketua_majelis === '' ||
-                        sekretaris_majelis === '') {
+                        ibu_pria === '' || ayah_wanita === '' || ibu_wanita === '' || saksi1 === '') {
                         Swal.showValidationMessage('Data tidak boleh kosong!');
                     }
 
@@ -526,7 +524,7 @@
                     var sekretaris_majelis = response.rows[0].sekretaris_majelis;
 
                     Swal.fire({
-                        title: 'Tambah Pernikahan Baru',
+                        title: 'Edit Data Pernikahan',
                         html: `
                         <form id="addJabatanMajelisForm">
                             <div class="form-group">
@@ -590,20 +588,20 @@
                                 <input type="text" id="saksi1" class="form-control" placeholder="Masukkan Nama Saksi 1" value="${saksi1}" required>
                             </div>
                             <div class="form-group">
-                                <label for="saksi2">Nama Saksi 2 *</label>
-                                <input type="text" id="saksi2" class="form-control" placeholder="Masukkan Nama Saksi 2" value="${saksi2}" required>
+                                <label for="saksi2">Nama Saksi 2</label>
+                                <input type="text" id="saksi2" class="form-control" placeholder="Masukkan Nama Saksi 2" value="${saksi2}">
                             </div>
                             <div class="form-group">
-                                <label for="tempat">Nama Lokasi *</label>
+                                <label for="tempat">Nama Lokasi</label>
                                 <input type="text" id="tempat" class="form-control" placeholder="Masukkan Nama Lokasi" value="${tempat}" required>
                             </div>
                             <div class="form-group">
-                                <label for="ketua_majelis">Nama Ketua Majelis *</label>
-                                <input type="text" id="ketua_majelis" class="form-control" placeholder="Masukkan Nama Ketua Majelis" value="${ketua_majelis}" required>
+                                <label for="ketua_majelis">Nama Ketua Majelis</label>
+                                <input type="text" id="ketua_majelis" class="form-control" placeholder="Masukkan Nama Ketua Majelis" value="${ketua_majelis}">
                             </div>
                             <div class="form-group">
-                                <label for="sekretaris_majelis">Nama Sekretaris Majelis *</label>
-                                <input type="text" id="sekretaris_majelis" class="form-control" placeholder="Masukkan Nama Sekretaris Majelis" value="${sekretaris_majelis}" required>
+                                <label for="sekretaris_majelis">Nama Sekretaris Majelis</label>
+                                <input type="text" id="sekretaris_majelis" class="form-control" placeholder="Masukkan Nama Sekretaris Majelis" value="${sekretaris_majelis}">
                             </div>
                         </form>
                         `,
@@ -720,8 +718,7 @@
                                 '' || nama_pendeta === '' || pengantin_pria === '' ||
                                 pengantin_wanita === '' || ayah_pria === '' || ibu_pria ===
                                 '' || ayah_wanita === '' || ibu_wanita === '' || saksi1 ===
-                                '' || saksi2 === '' || tempat === '' ||
-                                ketua_majelis === '' || sekretaris_majelis === '') {
+                                '') {
                                 Swal.showValidationMessage('Data tidak boleh kosong!');
                             }
 
