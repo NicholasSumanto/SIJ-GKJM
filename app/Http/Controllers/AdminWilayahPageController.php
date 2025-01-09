@@ -54,7 +54,7 @@ class AdminWilayahPageController extends Controller
         if (!$id_wilayah) {
             return redirect()->back()->with('error', 'Wilayah not assigned to the user.');
         }    
-        $tahun = date('Y');
+        $tahun = $request->input('tahun', date('Y'));
         $bulan = date('M');
         $totalJemaat = Jemaat::where('id_wilayah','=', $id_wilayah)
         ->count();
@@ -76,6 +76,7 @@ class AdminWilayahPageController extends Controller
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('wilayah.id_wilayah', $id_wilayah);
             })
+            ->whereYear('kematian.tanggal_meninggal', $tahun)
             ->groupBy('bulan')
             ->get();
         $baptisSidi = BaptisSidi::selectRaw('MONTH(baptis_sidi.tanggal_baptis) as bulan, COUNT(*) as total')
@@ -87,6 +88,7 @@ class AdminWilayahPageController extends Controller
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('baptis_sidi.id_wilayah', $id_wilayah);
             })
+            ->whereYear('baptis_sidi.tanggal_baptis', $tahun)
             ->groupBy('bulan')
             ->get();
         $baptisDewasa = BaptisDewasa::selectRaw('MONTH(baptis_dewasa.tanggal_baptis) as bulan, COUNT(*) as total')
@@ -98,6 +100,7 @@ class AdminWilayahPageController extends Controller
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('baptis_dewasa.id_wilayah', $id_wilayah);
             })
+            ->whereYear('baptis_dewasa.tanggal_baptis', $tahun)
             ->groupBy('bulan')
             ->get();
         $baptisAnak = BaptisAnak::selectRaw('MONTH(baptis_anak.tanggal_baptis) as bulan, COUNT(*) as total')
@@ -109,6 +112,7 @@ class AdminWilayahPageController extends Controller
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('baptis_anak.id_wilayah', $id_wilayah);
             })
+            ->whereYear('baptis_anak.tanggal_baptis', $tahun)
             ->groupBy('bulan')
             ->get();
         $atestasiMasuk = AtestasiMasuk::selectRaw('MONTH(tanggal_masuk) as bulan, COUNT(*) as jumlah')
@@ -120,6 +124,7 @@ class AdminWilayahPageController extends Controller
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('wilayah.id_wilayah', $id_wilayah);
             })
+            ->whereYear('atestasi_masuk.tanggal_masuk', $tahun)
             ->groupBy('bulan')
             ->get();
 
@@ -133,6 +138,7 @@ class AdminWilayahPageController extends Controller
             ->when($id_wilayah, function ($query) use ($id_wilayah) {
                 return $query->where('wilayah.id_wilayah', $id_wilayah);
             })
+            ->whereYear('atestasi_keluar.tanggal', $tahun)
             ->groupBy('bulan')
             ->get();
         $jumlahJemaat = Jemaat::selectRaw('wilayah.nama_wilayah as wil, COUNT(jemaat.id_wilayah) as jumlah')

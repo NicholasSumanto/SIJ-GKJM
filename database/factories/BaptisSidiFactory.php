@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\BaptisSidi;
 use App\Models\Pendeta;
 use App\Models\Status;
+use App\Models\Jemaat;
 use App\Models\Wilayah;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
@@ -16,6 +17,7 @@ class BaptisSidiFactory extends Factory
     public function definition(): array
     {
         return [
+            'id_jemaat' => Jemaat::inRandomOrder()->first()->id_jemaat,
             'id_status' => Status::inRandomOrder()->first()->id_status,
             'id_wilayah' => Wilayah::inRandomOrder()->first()->id_wilayah,
             'id_pendeta' => Pendeta::inRandomOrder()->first()->id_pendeta,

@@ -103,7 +103,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <br>
-                    <h4>Kategori Usia</h4>
+                    <h4>Kategori Usia Berdasarkan Komisi</h4>
                     <canvas id="ageGroupChart" style="width:100%; height:300px;  max-width: 500px; max-height: 300px;"></canvas>
                 </div>
                 <div class="col-md-6">
@@ -141,12 +141,13 @@
                 data: @json($isiData),
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.7)',
+                    'rgba(255, 25, 60, 0.7)',
                     'rgba(54, 162, 235, 0.7)',
+                    'rgba(54, 102, 219, 0.7)',
                     'rgba(255, 206, 86, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(153, 102, 255, 0.7)',
                     'rgba(255, 159, 64, 0.7)',
-                    'rgba(255, 90, 94, 0.7)'
+                    'rgba(153, 102, 255, 0.7)'
+                    
             ],
                 borderColor: 'rgba(255, 255, 255, 1)',
                 borderWidth: 1

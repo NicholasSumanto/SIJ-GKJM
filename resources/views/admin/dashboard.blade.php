@@ -110,7 +110,7 @@
                 </div>
                 <div class="col-md-6">
                     <br>
-                    <h4>Status </h4>
+                    <h4>Status Jemaat </h4>
                     <canvas id="chartPendidikan"
                         style="width:100%; height:200px; max-width: 300px; max-height: 300px;"></canvas>
                 </div>
@@ -192,22 +192,18 @@
                     label: 'Jumlah',
                     data: @json($jumlahStatus),
                     backgroundColor: [
+                        'rgba(100, 251, 95, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 198, 189, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(201, 203, 207, 0.2)'
+                        'rgba(255, 0, 0, 0.3)',
+                        'rgba(219, 53, 53, 0.5)',
+                        'rgba(172, 115, 249, 0.2)'
                     ],
                     borderColor: [
+                        'rgba(100, 251, 95, 1)',
                         'rgba(54, 162, 235, 1)',
-                        'rgba(255, 198, 189, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
-                        'rgba(201, 203, 207, 1)'
+                        'rgba(255, 0, 0, 0.7)',
+                        'rgba(219, 53, 53, 0.8)',
+                        'rgba(172, 115, 249, 0.8)'
                     ],
                     borderWidth: 1
                 }]
@@ -299,8 +295,8 @@
                     datasets: [{
                         label: 'Jemaat Meninggal',
                         data: @json($isiKematian),
-                        backgroundColor: 'rgba(185, 0, 0, 0.8)',
-                        borderColor: 'rgba(185, 0, 0, 0.8)',
+                        backgroundColor: 'rgba(219, 53, 53, 0.7)',
+                        borderColor: 'rgba(219, 53, 53, 0.7)',
                         borderWidth: 1
                     }, {
                         label: 'Atestasi Keluar',
@@ -349,8 +345,8 @@
                     }, {
                         label: 'Jemaat Meninggal',
                         data: @json($isiKematian),
-                        backgroundColor: 'rgba(185, 0, 0, 0.8)',
-                        borderColor: 'rgba(185, 0, 0, 0.8)',
+                        backgroundColor: 'rgba(219, 53, 53, 0.7)',
+                        borderColor: 'rgba(219, 53, 53, 0.7)',
                         borderWidth: 1,
                         stack: 'group2'
                     }, {

@@ -56,10 +56,26 @@
             <div class="col-md-4">
                 <br>
                 <h4>Status </h4>
-                <canvas id="chartPendidikan" style="width:100%; height:300px; max-width: 300px; max-height: 300px;"></canvas>
+                <canvas id="chartStatus" style="width:100%; height:300px; max-width: 300px; max-height: 300px;"></canvas>
             </div>
         </div>
         <div class="row">
+            <form method="GET" action="{{ route('admin-wilayah.dashboard') }}" class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="tahun" class="mr-2">Select Year:</label>
+                    <input
+                        type="number"
+                        id="tahun"
+                        name="tahun"
+                        class="form-control form-control-sm mr-2"
+                        value="{{ request('tahun', old('tahun', date('Y'))) }}"
+                        placeholder="Enter year"
+                        min="2000"
+                        max="{{ date('Y') }}">
+                </div>
+                <input type="hidden" name="InOut" value="{{ request('InOut', '') }}">
+                <button type="submit" class="btn btn-primary btn-sm mb-2">Search</button>
+            </form>
             <div class="col-md-6">
                 <br>
                 <h4>Baptis {{$tahun}}</h4>
@@ -70,6 +86,7 @@
                     <h4 class="mb-0">Jemaat Keluar Masuk {{$tahun}}</h4>
                     <span>
                         <form id="keluarMasuk" method="GET" action="{{ route('admin-wilayah.dashboard') }}">
+                            <input type="hidden" name="tahun" value="{{ request('tahun', old('tahun', date('Y'))) }}">
                             <select id="InOut" name="InOut" class="form-select" onchange="this.form.submit()">
                                 <option value="">All</option>
                                 <option value="Masuk" {{ request('InOut') == 'Masuk' ? 'selected' : '' }}>Masuk</option>
@@ -109,7 +126,7 @@
             }
         }
     });
-    const chart2 = document.getElementById('chartPendidikan').getContext('2d');
+    const chart2 = document.getElementById('chartStatus').getContext('2d');
     const status = new Chart(chart2, {
         type: 'doughnut',
         data: {
@@ -118,22 +135,18 @@
                 label: 'Jumlah',
                 data: @json($jumlahStatus),
                 backgroundColor: [
+                    'rgba(100, 251, 95, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 198, 189, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
+                    'rgba(255, 0, 0, 0.3)',
+                    'rgba(219, 53, 53, 0.5)',
+                    'rgba(172, 115, 249, 0.2)'
                 ],
                 borderColor: [
+                    'rgba(100, 251, 95, 1)',
                     'rgba(54, 162, 235, 1)',
-                    'rgba(255, 198, 189, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(201, 203, 207, 1)'
+                    'rgba(255, 0, 0, 0.7)',
+                    'rgba(219, 53, 53, 0.8)',
+                    'rgba(172, 115, 249, 0.8)'
                 ],
                 borderWidth: 1
             }]
@@ -224,16 +237,16 @@
             labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sept','Okt','Nov','Des'],
             datasets: [{
                 label: 'Jemaat Meninggal',
-                data: @json($isiKematian),
-                backgroundColor: 'rgba(185, 0, 0, 0.8)',
-                borderColor: 'rgba(185, 0, 0, 0.8)',
-                borderWidth: 1
-            },{
-                label: 'Atestasi Keluar',
-                data: @json($isiKeluar),
-                backgroundColor: 'rgba(255, 0, 0, 0.8)',
-                borderColor: 'rgba(255, 0, 0, 0.8)',
-                borderWidth: 1
+                    data: @json($isiKematian),
+                    backgroundColor: 'rgba(219, 53, 53, 0.7)',
+                    borderColor: 'rgba(219, 53, 53, 0.7)',
+                    borderWidth: 1
+                }, {
+                    label: 'Atestasi Keluar',
+                    data: @json($isiKeluar),
+                    backgroundColor: 'rgba(255, 0, 0, 0.8)',
+                    borderColor: 'rgba(255, 0, 0, 0.8)',
+                    borderWidth: 1
             }]
         },
         options: {
@@ -274,18 +287,18 @@
                 stack: 'group1'
             },{
                 label: 'Jemaat Meninggal',
-                data: @json($isiKematian),
-                backgroundColor: 'rgba(185, 0, 0, 0.8)',
-                borderColor: 'rgba(185, 0, 0, 0.8)',
-                borderWidth: 1,
-                stack: 'group2'
-            },{
-                label: 'Atestasi Keluar',
-                data: @json($isiKeluar),
-                backgroundColor: 'rgba(255, 0, 0, 0.8)',
-                borderColor: 'rgba(255, 0, 0, 0.8)',
-                borderWidth: 1,
-                stack: 'group2'
+                    data: @json($isiKematian),
+                    backgroundColor: 'rgba(219, 53, 53, 0.7)',
+                    borderColor: 'rgba(219, 53, 53, 0.7)',
+                    borderWidth: 1,
+                    stack: 'group2'
+                }, {
+                    label: 'Atestasi Keluar',
+                    data: @json($isiKeluar),
+                    backgroundColor: 'rgba(255, 0, 0, 0.8)',
+                    borderColor: 'rgba(255, 0, 0, 0.8)',
+                    borderWidth: 1,
+                    stack: 'group2'
             }]
         },
         options: {

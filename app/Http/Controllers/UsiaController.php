@@ -76,7 +76,7 @@ class UsiaController extends Controller
     $bd = Jemaat::selectRaw("
         CASE 
             WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND bd.id_jemaat IS NOT NULL THEN 'Dewasa Baptis'
-            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND bd.id_jemaat IS NULL THEN 'Dewasa Belum Baptis'
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND jemaat.tanggal_baptis IS NULL THEN 'Dewasa Belum Baptis'
         END as kategori,
         MONTH(bd.updated_at) as bulan,
         COUNT(*) as jumlah")
@@ -88,7 +88,7 @@ class UsiaController extends Controller
     $bs = Jemaat::selectRaw("
         CASE 
             WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND bs.id_jemaat IS NOT NULL THEN 'Dewasa Sudah Baptis Sidi'
-            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND bs.id_jemaat IS NULL THEN 'Dewasa Belum Baptis Sidi'
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) >= 17 AND jemaat.tanggal_baptis IS NULL THEN 'Dewasa Belum Baptis Sidi'
         END as kategori,
         MONTH(bs.updated_at) as bulan,
         COUNT(*) as jumlah")
@@ -100,7 +100,7 @@ class UsiaController extends Controller
     $ba = Jemaat::selectRaw("
         CASE 
             WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND ba.id_jemaat IS NOT NULL THEN 'Anak Baptis'
-            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND ba.id_jemaat IS NULL THEN 'Anak Belum Baptis'
+            WHEN (YEAR(CURDATE()) - YEAR(jemaat.tanggal_lahir)) < 17 AND jemaat.tanggal_baptis IS NULL THEN 'Anak Belum Baptis'
         END as kategori,
         MONTH(ba.updated_at) as bulan,
         COUNT(*) as jumlah")
